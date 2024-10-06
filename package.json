@@ -9,7 +9,7 @@
     "node": ">=18.x"
   },
   "scripts": {
-    "start": "node src/app.ts",
+    "start": "node app.ts",
     "register": "npx tsx script/commands.ts",
     "dev": "npx nodemon app.ts"
   },
