@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "npx tsc --outDir \"./build\" --removeComments",
-    "start": "node build/app.js",
+    "start": "node src/app.ts",
     "register": "npx tsx script/commands.ts",
     "dev": "npx nodemon app.ts"
   },
