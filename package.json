@@ -9,7 +9,7 @@
     "node": ">=18.x"
   },
   "scripts": {
-    "build": "npx tsx --outDir \"./build\" --removeComments",
+    "build": "npx tsc --outDir \"./build\" --removeComments",
     "start": "node build/app.js",
     "register": "npx tsx script/commands.ts",
     "dev": "npx nodemon app.ts"
