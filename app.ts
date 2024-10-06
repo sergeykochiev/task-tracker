@@ -5,7 +5,7 @@ import {
     InteractionResponseType,
     verifyKeyMiddleware,
 } from 'discord-interactions';
-import envconfig from './config/env/discord.config.js';
+import envconfig from './src/config/env/discord.config.js';
 
 // Create an express app
 const app = express();
