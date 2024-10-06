@@ -3,8 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Discord example app",
-  "main": "app.js",
-  "type": "commonjs",
+  "main": "app.ts",
   "engines": {
     "node": ">=18.x"
   },
