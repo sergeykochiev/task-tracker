@@ -1,18 +1,14 @@
 {
-  "name": "discord-getting-started",
+  "name": "discord-task-tracker-bot",
   "private": true,
   "version": "1.0.0",
-  "description": "Discord example app",
-  "main": "app.ts",
-  "engines": {
-    "node": ">=18.x"
-  },
+  "description": "Discord task tracker bot",
+  "main": "index.ts",
   "scripts": {
-    "start": "node app.ts",
+    "start": "node index.ts",
     "register": "npx tsx script/commands.ts",
-    "dev": "npx nodemon app.ts"
+    "dev": "npx nodemon index.ts"
   },
-  "author": "Shay DeWael",
   "license": "MIT",
   "dependencies": {
     "discord-interactions": "^4.0.0",
