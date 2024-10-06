@@ -59,14 +59,6 @@ app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req:
     return
 });
 
-app.get('/dupa', (req, res) => {
-    res.status(200).send(sampleResponse())
-})
-
-app.get("", (req, res) => {
-    res.status(200).send("hello world")
-})
-
 app.listen(PORT, () => {
     console.log('Listening on port', PORT);
 });
