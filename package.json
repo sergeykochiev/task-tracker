@@ -9,6 +9,7 @@
     "register": "npx tsx script/commands.ts",
     "dev": "npx nodemon app.ts"
   },
+  "author": "Sergey Kochiev",
   "license": "MIT",
   "dependencies": {
     "discord-interactions": "^4.0.0",
