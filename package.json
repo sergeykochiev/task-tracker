@@ -1,0 +1,29 @@
+{
+  "name": "discord-getting-started",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Discord example app",
+  "main": "app.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "start": "npx tsc --outDir \"./build\" --removeComments && node app.js",
+    "register": "npx tsc --outDir \"./build\" --removeComments && node commands.js",
+    "dev": "npx tsc --outDir \"./build\" --removeComments && nodemon app.js"
+  },
+  "author": "Shay DeWael",
+  "license": "MIT",
+  "dependencies": {
+    "discord-interactions": "^4.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.4",
+    "nodemon": "^3.0.0",
+    "typescript": "^5.6.2"
+  }
+}
