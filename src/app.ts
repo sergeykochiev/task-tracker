@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import {
     InteractionType,
     InteractionResponseType,
@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
  * Interactions endpoint URL where Discord will send HTTP requests
  * Parse request body and verifies incoming requests using discord-interactions package
  */
-app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req, res) => {
+app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req: Request, res: Response) => {
     // Interaction type and data
     const { type, data } = req.body;
 
@@ -25,7 +25,8 @@ app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req,
      * Handle verification requests
      */
     if (type === InteractionType.PING) {
-        return res.send({ type: InteractionResponseType.PONG });
+        res.send({ type: InteractionResponseType.PONG });
+        return
     }
 
     /**
@@ -37,22 +38,25 @@ app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req,
 
         // "test" command
         if (name === 'test') {
-        // Send a message into the channel where command was triggered from
-        return res.send({
-            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-                // Fetches a random emoji to send from a helper function
-                content: `hello world ${getRandomEmoji()}`,
-            },
-        });
+            // Send a message into the channel where command was triggered from
+            res.send({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: {
+                    // Fetches a random emoji to send from a helper function
+                    content: `hello world ${getRandomEmoji()}`,
+                },
+            });
+            return
         }
 
         console.error(`unknown command: ${name}`);
-        return res.status(400).json({ error: 'unknown command' });
+        res.status(400).json({ error: 'unknown command' });
+        return
     }
 
     console.error('unknown interaction type', type);
-    return res.status(400).json({ error: 'unknown interaction type' });
+    res.status(400).json({ error: 'unknown interaction type' });
+    return
 });
 
 app.listen(PORT, () => {
