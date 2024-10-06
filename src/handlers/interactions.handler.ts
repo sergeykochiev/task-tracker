@@ -1,40 +1,38 @@
-import { InteractionResponseType, InteractionType } from "discord-interactions"
-import { Request, Response } from "express"
+import { InteractionResponseType } from "discord-interactions"
+import { Response } from "express"
+import { InteractionType } from 'discord-api-types/v10';
+import DiscordInteractionsRequest from "../types/discord-interactions-request";
 
-export default async function handleInteractions(req: Request, res: Response)  {
+export default async function handleInteractions(req: DiscordInteractionsRequest, res: Response)  {
     const { type, data } = req.body
-
-    /**
-     * Handle verification requests
-     */
-    if (type === InteractionType.PING) {
-        res.send({ type: InteractionResponseType.PONG })
-        return
-    }
-
     /**
      * Handle slash command requests
      * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
      */
-    if (type === InteractionType.APPLICATION_COMMAND) {
+    if (type === InteractionType.ApplicationCommand) {
+        if (!data) return
         const { name } = data
-
-        // "test" command
         if (name === 'register') {
-            // Send a message into the channel where command was triggered from
             res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    // Fetches a random emoji to send from a helper function
                     content: `hello world`,
                 },
             })
             return
         }
-
         console.error(`unknown command: ${name}`)
         res.status(400).json({ error: 'unknown command' })
         return
+    }
+
+    if (type === InteractionType.MessageComponent) {
+        res.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: `hello world`,
+            },
+        })
     }
 
     console.error('unknown interaction type', type)

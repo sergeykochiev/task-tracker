@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
+    "discord-api-types": "^0.37.101",
     "nodemon": "^3.1.7",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
