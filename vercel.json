@@ -3,7 +3,8 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/"
+            "destination": "/build"
         }
-    ]
+    ],
+    "buildCommand": "npm run build"
   }
