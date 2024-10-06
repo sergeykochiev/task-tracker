@@ -1,14 +1,17 @@
 import 'dotenv/config';
-import envconfig from '../src/config/env/env.config.js';
-import InstallGlobalCommands from './utils/install-global-commands.js';
+import envconfig from '../src/config/env/discord.config.js';
+import InstallGlobalCommands from '../src/utils/install-global-commands.js';
+import IntegrationTypes from '../src/enum/integration-types.js';
+import InteractionContextTypes from '../src/enum/interaction-context-types.js';
+import CommandTypes from '../src/enum/command-types.js';
 
 // Simple test command
-const TEST_COMMAND = {
-    name: 'test',
-    description: 'Basic command',
-    type: 1,
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
+const REGISTER_COMMAND = {
+    name: 'register',
+    description: 'Registers a chat as a task supplier',
+    type: CommandTypes.CHAT_INPUT,
+    integration_types: [IntegrationTypes.GUILD_INSTALL],
+    contexts: [InteractionContextTypes.GUILD],
 };
 
 // Command containing options
@@ -29,6 +32,6 @@ const CHALLENGE_COMMAND = {
     contexts: [0, 2],
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND] as const;
+const ALL_COMMANDS = [REGISTER_COMMAND] as const;
 
 InstallGlobalCommands(envconfig.APP_ID, ALL_COMMANDS);
