@@ -6,6 +6,7 @@ import {
     verifyKeyMiddleware,
 } from 'discord-interactions';
 import envconfig from './src/config/env/discord.config.js';
+import sampleResponse from './src/utils/sample-response.js';
 
 // Create an express app
 const app = express();
@@ -59,7 +60,7 @@ app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req:
 });
 
 app.get('/dupa', (req, res) => {
-    res.status(200).send("hell, i'm dupa")
+    res.status(200).send(sampleResponse())
 })
 
 app.listen(PORT, () => {
