@@ -1,11 +1,6 @@
 import 'dotenv/config';
-import { capitalize, InstallGlobalCommands } from './utils.js';
-import envconfig from './config/env/env.config.js';
-
-// Get the game choices from game.js
-function createCommandChoices() {
-    return;
-}
+import envconfig from '../src/config/env/env.config.js';
+import InstallGlobalCommands from './utils/install-global-commands.js';
 
 // Simple test command
 const TEST_COMMAND = {
@@ -26,7 +21,7 @@ const CHALLENGE_COMMAND = {
         name: 'object',
         description: 'Pick your object',
         required: true,
-        choices: createCommandChoices(),
+        choices: [1, 2],
         },
     ],
     type: 1,
@@ -34,6 +29,6 @@ const CHALLENGE_COMMAND = {
     contexts: [0, 2],
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND];
+const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND] as const;
 
 InstallGlobalCommands(envconfig.APP_ID, ALL_COMMANDS);

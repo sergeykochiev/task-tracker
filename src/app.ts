@@ -5,7 +5,6 @@ import {
     InteractionResponseType,
     verifyKeyMiddleware,
 } from 'discord-interactions';
-import { getRandomEmoji } from './utils.js';
 import envconfig from './config/env/env.config.js';
 
 // Create an express app
@@ -43,7 +42,7 @@ app.post('/interactions', verifyKeyMiddleware(envconfig.PUBLIC_KEY), async (req:
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
                     // Fetches a random emoji to send from a helper function
-                    content: `hello world ${getRandomEmoji()}`,
+                    content: `hello world`,
                 },
             });
             return
