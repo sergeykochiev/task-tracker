@@ -16,7 +16,7 @@ export default async function handleInteractions(req: DiscordInteractionsRequest
             res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: `hello world`,
+                    content: `register command`,
                 },
             })
             return
