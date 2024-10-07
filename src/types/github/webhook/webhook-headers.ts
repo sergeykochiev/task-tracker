@@ -1,4 +1,4 @@
-import GithubEventTypes from "./event-type"
+import GithubEventTypes from "../../../enum/github/event-type"
 
 interface GithubWebhookHeaders {
     "X-GitHub-Delivery": string

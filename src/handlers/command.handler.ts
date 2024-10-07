@@ -1,7 +1,7 @@
 import { InteractionResponseType } from "discord-interactions"
 import { Response } from "express"
 import { InteractionType } from 'discord-api-types/v10';
-import DiscordInteractionsRequest from "../types/discord-interactions-request";
+import DiscordInteractionsRequest from "../types/discord/discord-interactions-request";
 
 export default async function handleCommands(req: DiscordInteractionsRequest, res: Response)  {
     const { type, data } = req.body
