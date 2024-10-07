@@ -5,12 +5,21 @@ import {
 } from 'discord-interactions';
 import handleCommands from '../src/handlers/command.handler.js';
 import discordConfig from '../src/config/env/discord.config.js';
+import AppConfig from '../src/config/env/app.config.js';
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = AppConfig.PORT
 
-app.post('/discord/interactions', verifyKeyMiddleware(discordConfig.PUBLIC_KEY), handleCommands)
-app.post('/github/webhooks', )
+const githubWebhookRouter = express.Router()
+githubWebhookRouter.get("test")
+githubWebhookRouter.get("ping")
+githubWebhookRouter.post("deliveries")
+
+const discordRouter = express.Router()
+githubWebhookRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), handleCommands)
+
+app.use('/discord', discordRouter)
+app.use('/github', githubWebhookRouter)
 
 app.listen(PORT, () => {
     console.log('Listening on port', PORT)
