@@ -1,7 +1,7 @@
 import discordConfig from "../config/env/discord.config"
 import ConstObjectType from "../types/utils/const-object-type"
 
-const DiscordConst: ConstObjectType = {
+const DiscordConst = {
     URL: {
         API_ROOT: 'https://discord.com/api/v10/',
         ENDPOINTS: {

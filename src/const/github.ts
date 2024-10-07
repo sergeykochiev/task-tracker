@@ -1,7 +1,7 @@
 import GithubConfig from "../config/env/github.config"
 import ConstObjectType from "../types/utils/const-object-type"
 
-const GithubConst: ConstObjectType = {
+const GithubConst = {
     URL: {
         API_ROOT: "",
         ENDPOINTS: {
