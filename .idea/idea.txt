@@ -1,0 +1,37 @@
+GITHUB -> DISCORD
+
+task-tracker
+
+there needs to be a message with a request to use the configure command at each server join
+
+commands
+
+/configure
+	needs to be invoked right after the bot lands on the server. its main function is to evaluate which roles and/or users can register chats for the bot to track. sample sequence:
+	1. init
+	2. request to send roles that have a right to /register
+	3. request to send users that have a right to /register
+	4. end
+	makes server entry in db have pending status on init and configured status on end. pending servers cannot be reconfigured. one conversation only goes with one user
+
+	also right after there should be message that mentions all provided roles and users with a quick guide. it also should be moved to a inside-discord configuration on server join if there is one.
+
+/register
+	needs to be invoked in the chat messages of which needs to be tracked and transformed into github issues. main function is to evaluate which roles and/or users can create, assign to and close issues (tasks). sample sequence:
+	1. init
+	2. request to send the github repo
+	4. request to add to contributors and set nessesary permissions
+	5. request to send roles that can manage tasks
+	6. request to send users that can manage tasks
+	7. end
+	makes chat entry in db have pending status on init and configured status on end. pending chats cannot be reregistered. one conversation only goes with one user
+
+Github events:
+
+messages on issue creation, pull request creation, leaving comments, merging branches, requesting reviews.
+
+messages on assinging labels on reviews.
+
+closing issue on closing pull request accociated with that issue
+
+assigning labels on issues when label assigned to pull request and an issue url is present in its description
