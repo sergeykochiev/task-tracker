@@ -6,6 +6,7 @@ import {
 import handleCommands from '../src/handlers/command.handler.js';
 import discordConfig from '../src/config/env/discord.config.js';
 import AppConfig from '../src/config/env/app.config.js';
+import pongIfPing from '../src/handlers/ping.handler.js';
 
 const app = express()
 const PORT = AppConfig.PORT
@@ -16,7 +17,7 @@ githubWebhookRouter.post("ping")
 githubWebhookRouter.post("deliveries")
 
 const discordRouter = express.Router({ mergeParams: true })
-discordRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), handleCommands)
+discordRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), pongIfPing, handleCommands)
 
 app.use('/discord', discordRouter)
 app.use('/github', githubWebhookRouter)
