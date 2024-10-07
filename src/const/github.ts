@@ -1,5 +1,4 @@
 import GithubConfig from "../config/env/github.config"
-import ConstObjectType from "../types/utils/const-object-type"
 
 const GithubConst = {
     URL: {

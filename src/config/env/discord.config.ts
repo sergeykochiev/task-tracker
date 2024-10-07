@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 const { APP_ID, DISCORD_TOKEN, PUBLIC_KEY } = process.env
 
 if (!APP_ID || !DISCORD_TOKEN || !PUBLIC_KEY) {

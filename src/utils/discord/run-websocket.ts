@@ -1,6 +1,6 @@
 import { WebSocket } from "ws"
-import handleGetawayMessage from "../../handlers/getaway/handle-message"
 import getDiscordWebSocketUrl from "./get-websocket-url"
+import handleDiscordGetawayMessage from "../../handlers/discord/websocket/handle-message"
 
 export default async function runDiscordWebSocket() {
     const socket = new WebSocket(await getDiscordWebSocketUrl())
@@ -11,6 +11,6 @@ export default async function runDiscordWebSocket() {
     socket.onclose = function(event) {
         console.log("websocket closed, clean: ", event.wasClean)
     }
-    socket.onmessage = handleGetawayMessage
+    socket.onmessage = handleDiscordGetawayMessage
     return
 }

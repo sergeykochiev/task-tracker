@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 const { ACCESS_TOKEN } = process.env
 
 if (!ACCESS_TOKEN) {
