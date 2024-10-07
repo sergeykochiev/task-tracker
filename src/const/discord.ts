@@ -5,7 +5,9 @@ const DiscordConst = {
     URL: {
         API_ROOT: 'https://discord.com/api/v10/',
         ENDPOINTS: {
-            COMMANDS: (appId: string | number) => `applications/${appId}/commands`
+            COMMANDS: (appId: string | number) => `applications/${appId}/commands`,
+            MESSAGES: (channelId: string | number) => `channels/${channelId}/messages`,
+            FOLLOWUP_MESSAGE: (appId: string | number, interactionToken: string) => `/webhooks/${appId}/${interactionToken}`
         }
     },
     AUTH_HEADERS: {
