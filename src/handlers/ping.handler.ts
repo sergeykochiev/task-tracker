@@ -5,6 +5,7 @@ export default async function pongIfPing(req: Request, res: Response, next?: () 
     const { type } = req.body
     if (type === InteractionType.PING) {
         res.send({ type: InteractionResponseType.PONG })
+        return
     }
     next && next()
 }
