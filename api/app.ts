@@ -15,8 +15,8 @@ githubWebhookRouter.post("test")
 githubWebhookRouter.post("ping")
 githubWebhookRouter.post("deliveries")
 
-const discordRouter = express.Router()
-githubWebhookRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), handleCommands)
+const discordRouter = express.Router({ mergeParams: true })
+discordRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), handleCommands)
 
 app.use('/discord', discordRouter)
 app.use('/github', githubWebhookRouter)
