@@ -3,7 +3,7 @@ import { Response } from "express"
 import { InteractionType } from 'discord-api-types/v10';
 import DiscordInteractionsRequest from "../types/discord-interactions-request";
 
-export default async function handleInteractions(req: DiscordInteractionsRequest, res: Response)  {
+export default async function handleCommands(req: DiscordInteractionsRequest, res: Response)  {
     const { type, data } = req.body
     /**
      * Handle slash command requests
