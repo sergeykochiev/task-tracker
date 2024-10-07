@@ -5,6 +5,12 @@ import DiscordInteractionsRequest from "../types/discord/discord-interactions-re
 
 export default async function handleCommands(req: DiscordInteractionsRequest, res: Response): Promise<void> {
     const { type, data } = req.body
+    res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+            content: `register command`,
+        },
+    })
     /**
      * Handle slash command requests
      * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
