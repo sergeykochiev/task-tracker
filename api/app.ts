@@ -12,12 +12,12 @@ const app = express()
 const PORT = AppConfig.PORT
 
 const githubWebhookRouter = express.Router()
-githubWebhookRouter.post("test")
-githubWebhookRouter.post("ping")
-githubWebhookRouter.post("deliveries")
+githubWebhookRouter.post("/test")
+githubWebhookRouter.post("/ping")
+githubWebhookRouter.post("/deliveries")
 
 const discordRouter = express.Router({ mergeParams: true })
-discordRouter.post("interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), pongIfPing, handleCommands)
+discordRouter.post("/interactions", verifyKeyMiddleware(discordConfig.PUBLIC_KEY), pongIfPing, handleCommands)
 
 app.use('/discord', discordRouter)
 app.use('/github', githubWebhookRouter)
