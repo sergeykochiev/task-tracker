@@ -7,7 +7,8 @@ const DiscordConst = {
         ENDPOINTS: {
             COMMANDS: (appId: string | number) => `applications/${appId}/commands`,
             MESSAGES: (channelId: string | number) => `channels/${channelId}/messages`,
-            FOLLOWUP_MESSAGE: (appId: string | number, interactionToken: string) => `/webhooks/${appId}/${interactionToken}`
+            FOLLOWUP_MESSAGE: (appId: string | number, interactionToken: string) => `/webhooks/${appId}/${interactionToken}`,
+            GETAWAY: "gateway"
         }
     },
     AUTH_HEADERS: {
