@@ -11,8 +11,8 @@ const app = express()
 const PORT = AppConfig.PORT
 
 const githubWebhookRouter = express.Router()
-githubWebhookRouter.get("test")
-githubWebhookRouter.get("ping")
+githubWebhookRouter.post("test")
+githubWebhookRouter.post("ping")
 githubWebhookRouter.post("deliveries")
 
 const discordRouter = express.Router()
