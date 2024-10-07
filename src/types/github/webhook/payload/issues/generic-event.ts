@@ -1,4 +1,4 @@
-import GithubIssue from "../../entity/issue";
+import GithubIssue from "../../../entity/issue";
 import GithubIssueAction from "./action";
 
 interface GenericGithubIssueEventPayload<Action extends GithubIssueAction = GithubIssueAction> {

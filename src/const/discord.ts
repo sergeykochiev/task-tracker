@@ -11,4 +11,5 @@ const DiscordConst = {
         'User-Agent': 'TaskTrackerDiscordBot (https://github.com/sergeykochiev/task-tracker, 1.0.0)'
     }
 } as const
+
 export default DiscordConst
