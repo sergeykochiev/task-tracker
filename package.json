@@ -10,7 +10,6 @@
     "dev": "npx nodemon app.ts"
   },
   "author": "Sergey Kochiev",
-  "license": "MIT",
   "dependencies": {
     "discord-interactions": "^4.0.0",
     "dotenv": "^16.0.3",
