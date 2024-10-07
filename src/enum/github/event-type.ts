@@ -1,5 +1,3 @@
-import { deflate } from "zlib";
-
 enum GithubEventTypes {
     ISSUE = "issues"
 }

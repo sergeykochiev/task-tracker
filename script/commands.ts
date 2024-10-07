@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import envconfig from '../src/config/env/discord.config.js';
-import InstallGlobalCommands from '../src/utils/install-global-commands.js';
-import IntegrationTypes from '../src/enum/integration-types.js';
-import InteractionContextTypes from '../src/enum/interaction-context-types.js';
-import CommandTypes from '../src/enum/command-types.js';
+import InstallGlobalCommands from '../src/utils/discord/install-global-commands.js';
+import IntegrationTypes from '../src/enum/discord/integration-types.js';
+import InteractionContextTypes from '../src/enum/discord/interaction-context-types.js';
+import CommandTypes from '../src/enum/discord/command-types.js';
 
 // Simple test command
 const REGISTER_COMMAND = {

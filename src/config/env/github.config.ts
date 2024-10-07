@@ -5,7 +5,7 @@ if (!ACCESS_TOKEN) {
 }
 
 const GithubConfig = {
-    APP_ID: ACCESS_TOKEN,
+    ACCESS_TOKEN: ACCESS_TOKEN,
 } as const
 
 export default GithubConfig

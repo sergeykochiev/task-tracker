@@ -1,9 +1,12 @@
 import discordConfig from "../config/env/discord.config"
+import ConstObjectType from "../types/utils/const-object-type"
 
-const DiscordConst = {
+const DiscordConst: ConstObjectType = {
     URL: {
         API_ROOT: 'https://discord.com/api/v10/',
-        COMMANDS_ENDPOINT: (appId: string | number) => `applications/${appId}/commands`,
+        ENDPOINTS: {
+            COMMANDS: (appId: string | number) => `applications/${appId}/commands`
+        }
     },
     AUTH_HEADERS: {
         Authorization: `Bot ${discordConfig.DISCORD_TOKEN}`,
