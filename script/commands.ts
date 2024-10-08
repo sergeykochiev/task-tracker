@@ -1,37 +1,25 @@
 import 'dotenv/config';
 import envconfig from '../src/config/env/discord.config.js';
 import InstallGlobalCommands from '../src/utils/discord/install-global-commands.js';
-import IntegrationTypes from '../src/enum/discord/integration-types.js';
-import InteractionContextTypes from '../src/enum/discord/interaction-context-types.js';
 import CommandTypes from '../src/enum/discord/command-types.js';
+import { ApplicationIntegrationType, InteractionContextType } from "discord-api-types/v10"
 
-// Simple test command
 const REGISTER_COMMAND = {
     name: 'register',
     description: 'Registers a chat as a task supplier',
     type: CommandTypes.CHAT_INPUT,
-    integration_types: [IntegrationTypes.GUILD_INSTALL],
-    contexts: [InteractionContextTypes.GUILD],
-};
+    integration_types: [ApplicationIntegrationType.GuildInstall],
+    contexts: [InteractionContextType.Guild],
+} as const
 
-// Command containing options
-const CHALLENGE_COMMAND = {
-    name: 'challenge',
-    description: 'Challenge to a match of rock paper scissors',
-    options: [
-        {
-        type: 3,
-        name: 'object',
-        description: 'Pick your object',
-        required: true,
-        choices: [1, 2],
-        },
-    ],
-    type: 1,
-    integration_types: [0, 1],
-    contexts: [0, 2],
-};
+const CONFIGURE_COMMAND = {
+    name: 'configure',
+    description: 'Configures roles and users that are able to register chats',
+    type: CommandTypes.CHAT_INPUT,
+    integration_types: [ApplicationIntegrationType.GuildInstall],
+    contexts: [InteractionContextType.Guild],
+} as const
 
-const ALL_COMMANDS = [REGISTER_COMMAND] as const;
+const ALL_COMMANDS = [REGISTER_COMMAND, CONFIGURE_COMMAND] as const;
 
 InstallGlobalCommands(envconfig.APP_ID, ALL_COMMANDS);

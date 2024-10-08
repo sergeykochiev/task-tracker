@@ -1,9 +1,8 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionResponseType, InteractionType } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionResponseType, InteractionType, InteractionContextType } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
 import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
-import sendFollowupMessage from "../utils/discord/send-followup-message"
 import replyToInteraction from "../utils/discord/reply-to-interaction"
  
 export default class DiscordWebsocketConnection {
