@@ -163,8 +163,18 @@ export default class DiscordWebsocketConnection {
                         content: "register command"
                     }
                 })
-                return
+                break
+            }
+            case "configure": {
+                replyToInteraction(data.id, data.token, {
+                    type: InteractionResponseType.ChannelMessageWithSource,
+                    data: {
+                        content: "configure command"
+                    }
+                })
+                break
             }
         }
+        return
     }
 }
