@@ -1,9 +1,8 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionResponseType, InteractionType, InteractionContextType } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
 import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
-import replyToInteraction from "../utils/discord/reply-to-interaction"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -13,6 +12,8 @@ export default class DiscordWebsocketConnection {
     private receivedHeartbeatAck: boolean = false
     private resumeWssUrl: string
     private sessionId: string
+    public onCommand: (data: APIApplicationCommandInteraction) => Promise<void> | void
+    public onReady: (data: GatewayReadyDispatchData) => Promise<void> | void
 
     constructor(
         private wssUrl: string
@@ -58,22 +59,49 @@ export default class DiscordWebsocketConnection {
         }
         console.log("Received opcode:", GatewayOpcodes[data.op])
         switch(data.op) {
-            case GatewayOpcodes.Hello: {
-                this.heartbeatIntervalDelay = data.d.heartbeat_interval
-                const jitter = Math.random()
-                setTimeout(() => {
-                    this.sendHeartbeat()
-                    this.keepTheHeartBeating()
-                    this.identify()
-                }, this.heartbeatIntervalDelay * jitter)
-                break
-            }
-            case GatewayOpcodes.Heartbeat: this.sendHeartbeat(); break
-            case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true; break
-            case GatewayOpcodes.InvalidSession: data.d ? this.resume() : this.reconnect(); break
-            case GatewayOpcodes.Reconnect: this.resume(); break
-            case GatewayOpcodes.Dispatch: this.handleDispatchedEvent(data); break
+            case GatewayOpcodes.Hello: this.handleHello(data.d); break
+            case GatewayOpcodes.Heartbeat: this.handleHeartbeat(data.d); break
+            case GatewayOpcodes.HeartbeatAck: this.handleHeartbeatAck; break
+            case GatewayOpcodes.InvalidSession: this.handleInvalidSession(data.d); break
+            case GatewayOpcodes.Reconnect: this.handleReconnect(); break
+            case GatewayOpcodes.Dispatch: this.handleDispatched(data); break
         }
+        return
+    }
+
+    private handleHello(data: GatewayHelloData) {
+        this.heartbeatIntervalDelay = data.heartbeat_interval
+        const jitter = Math.random()
+        setTimeout(() => {
+            this.sendHeartbeat()
+            this.keepTheHeartBeating()
+            this.identify()
+        }, this.heartbeatIntervalDelay * jitter)
+        return
+    }
+
+    private handleHeartbeat(data: GatewayHeartbeatData) {
+        this.sendHeartbeat()
+        return
+    }
+
+    private handleHeartbeatAck() {
+        this.receivedHeartbeatAck = true
+        return
+    }
+
+    private handleInvalidSession(data: GatewayInvalidSessionData) {
+        if (data) {
+            this.resume()
+            return
+        }
+        this.reconnect()
+        return
+    }
+    
+    private handleReconnect() {
+        this.resume()
+        return
     }
 
     private sendPayload(payload: GatewaySendPayload): void {
@@ -139,41 +167,26 @@ export default class DiscordWebsocketConnection {
         return
     }
 
-    private handleDispatchedEvent(payload: GatewayDispatchPayload) {
+    private handleDispatched(payload: GatewayDispatchPayload) {
         if (payload.s) this.sequenceNumber = payload.s
+        console.log("Received dispatch event:", payload.t)
         switch(payload.t) {
-            case GatewayDispatchEvents.Ready: {
-                this.sessionId = payload.d.session_id
-                this.resumeWssUrl = payload.d.resume_gateway_url
-                break
-            }
-            case GatewayDispatchEvents.InteractionCreate: {
-                if (payload.d.type === InteractionType.ApplicationCommand) this.handleCommands(payload.d)
-            }
-        }
-    }
-
-    private async handleCommands(data: APIApplicationCommandInteraction): Promise<void> {
-        switch(data.data.name) {
-            case "register": {
-                replyToInteraction(data.id, data.token, {
-                    type: InteractionResponseType.ChannelMessageWithSource,
-                    data: {
-                        content: "register command"
-                    }
-                })
-                break
-            }
-            case "configure": {
-                replyToInteraction(data.id, data.token, {
-                    type: InteractionResponseType.ChannelMessageWithSource,
-                    data: {
-                        content: "configure command"
-                    }
-                })
-                break
-            }
+            case GatewayDispatchEvents.Ready: this.handleReady(payload.d); break
+            case GatewayDispatchEvents.InteractionCreate: this.handleInteraction(payload.d); break
         }
         return
+    }
+
+    private handleReady(data: GatewayReadyDispatchData) {
+        this.sessionId = data.session_id
+        this.resumeWssUrl = data.resume_gateway_url
+        this.onReady && this.onReady(data)
+        return
+    }
+
+    private handleInteraction(data: GatewayInteractionCreateDispatchData) {
+        switch(data.type) {
+            case InteractionType.ApplicationCommand: this.onCommand && this.onCommand(data)
+        }
     }
 }
