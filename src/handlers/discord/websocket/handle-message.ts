@@ -1,5 +1,5 @@
 import DiscordWebsocketMessageEvent from "../../../types/discord/websocket/message-event";
-import { GatewayReceivePayload } from 'discord-api-types/v10';
+import { GatewayOpcodes, GatewayReceivePayload } from 'discord-api-types/v10';
 
 export default async function handleDiscordGetawayMessage(event: DiscordWebsocketMessageEvent): Promise<void> {
     const [data, socket] = [event.data, event.target]
@@ -9,5 +9,12 @@ export default async function handleDiscordGetawayMessage(event: DiscordWebsocke
     } catch(e) {
         console.error("Error parsing websocket message: ", e)
         return
+    }
+    switch (parsedData.op) {
+        case GatewayOpcodes.Heartbeat: {
+            socket.send(JSON.stringify({
+                
+            }))
+        }
     }
 }

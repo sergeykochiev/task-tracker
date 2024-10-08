@@ -4,7 +4,8 @@ import { WebSocket, WebSocketEventMap } from "ws"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
-    private heartbeatInterval: number
+    private heartbeatIntervalDelay: number
+    private heartbeatInterval: ReturnType<typeof setInterval>
     private sequenceNumber: number
     private receivedHeartbeatAck: boolean = false
 
@@ -14,10 +15,10 @@ export default class DiscordWebsocketConnection {
 
     public async openAndInit() {
         this.socket = new WebSocket(this.wssUrl)
-        this.socket.onopen = this.handleOpenEvent
-        this.socket.onerror = this.handleErrorEvent
-        this.socket.onclose = this.handleCloseEvent
-        this.socket.onmessage = this.handleMessageEvent
+        this.socket.onopen = (e) => this.handleOpenEvent(e)
+        this.socket.onerror = (e) => this.handleErrorEvent(e)
+        this.socket.onclose = (e) => this.handleCloseEvent(e)
+        this.socket.onmessage = (e) => this.handleMessageEvent(e)
         return
     }
 
@@ -32,65 +33,64 @@ export default class DiscordWebsocketConnection {
     }
 
     private async handleCloseEvent(event: WebSocketEventMap["close"]) {
-        console.log("websocket closed, clean: ", event.wasClean)
+        console.log("websocket closed, clean:", event.wasClean)
         return
     }
 
     private async handleMessageEvent(event: DiscordWebsocketMessageEvent) {
-        const [data, socket] = [event.data, event.target]
         let parsedData: GatewayReceivePayload
         try {
-            parsedData = JSON.parse(data.toString())
+            parsedData = JSON.parse(event.data.toString())
         } catch(e) {
             console.error("Error parsing websocket message: ", e)
             return
         }
         parsedData.s && (this.sequenceNumber = parsedData.s)
+        console.log("Received opcode:", GatewayOpcodes[parsedData.op])
         switch (parsedData.op) {
             case GatewayOpcodes.Hello: {
-                this.heartbeatInterval = parsedData.d.heartbeat_interval
-                setTimeout(this.sendHeartbeat, this.heartbeatInterval)
+                this.heartbeatIntervalDelay = parsedData.d.heartbeat_interval
+                const jitter = Math.random()
+                setTimeout(this.sendHeartbeat.bind(this), this.heartbeatIntervalDelay * jitter)
                 this.keepTheHeartBeating()
             }
-            case GatewayOpcodes.Heartbeat: {
-                this.sendPayload({
-                    op: GatewayOpcodes.Heartbeat,
-                    d: this.sequenceNumber
-                })
-            }
-            case GatewayOpcodes.HeartbeatAck: {
-                this.receivedHeartbeatAck = true
-            }
+            case GatewayOpcodes.Heartbeat: this.sendHeartbeat()
+            case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true
         }
     }
 
     private sendPayload(payload: GatewaySendPayload): void {
+        console.log("Sending payload:", payload)
         this.socket.send(JSON.stringify(payload))
         return
     }
 
     private keepTheHeartBeating() {
-        setInterval(() => {
-            if (!this.receivedHeartbeatAck) {
-                this.reconnect()
-                return
-            }
-            this.sendHeartbeat()
-        }, this.heartbeatInterval)
+        this.heartbeatInterval = setInterval(this.sendHeartbeatInterval.bind(this), this.heartbeatIntervalDelay)
+        return
+    }
+
+    private sendHeartbeatInterval() {
+        if (!this.receivedHeartbeatAck) {
+            this.reconnect()
+            return
+        }
+        this.sendHeartbeat()
         return
     }
 
     private sendHeartbeat() {
-        this.socket.send(JSON.stringify({
+        this.sendPayload({
             op: GatewayOpcodes.Heartbeat,
-            d: this.sequenceNumber
-        }))
+            d: this.sequenceNumber || null
+        })
         this.receivedHeartbeatAck = false
         return
     }
 
     private reconnect() {
         this.socket.close()
+        clearInterval(this.heartbeatInterval)
         this.openAndInit()
         return
     }
