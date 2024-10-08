@@ -1,9 +1,8 @@
-import { GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload } from "discord-api-types/v10"
-import DiscordWebsocketMessageEvent from "../types/discord/websocket/message-event"
+import { GatewayCloseCodes, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
-import DiscordConst from "../const/discord/discord"
 import DiscordConfig from "../config/env/discord.config"
+import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -38,33 +37,42 @@ export default class DiscordWebsocketConnection {
     }
 
     private async handleCloseEvent(event: WebSocketEventMap["close"]) {
-        console.log("websocket closed, clean:", event.wasClean)
+        console.log("websocket closed, clean:", event.wasClean, "; code was: ", GatewayCloseCodes[event.code])
+        this.stopTheHeart()
+        switch(event.code as GatewayCloseCodes) {
+            case GatewayCloseCodes.DisallowedIntents: throw new DiscordGatewayClosedError(event.code, "Some/all intents are disallowed by the server - consider checking if all of provided intents are enabled in bot settings")
+            case GatewayCloseCodes.InvalidAPIVersion: throw new DiscordGatewayClosedError(event.code, "Invalid API version")
+            case GatewayCloseCodes.InvalidIntents: console.log("invalid intents")
+        }
         return
     }
 
-    private async handleMessageEvent(event: DiscordWebsocketMessageEvent) {
-        let parsedData: GatewayReceivePayload
+    private async handleMessageEvent(event: WebSocketEventMap["message"]) {
+        let data: GatewayReceivePayload
         try {
-            parsedData = JSON.parse(event.data.toString())
+            data = JSON.parse(event.data.toString())
         } catch(e) {
-            console.error("Error parsing websocket message: ", e)
+            console.error("Error parsing websocket data: ", e)
             return
         }
-        parsedData.s && (this.sequenceNumber = parsedData.s)
-        console.log("Received opcode:", GatewayOpcodes[parsedData.op])
-        switch (parsedData.op) {
+        data.s && (this.sequenceNumber = data.s)
+        console.log("Received opcode:", GatewayOpcodes[data.op])
+        switch(data.op) {
             case GatewayOpcodes.Hello: {
-                this.heartbeatIntervalDelay = parsedData.d.heartbeat_interval
+                this.heartbeatIntervalDelay = data.d.heartbeat_interval
                 const jitter = Math.random()
-                setTimeout(this.sendHeartbeat.bind(this), this.heartbeatIntervalDelay * jitter)
-                this.keepTheHeartBeating()
-                this.identify()
+                setTimeout(() => {
+                    this.sendHeartbeat()
+                    this.keepTheHeartBeating()
+                    this.identify()
+                }, this.heartbeatIntervalDelay * jitter)
+                break
             }
-            case GatewayOpcodes.Heartbeat: this.sendHeartbeat()
-            case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true
-            case GatewayOpcodes.InvalidSession: parsedData.d ? this.resume() : this.reconnect()
-            case GatewayOpcodes.Reconnect: this.resume()
-            case GatewayOpcodes.Dispatch: this.handleDispatchedEvent(parsedData)
+            case GatewayOpcodes.Heartbeat: this.sendHeartbeat(); break
+            case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true; break
+            case GatewayOpcodes.InvalidSession: data.d ? this.resume() : this.reconnect(); break
+            case GatewayOpcodes.Reconnect: this.resume(); break
+            case GatewayOpcodes.Dispatch: this.handleDispatchedEvent(data); break
         }
     }
 
@@ -76,6 +84,11 @@ export default class DiscordWebsocketConnection {
 
     private keepTheHeartBeating() {
         this.heartbeatInterval = setInterval(this.sendHeartbeatInterval.bind(this), this.heartbeatIntervalDelay)
+        return
+    }
+
+    private stopTheHeart() {
+        clearInterval(this.heartbeatInterval)
         return
     }
 
@@ -99,13 +112,16 @@ export default class DiscordWebsocketConnection {
 
     private reconnect(url: string = this.wssUrl) {
         this.socket.close()
-        clearInterval(this.heartbeatInterval)
+        this.stopTheHeart()
         this.openAndInit(url)
         return
     }
 
     private resume() {
-        if (!this.resumeWssUrl) throw new Error("cant resume: no resume url")
+        if (!this.resumeWssUrl) {
+            this.reconnect()
+            return
+        }
         this.reconnect(this.resumeWssUrl)
         this.sendPayload({
             op: GatewayOpcodes.Resume,
