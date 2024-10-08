@@ -1,4 +1,4 @@
-import GithubConfig from "../config/env/github.config"
+import GithubConfig from "../../config/env/github.config"
 
 const GithubConst = {
     URL: {

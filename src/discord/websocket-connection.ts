@@ -1,6 +1,7 @@
 import { GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload } from "discord-api-types/v10"
 import DiscordWebsocketMessageEvent from "../types/discord/websocket/message-event"
 import { WebSocket, WebSocketEventMap } from "ws"
+import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -53,6 +54,7 @@ export default class DiscordWebsocketConnection {
                 const jitter = Math.random()
                 setTimeout(this.sendHeartbeat.bind(this), this.heartbeatIntervalDelay * jitter)
                 this.keepTheHeartBeating()
+                this.identify()
             }
             case GatewayOpcodes.Heartbeat: this.sendHeartbeat()
             case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true
@@ -60,7 +62,7 @@ export default class DiscordWebsocketConnection {
     }
 
     private sendPayload(payload: GatewaySendPayload): void {
-        console.log("Sending payload:", payload)
+        console.log("Sending opcode:", GatewayOpcodes[payload.op])
         this.socket.send(JSON.stringify(payload))
         return
     }
@@ -92,6 +94,11 @@ export default class DiscordWebsocketConnection {
         this.socket.close()
         clearInterval(this.heartbeatInterval)
         this.openAndInit()
+        return
+    }
+
+    private identify() {
+        this.sendPayload(DEFAULT_IDENTIFY_PAYLOAD)
         return
     }
 }

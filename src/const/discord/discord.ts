@@ -1,4 +1,4 @@
-import discordConfig from "../config/env/discord.config"
+import DiscordConfig from "../../config/env/discord.config"
 
 const DiscordConst = {
     URL: {
@@ -11,7 +11,7 @@ const DiscordConst = {
         }
     },
     AUTH_HEADERS: {
-        Authorization: `Bot ${discordConfig.DISCORD_TOKEN}`,
+        Authorization: `Bot ${DiscordConfig.DISCORD_TOKEN}`,
         'Content-Type': 'application/json; charset=UTF-8',
         'User-Agent': 'TaskTrackerDiscordBot (https://github.com/sergeykochiev/task-tracker, 1.0.0)'
     }

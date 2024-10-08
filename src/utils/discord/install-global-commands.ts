@@ -1,4 +1,4 @@
-import DiscordConst from "../../const/discord";
+import DiscordConst from "../../const/discord/discord";
 import DiscordRequest from "./discord-request";
 
 export default async function InstallGlobalCommands(appId: string, commands: Record<any, any>) {

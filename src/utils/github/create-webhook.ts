@@ -1,4 +1,4 @@
-import GithubConst from "../../const/github";
+import GithubConst from "../../const/github/github";
 import GithubHookCreateOptions from "../../types/github/webhook/create-options";
 import GithubRequest from "./github-request";
 
