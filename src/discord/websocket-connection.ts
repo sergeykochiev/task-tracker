@@ -1,8 +1,9 @@
-import { GatewayCloseCodes, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
 import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
+import sendFollowupMessage from "../utils/discord/send-followup-message"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -55,7 +56,6 @@ export default class DiscordWebsocketConnection {
             console.error("Error parsing websocket data: ", e)
             return
         }
-        data.s && (this.sequenceNumber = data.s)
         console.log("Received opcode:", GatewayOpcodes[data.op])
         switch(data.op) {
             case GatewayOpcodes.Hello: {
@@ -139,7 +139,28 @@ export default class DiscordWebsocketConnection {
         return
     }
 
-    private handleDispatchedEvent(payload: GatewayReceivePayload) {
-        return
+    private handleDispatchedEvent(payload: GatewayDispatchPayload) {
+        if (payload.s) this.sequenceNumber = payload.s
+        switch(payload.t) {
+            case GatewayDispatchEvents.Ready: {
+                this.sessionId = payload.d.session_id
+                this.resumeWssUrl = payload.d.resume_gateway_url
+                break
+            }
+            case GatewayDispatchEvents.InteractionCreate: {
+                if (payload.d.type === InteractionType.ApplicationCommand) this.handleCommands(payload.d)
+            }
+        }
+    }
+
+    private async handleCommands(data: APIApplicationCommandInteraction): Promise<void> {
+        switch(data.data.name) {
+            case "register": {
+                sendFollowupMessage(data.application_id, data.token, {
+                    content: `register command`,
+                })
+                return
+            }
+        }
     }
 }
