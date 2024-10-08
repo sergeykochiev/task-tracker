@@ -3,18 +3,16 @@ import DiscordWebsocketMessageEvent from "../types/discord/websocket/message-eve
 import { WebSocket, WebSocketEventMap } from "ws"
  
 export default class DiscordWebsocketConnection {
-    socket: WebSocket
-    heartbeatInterval: number
-    sequenceNumber: number
-    receivedHeartbeatAck: boolean = false
+    private socket: WebSocket
+    private heartbeatInterval: number
+    private sequenceNumber: number
+    private receivedHeartbeatAck: boolean = false
 
     constructor(
         private wssUrl: string
-    ) {
-        this.openAndInit()
-    }
+    ) {}
 
-    async openAndInit() {
+    public async openAndInit() {
         this.socket = new WebSocket(this.wssUrl)
         this.socket.onopen = this.handleOpenEvent
         this.socket.onerror = this.handleErrorEvent
