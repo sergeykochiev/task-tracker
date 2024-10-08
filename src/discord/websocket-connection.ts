@@ -2,6 +2,8 @@ import { GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload } from "disco
 import DiscordWebsocketMessageEvent from "../types/discord/websocket/message-event"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
+import DiscordConst from "../const/discord/discord"
+import DiscordConfig from "../config/env/discord.config"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -9,13 +11,15 @@ export default class DiscordWebsocketConnection {
     private heartbeatInterval: ReturnType<typeof setInterval>
     private sequenceNumber: number
     private receivedHeartbeatAck: boolean = false
+    private resumeWssUrl: string
+    private sessionId: string
 
     constructor(
         private wssUrl: string
     ) {}
 
-    public async openAndInit() {
-        this.socket = new WebSocket(this.wssUrl)
+    public async openAndInit(wssUrl: string = this.wssUrl) {
+        this.socket = new WebSocket(wssUrl)
         this.socket.onopen = (e) => this.handleOpenEvent(e)
         this.socket.onerror = (e) => this.handleErrorEvent(e)
         this.socket.onclose = (e) => this.handleCloseEvent(e)
@@ -58,6 +62,9 @@ export default class DiscordWebsocketConnection {
             }
             case GatewayOpcodes.Heartbeat: this.sendHeartbeat()
             case GatewayOpcodes.HeartbeatAck: this.receivedHeartbeatAck = true
+            case GatewayOpcodes.InvalidSession: parsedData.d ? this.resume() : this.reconnect()
+            case GatewayOpcodes.Reconnect: this.resume()
+            case GatewayOpcodes.Dispatch: this.handleDispatchedEvent(parsedData)
         }
     }
 
@@ -90,15 +97,33 @@ export default class DiscordWebsocketConnection {
         return
     }
 
-    private reconnect() {
+    private reconnect(url: string = this.wssUrl) {
         this.socket.close()
         clearInterval(this.heartbeatInterval)
-        this.openAndInit()
+        this.openAndInit(url)
+        return
+    }
+
+    private resume() {
+        if (!this.resumeWssUrl) throw new Error("cant resume: no resume url")
+        this.reconnect(this.resumeWssUrl)
+        this.sendPayload({
+            op: GatewayOpcodes.Resume,
+            d: {
+                session_id: this.sessionId,
+                seq: this.sequenceNumber,
+                token: DiscordConfig.DISCORD_TOKEN
+            }
+        })
         return
     }
 
     private identify() {
         this.sendPayload(DEFAULT_IDENTIFY_PAYLOAD)
+        return
+    }
+
+    private handleDispatchedEvent(payload: GatewayReceivePayload) {
         return
     }
 }
