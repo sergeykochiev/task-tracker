@@ -1,9 +1,10 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionResponseType, InteractionType } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
 import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
 import sendFollowupMessage from "../utils/discord/send-followup-message"
+import replyToInteraction from "../utils/discord/reply-to-interaction"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -156,8 +157,11 @@ export default class DiscordWebsocketConnection {
     private async handleCommands(data: APIApplicationCommandInteraction): Promise<void> {
         switch(data.data.name) {
             case "register": {
-                sendFollowupMessage(data.application_id, data.token, {
-                    content: `register command`,
+                replyToInteraction(data.id, data.token, {
+                    type: InteractionResponseType.ChannelMessageWithSource,
+                    data: {
+                        content: "register command"
+                    }
                 })
                 return
             }
