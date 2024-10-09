@@ -1,6 +1,6 @@
 import express from 'express';
-import handleGithubHookCall from './handle-hook-call';
-import GithubWebhookRequest from '../../types/github/webhook/request';
+import handleGithubHookCall from './handle-webhook-call';
+import GithubWebhookRequest from '../../types/github/webhook/webhook-request';
 
 export default function initGithubHookApi() {
     const app = express()
