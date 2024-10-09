@@ -1,4 +1,4 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
@@ -14,6 +14,11 @@ export default class DiscordWebsocketConnection {
     private sessionId: string
     public onCommand: (data: APIApplicationCommandInteraction) => Promise<void> | void
     public onReady: (data: GatewayReadyDispatchData) => Promise<void> | void
+    public onMessageCreate: (data: GatewayMessageCreateDispatchData) => Promise<void> | void
+    public onMessageDelete: (data: GatewayMessageDeleteDispatchData) => Promise<void> | void
+    public onMessageDeleteBulk: (data: GatewayMessageDeleteBulkDispatchData) => Promise<void> | void
+    public onMessageUpdate: (data: GatewayMessageUpdateDispatchData) => Promise<void> | void
+    public onChannelPinsUpdate: (data: GatewayChannelPinsUpdateDispatchData) => Promise<void> | void
 
     constructor(
         private wssUrl: string
@@ -173,6 +178,11 @@ export default class DiscordWebsocketConnection {
         switch(payload.t) {
             case GatewayDispatchEvents.Ready: this.handleReady(payload.d); break
             case GatewayDispatchEvents.InteractionCreate: this.handleInteraction(payload.d); break
+            case GatewayDispatchEvents.MessageCreate: this.onMessageCreate && this.onMessageCreate(payload.d); break
+            case GatewayDispatchEvents.MessageDelete: this.onMessageDelete && this.onMessageDelete(payload.d); break
+            case GatewayDispatchEvents.MessageDeleteBulk: this.onMessageDeleteBulk && this.onMessageDeleteBulk(payload.d); break
+            case GatewayDispatchEvents.MessageUpdate: this.onMessageUpdate && this.onMessageUpdate(payload.d); break
+            case GatewayDispatchEvents.ChannelPinsUpdate: this.onChannelPinsUpdate && this.onChannelPinsUpdate(payload.d); break
         }
         return
     }
@@ -190,3 +200,5 @@ export default class DiscordWebsocketConnection {
         }
     }
 }
+
+//Application Command Permissions Update
