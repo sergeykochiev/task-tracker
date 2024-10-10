@@ -161,7 +161,7 @@ export default class DiscordWebsocketConnection {
             d: {
                 session_id: this.sessionId,
                 seq: this.sequenceNumber,
-                token: DiscordConfig.DISCORD_TOKEN
+                token: DiscordConfig.TOKEN
             }
         })
         return
