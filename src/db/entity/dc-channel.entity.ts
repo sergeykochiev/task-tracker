@@ -4,8 +4,8 @@ import DiscordGuildEntity from "./dc-guild.entity";
 @Entity()
 export default class DiscordChannelEntity {
     @PrimaryColumn()
-    channel_id: number
+    dc_channel_id: number
 
     @ManyToOne(() => DiscordGuildEntity)
-    guild_id: DiscordGuildEntity
+    dc_guild: DiscordGuildEntity
 }

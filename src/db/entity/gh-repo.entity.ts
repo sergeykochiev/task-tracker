@@ -6,10 +6,13 @@ export default class GithubRepoEntity {
     repo_id: number
 
     @Column()
-    hook_id: number
+    gh_hook_id: number
     
     @Column()
-    token_enc: string
+    ds_token_enc: string
+
+    @Column()
+    gh_hook_secret_enc: string
 
     @Column()
     slug: string
