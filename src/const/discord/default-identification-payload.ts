@@ -7,7 +7,7 @@ import INITIAL_PRESENCE_UPDATE_PAYLOAD from "./initial-presence-update-payload"
 const DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
     op: GatewayOpcodes.Identify,
     d: {
-        token: DiscordConfig.DISCORD_TOKEN,
+        token: DiscordConfig.TOKEN,
         properties: {
             os: os.platform(),
             browser: DiscordConst.AUTH_HEADERS["User-Agent"],

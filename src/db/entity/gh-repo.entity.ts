@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import TrackerEntity from "./tracker.entity";
 
 @Entity()
 export default class GithubRepoEntity {
     @PrimaryColumn()
-    repo_id: number
+    gh_repo_id: number
 
     @Column()
     gh_hook_id: number

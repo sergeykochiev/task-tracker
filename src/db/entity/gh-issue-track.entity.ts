@@ -8,7 +8,7 @@ export default class GithubIssueTrackEntity {
     gh_issue_id: number
 
     @Column()
-    dc_original_message_id: number
+    dc_original_message_id: string
 
     @ManyToOne(() => GithubRepoEntity)
     @JoinColumn()

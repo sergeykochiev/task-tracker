@@ -66,7 +66,7 @@ export default class DiscordWebsocketConnection {
         switch(data.op) {
             case GatewayOpcodes.Hello: this.handleHello(data.d); break
             case GatewayOpcodes.Heartbeat: this.handleHeartbeat(data.d); break
-            case GatewayOpcodes.HeartbeatAck: this.handleHeartbeatAck; break
+            case GatewayOpcodes.HeartbeatAck: this.handleHeartbeatAck(); break
             case GatewayOpcodes.InvalidSession: this.handleInvalidSession(data.d); break
             case GatewayOpcodes.Reconnect: this.handleReconnect(); break
             case GatewayOpcodes.Dispatch: this.handleDispatched(data); break
@@ -116,17 +116,21 @@ export default class DiscordWebsocketConnection {
     }
 
     private keepTheHeartBeating() {
+        console.log("Starting the heartbeat interval...")
         this.heartbeatInterval = setInterval(this.sendHeartbeatInterval.bind(this), this.heartbeatIntervalDelay)
+        console.log("Heartbeating every", this.heartbeatIntervalDelay / 1000, "seconds")
         return
     }
 
     private stopTheHeart() {
+        console.log("Stopping the heartbeat interval...")
         clearInterval(this.heartbeatInterval)
         return
     }
 
     private sendHeartbeatInterval() {
         if (!this.receivedHeartbeatAck) {
+            console.log("Last heartbeat was not acknoledged, reconnecting...")
             this.reconnect()
             return
         }
@@ -190,7 +194,7 @@ export default class DiscordWebsocketConnection {
     private handleReady(data: GatewayReadyDispatchData) {
         this.sessionId = data.session_id
         this.resumeWssUrl = data.resume_gateway_url
-        this.onReady && this.onReady(data)
+        // this.onReady && this.onReady(data)
         return
     }
 

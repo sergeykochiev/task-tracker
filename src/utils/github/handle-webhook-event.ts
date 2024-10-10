@@ -11,6 +11,7 @@ import handlePullRequestReviewComment from "./event-handlers/handle-pull-request
 import handlePullRequestReviewThread from "./event-handlers/handle-pull-request-review-thread";
 
 export default function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
+    console.log("Received github webhook event:", args.eventType)
     switch(args.eventType) {
         case GithubEventType.Issues: handleIssues(args.data); break
         case GithubEventType.IssueComment: handleIssueComment(args.data); break
