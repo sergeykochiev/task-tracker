@@ -17,8 +17,8 @@ function hexToBytes(hex: string) {
 
 const encoder = new TextEncoder()
 
-export default async function validateWebhookSignature(body: string, signature: string): Promise<boolean> {
-    const secretBytes = encoder.encode(GithubConfig.WEBHOOK_SECRET)
+export default async function validateWebhookSignature(body: string, signature: string, secret: string = GithubConfig.WEBHOOK_SECRET): Promise<boolean> {
+    const secretBytes = encoder.encode(secret)
     const bodyBytes = encoder.encode(body)
     const signatureBytes = hexToBytes(signature)
     const cryptoAlgorithm = {
