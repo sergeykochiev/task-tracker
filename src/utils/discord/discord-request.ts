@@ -1,6 +1,6 @@
 import DiscordConst from "../../const/discord/discord";
 import requestFactory from "../request-factory";
 
-const DiscordRequest = requestFactory(DiscordConst)
+const discordMakeRequest = requestFactory(DiscordConst)
 
-export default DiscordRequest
+export default discordMakeRequest

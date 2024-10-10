@@ -1,7 +1,7 @@
 import DiscordConst from "../../const/discord/discord"
 import DiscordRequest from "./discord-request"
 
-export default async function getDiscordWebSocketUrl() {
+export default async function discordGetWebSocketUrl() {
     const getawayEndpointRes = await DiscordRequest(DiscordConst.URL.ENDPOINTS.GETAWAY, {
         method: "GET"
     })

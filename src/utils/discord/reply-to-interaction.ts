@@ -2,7 +2,7 @@ import { APIInteractionResponse, APIModalInteractionResponse } from 'discord-api
 import DiscordRequest from './discord-request';
 import DiscordConst from '../../const/discord/discord';
 
-export default async function replyToInteraction(interactionId: string, interactionToken: string, response: APIInteractionResponse): Promise<void> {
+export default async function discordReplyToInteraction(interactionId: string, interactionToken: string, response: APIInteractionResponse): Promise<void> {
     const endpoint = DiscordConst.URL.ENDPOINTS.INTERACTION_RESPONSE(interactionId, interactionToken);
     try {
         await DiscordRequest(endpoint, { method: 'POST', body: response });
