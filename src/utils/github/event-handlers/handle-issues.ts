@@ -1,5 +1,5 @@
-import GithubIssueWebhookEventPayload from "../../../types/github/webhook/payload/event/issues.event";
+import { IssuesEvent } from "@octokit/webhooks-types";
 
-export default async function handleIssues(data: GithubIssueWebhookEventPayload) {
+export default async function handleIssues(data: IssuesEvent) {
     return
 }

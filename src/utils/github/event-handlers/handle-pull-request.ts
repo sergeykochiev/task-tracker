@@ -1,5 +1,5 @@
-import GithubPullRequestWebhookEventPayload from "../../../types/github/webhook/payload/event/pull-request.event";
+import { PullRequestEvent } from "@octokit/webhooks-types";
 
-export default async function handlePullRequest(data: GithubPullRequestWebhookEventPayload) {
+export default async function handlePullRequest(data: PullRequestEvent) {
     return
 }

@@ -1,5 +1,5 @@
-import GithubPingWebhookEventPayload from "../../../types/github/webhook/payload/event/ping.event";
+import { PingEvent } from "@octokit/webhooks-types";
 
-export default async function handlePing(data: GithubPingWebhookEventPayload) {
+export default async function handlePing(data: PingEvent) {
     return
 }

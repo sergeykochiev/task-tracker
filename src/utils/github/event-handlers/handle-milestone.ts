@@ -1,5 +1,5 @@
-import GithubMilestoneWebhookEventPayload from "../../../types/github/webhook/payload/event/milestone.event";
+import { MilestoneEvent } from "@octokit/webhooks-types";
 
-export default async function handleMilestone(data: GithubMilestoneWebhookEventPayload) {
+export default async function handleMilestone(data: MilestoneEvent) {
     return
 }

@@ -1,5 +1,5 @@
-import GithubPullRequestReviewCommentWebhookEventPayload from "../../../types/github/webhook/payload/event/pull-request-review-comment.event";
+import { PullRequestReviewCommentEvent } from "@octokit/webhooks-types";
 
-export default async function handlePullRequestReviewComment(data: GithubPullRequestReviewCommentWebhookEventPayload) {
+export default async function handlePullRequestReviewComment(data: PullRequestReviewCommentEvent) {
     return
 }

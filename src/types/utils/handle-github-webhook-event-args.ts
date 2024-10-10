@@ -1,11 +1,11 @@
 import GithubEventType from "../../enum/github/event-type"
-import GithubWebhookEventPayloadMap from "../github/webhook/payload/payload-map"
+import { WebhookEventMap } from "@octokit/webhooks-types"
 
 type GithubWebhookEventHandlerArgsMap = {
-    [ET in GithubEventType]: {
+    [ET in GithubEventType]: ET extends keyof WebhookEventMap ? {
         eventType: ET,
-        data: GithubWebhookEventPayloadMap[ET]
-    }   
+        data: WebhookEventMap[ET]
+    } : object
 }
 
 type GithubWebhookEventHandlerArgs = GithubWebhookEventHandlerArgsMap[keyof GithubWebhookEventHandlerArgsMap]
