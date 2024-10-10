@@ -34,7 +34,7 @@ export default async function githubValidateWebhookSignature(body: string, signa
         false,
         ["sign", "verify"]
     )
-    return crypto.subtle.verify(
+    return await crypto.subtle.verify(
         cryptoAlgorithm.name,
         cryptoKey,
         signatureBytes,

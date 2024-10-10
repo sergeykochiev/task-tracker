@@ -1,16 +1,23 @@
-import { Response } from "express";
-import GithubWebhookRequest from "../../types/github/webhook/webhook-request";
+import { Request, Response } from "express";
 import handleGithubWebhookEvent from "./handle-webhook-event";
 import GithubWebhookEventHandlerArgs from "../../types/utils/handle-github-webhook-event-args";
 import validateWebhookSignature from "./validate-webhook-call";
 
-export default async function githubHandleWebhookCall(req: GithubWebhookRequest, res: Response) {
-    const signature = req.headers["X-Hub-Signature-256"].split("=")[1]
-    const valid = await validateWebhookSignature(req.body, signature)
-    if (!valid) res.status(401).send("Unauthorized")
+export default async function githubHandleWebhookCall(req: Request, res: Response) {
+    console.log("Received github webhook call")
+    const signature = (req.headers["x-hub-signature-256"] as string).split("=")[1]
+    console.log(signature)
+    const valid = await validateWebhookSignature(JSON.stringify(req.body), signature)
+    if (!valid) {
+        res.status(401).send("Unauthorized")
+        console.log("Github webhook call unauthorized, returning...")
+        return
+    }
+    console.log("Github webhook call authorized, proceeding...")
+    res.status(202).send("Accepted")
     handleGithubWebhookEvent({
-        eventType: req.headers["X-GitHub-Event"],
-        data: JSON.parse(req.body)
+        eventType: req.headers["x-github-event"],
+        data: req.body
     } as GithubWebhookEventHandlerArgs)
     return
 }

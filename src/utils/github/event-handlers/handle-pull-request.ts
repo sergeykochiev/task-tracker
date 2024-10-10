@@ -1,6 +1,6 @@
 import { PullRequestEvent } from "@octokit/webhooks-types";
 
-export default async function handlePullRequest(data: PullRequestEvent) {
+export default async function githubHandlePullRequestEvent(data: PullRequestEvent) {
     switch(data.action) {
         case "assigned": break
         case "auto_merge_disabled": break
