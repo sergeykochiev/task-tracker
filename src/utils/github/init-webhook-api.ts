@@ -5,7 +5,7 @@ import GithubWebhookRequest from '../../types/github/webhook/webhook-request';
 export default function initGithubHookApi() {
     const app = express()
     const githubWebhookRouter = express.Router()
-    githubWebhookRouter.post("", express.json(), (req, res) => handleGithubHookCall(req as GithubWebhookRequest, res))
+    githubWebhookRouter.post("", (req, res) => handleGithubHookCall(req as GithubWebhookRequest, res))
     app.use('/github', githubWebhookRouter)
     return app
 }
