@@ -1,6 +1,6 @@
 import { LabelEvent } from "@octokit/webhooks-types";
 
-export default async function handlelabel(data: LabelEvent) {
+export default async function githubHandleLabelEvent(data: LabelEvent) {
     switch(data.action) {
         case "created": break
         case "deleted": break

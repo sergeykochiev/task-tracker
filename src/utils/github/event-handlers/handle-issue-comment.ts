@@ -1,5 +1,5 @@
 import { IssueCommentEvent } from "@octokit/webhooks-types";
 
-export default async function handleIssueComment(data: IssueCommentEvent) {
+export default async function githubHandleIssueCommentEvent(data: IssueCommentEvent) {
     return
 }
