@@ -1,26 +1,11 @@
 import replyToInteraction from "../reply-to-interaction"
 import { APIApplicationCommandInteraction, InteractionResponseType } from "discord-api-types/v10"
+import discordHandleRegisterCommand from "./commands/handle-configure"
 
 export default async function discordHandleCommands(data: APIApplicationCommandInteraction): Promise<void> {
     switch(data.data.name) {
-        case "register": {
-            replyToInteraction(data.id, data.token, {
-                type: InteractionResponseType.ChannelMessageWithSource,
-                data: {
-                    content: "register command"
-                }
-            })
-            break
-        }
-        case "configure": {
-            replyToInteraction(data.id, data.token, {
-                type: InteractionResponseType.ChannelMessageWithSource,
-                data: {
-                    content: "configure command"
-                }
-            })
-            break
-        }
+        case "register": discordHandleRegisterCommand(data)
+        case "configure": 
     }
     return
 }
