@@ -10,7 +10,7 @@ import handlePullRequestReview from "./event-handlers/handle-pull-request-review
 import handlePullRequestReviewComment from "./event-handlers/handle-pull-request-review-comment";
 import handlePullRequestReviewThread from "./event-handlers/handle-pull-request-review-thread";
 
-export default function handleGithubWebhookEvent(args: GithubWebhookEventHandlerArgs) {
+export default function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
     switch(args.eventType) {
         case GithubEventType.Issues: handleIssues(args.data); break
         case GithubEventType.IssueComment: handleIssueComment(args.data); break

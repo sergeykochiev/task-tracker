@@ -1,6 +1,6 @@
-import runDiscordWebSocket from "../src/utils/discord/run-websocket"
-import runGithubHookApi from "../src/utils/github/run-webhook-api"
 import "reflect-metadata"
+import discordRunWebSocket from "../src/utils/discord/run-websocket"
+import githubRunWebhookApi from "../src/utils/github/run-webhook-api"
 
-runDiscordWebSocket()
-module.exports = runGithubHookApi()
+discordRunWebSocket()
+module.exports = githubRunWebhookApi()
