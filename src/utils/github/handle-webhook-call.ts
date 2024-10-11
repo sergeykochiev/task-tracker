@@ -6,7 +6,6 @@ import validateWebhookSignature from "./validate-webhook-call";
 export default async function githubHandleWebhookCall(req: Request, res: Response) {
     console.log("Received github webhook call")
     const signature = (req.headers["x-hub-signature-256"] as string).split("=")[1]
-    console.log(signature)
     const valid = await validateWebhookSignature(JSON.stringify(req.body), signature)
     if (!valid) {
         res.status(401).send("Unauthorized")
@@ -17,7 +16,7 @@ export default async function githubHandleWebhookCall(req: Request, res: Respons
     res.status(202).send("Accepted")
     handleGithubWebhookEvent({
         eventType: req.headers["x-github-event"],
-        data: req.body
+        data: req.body,
     } as GithubWebhookEventHandlerArgs)
     return
 }
