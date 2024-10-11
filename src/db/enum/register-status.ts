@@ -1,6 +1,6 @@
 enum RegisterStatus {
-    Pending,
-    Registered,
-    Invalid
+    Failed,
+    PendingToken,
+    Registered
 }
 export default RegisterStatus
