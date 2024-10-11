@@ -1,8 +1,8 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIMessageComponentInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData, APIModalSubmitInteraction, ComponentType, APIMessageComponentButtonInteraction } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
-import DiscordGatewayClosedError from "../error/discord/gateway-closed-error"
+import DiscordGatewayClosedError from "../error/discord/gateway-closed.error"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -19,6 +19,9 @@ export default class DiscordWebsocketConnection {
     public onMessageDeleteBulk: (data: GatewayMessageDeleteBulkDispatchData) => Promise<void> | void
     public onMessageUpdate: (data: GatewayMessageUpdateDispatchData) => Promise<void> | void
     public onChannelPinsUpdate: (data: GatewayChannelPinsUpdateDispatchData) => Promise<void> | void
+    public onMessageComponent: (data: APIMessageComponentInteraction) => Promise<void> | void
+    public onModalSubmit: (data: APIModalSubmitInteraction) => Promise<void> | void
+    public onButtonComponent: (data: APIMessageComponentButtonInteraction) => Promise<void> | void
 
     constructor(
         private wssUrl: string
@@ -181,7 +184,7 @@ export default class DiscordWebsocketConnection {
         console.log("Received dispatch event:", payload.t)
         switch(payload.t) {
             case GatewayDispatchEvents.Ready: this.handleReady(payload.d); break
-            case GatewayDispatchEvents.InteractionCreate: this.handleInteraction(payload.d); break
+            case GatewayDispatchEvents.InteractionCreate: this.handleInteractionCreate(payload.d); break
             case GatewayDispatchEvents.MessageCreate: this.onMessageCreate && this.onMessageCreate(payload.d); break
             case GatewayDispatchEvents.MessageDelete: this.onMessageDelete && this.onMessageDelete(payload.d); break
             case GatewayDispatchEvents.MessageDeleteBulk: this.onMessageDeleteBulk && this.onMessageDeleteBulk(payload.d); break
@@ -194,14 +197,26 @@ export default class DiscordWebsocketConnection {
     private handleReady(data: GatewayReadyDispatchData) {
         this.sessionId = data.session_id
         this.resumeWssUrl = data.resume_gateway_url
-        // this.onReady && this.onReady(data)
+        this.onReady && this.onReady(data)
         return
     }
 
-    private handleInteraction(data: GatewayInteractionCreateDispatchData) {
+    private handleInteractionCreate(data: GatewayInteractionCreateDispatchData) {
         switch(data.type) {
-            case InteractionType.ApplicationCommand: this.onCommand && this.onCommand(data)
+            case InteractionType.ApplicationCommand: this.onCommand && this.onCommand(data); break
+            case InteractionType.MessageComponent: {
+                if (this.onMessageComponent) {
+                    this.onMessageComponent(data)
+                    break
+                }
+                switch(data.data.component_type) {
+                    case ComponentType.Button: this.onButtonComponent && this.onButtonComponent(data as APIMessageComponentButtonInteraction); break
+                }
+                break
+            }
+            case InteractionType.ModalSubmit: this.onModalSubmit && this.onModalSubmit(data); break
         }
+        return
     }
 }
 
