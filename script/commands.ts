@@ -1,24 +1,5 @@
-import 'dotenv/config';
-import envconfig from '../src/config/env/discord.config.js';
-import InstallGlobalCommands from '../src/utils/discord/install-global-commands.js';
-import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType } from "discord-api-types/v10"
+import DiscordConfig from "../src/config/env/discord.config";
+import ALL_COMMANDS from "../src/const/discord/global-commands";
+import discordInstallGlobalCommands from "../src/utils/discord/helpers/install-global-commands";
 
-const REGISTER_COMMAND = {
-    name: 'register',
-    description: 'Registers a chat as a task supplier',
-    type: ApplicationCommandType.ChatInput,
-    integration_types: [ApplicationIntegrationType.GuildInstall],
-    contexts: [InteractionContextType.Guild],
-} as const
-
-const CONFIGURE_COMMAND = {
-    name: 'configure',
-    description: 'Configures roles and users that are able to register chats',
-    type: ApplicationCommandType.ChatInput,
-    integration_types: [ApplicationIntegrationType.GuildInstall],
-    contexts: [InteractionContextType.Guild],
-} as const
-
-const ALL_COMMANDS = [REGISTER_COMMAND, CONFIGURE_COMMAND] as const;
-
-InstallGlobalCommands(envconfig.APP_ID, ALL_COMMANDS);
+discordInstallGlobalCommands(DiscordConfig.APP_ID, ALL_COMMANDS)
