@@ -4,9 +4,9 @@ import RegistrationFailedError from "../../../../../error/app/registration-faile
 import dbGetTrackerByRegistrarId from "../../../../db/get-trackers-by-registrar-id"
 import RegisterStatus from "../../../../../db/enum/register-status"
 import discordHandleRegistrationAddToken from "../../../handle-registration-add-token"
-import discordSendTextMessage from "../../../helpers/send-plain-text-as-message"
-import discordSendFollowupTextMessage from "../../../helpers/send-plain-text-as-followup-message"
-import discordReplyToInteractionWithText from "../../../helpers/send-plain-text-as-interaction-reply"
+import discordSendTextMessage from "../../../api/send-plain-text-as-message"
+import discordSendFollowupTextMessage from "../../../api/send-plain-text-as-followup-message"
+import discordReplyToInteractionWithText from "../../../api/send-plain-text-as-interaction-reply"
 
 export default async function handleRepositoryTokenSubmit(data: APIModalSubmitInteraction) {
     const targetTracker = await dbGetTrackerByRegistrarId(data.member!.user.id)

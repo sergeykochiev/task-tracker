@@ -7,7 +7,7 @@ import githubCreateWebhook from "../github/api/create-webhook"
 import RegistrationFailedError from "../../error/app/registration-failed.error"
 import dbUpdateRepositoryCredentials from "../db/update-repository-credentials"
 import ApiRequestError from "../../error/app/request.error"
-import discordReplyToInteractionWithText from "./helpers/send-plain-text-as-interaction-reply"
+import discordReplyToInteractionWithText from "./api/send-plain-text-as-interaction-reply"
 import DatabaseError from "../../error/db/database.error"
 
 export default async function discordHandleRegistrationAddToken(data: APIModalSubmitInteraction, tracker: TrackerEntity) {

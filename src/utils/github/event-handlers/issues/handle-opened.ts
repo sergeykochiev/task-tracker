@@ -1,7 +1,7 @@
 import { IssuesOpenedEvent } from "@octokit/webhooks-types";
 import AppDataSource from "../../../../db/data-source";
 import GithubIssueTrackEntity from "../../../../db/entity/issue-track.entity";
-import discordSendMessageToChannel from "../../../discord/helpers/send-message";
+import discordSendMessageToChannel from "../../../discord/api/send-message";
 import TrackerEntity from "../../../../db/entity/tracker.entity";
 import { APIMessage } from "discord-api-types/v10"
 

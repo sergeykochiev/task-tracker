@@ -3,7 +3,7 @@ import DiscordGuildEntity from "../../../../../db/entity/guild.entity"
 import ConfigureStatus from "../../../../../db/enum/configure-status"
 import RegisterStatus from "../../../../../db/enum/register-status"
 import DatabaseError from "../../../../../error/db/database.error"
-import discordReplyToInteraction from "../../../helpers/reply-to-interaction"
+import discordReplyToInteraction from "../../../api/reply-to-interaction"
 import { APIApplicationCommandInteraction, InteractionResponseType } from "discord-api-types/v10"
 
 export default async function discordHandleConfigureCommand(data: APIApplicationCommandInteraction) {

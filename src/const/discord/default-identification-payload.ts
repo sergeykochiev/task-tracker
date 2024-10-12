@@ -4,7 +4,7 @@ import os from "node:os"
 import DiscordConst from "./discord"
 import INITIAL_PRESENCE_UPDATE_PAYLOAD from "./initial-presence-update-payload"
 
-const DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
+const DISCORD_DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
     op: GatewayOpcodes.Identify,
     d: {
         token: DiscordConfig.TOKEN,
@@ -14,8 +14,8 @@ const DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
             device: DiscordConst.AUTH_HEADERS["User-Agent"]
         },
         presence: INITIAL_PRESENCE_UPDATE_PAYLOAD,
-        intents: GatewayIntentBits.GuildMessages + GatewayIntentBits.DirectMessages + GatewayIntentBits.MessageContent
+        intents: GatewayIntentBits.GuildMessages + GatewayIntentBits.DirectMessages
     }
 } as const
 
-export default DEFAULT_IDENTIFY_PAYLOAD
+export default DISCORD_DEFAULT_IDENTIFY_PAYLOAD

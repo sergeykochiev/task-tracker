@@ -8,7 +8,8 @@ const DiscordConst = {
             MESSAGES: (channelId: string | number) => `channels/${channelId}/messages`,
             FOLLOWUP_MESSAGE: (appId: string, interactionToken: string) => `/webhooks/${appId}/${interactionToken}`,
             GETAWAY: "gateway",
-            INTERACTION_RESPONSE: (interactionId: string, interactionToken: string) => `/interactions/${interactionId}/${interactionToken}/callback`
+            INTERACTION_RESPONSE: (interactionId: string, interactionToken: string) => `/interactions/${interactionId}/${interactionToken}/callback`,
+            CREATE_DM: "/users/@me/channels"
         }
     },
     AUTH_HEADERS: {

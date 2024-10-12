@@ -1,10 +1,10 @@
 import { APIApplicationCommandInteraction, ButtonStyle, ComponentType, InteractionContextType, InteractionResponseType } from "discord-api-types/v10"
-import discordReplyToInteractionWithText from "../../../helpers/send-plain-text-as-interaction-reply"
+import discordReplyToInteractionWithText from "../../../api/send-plain-text-as-interaction-reply"
 import RegisterStatus from "../../../../../db/enum/register-status"
 import dbGetGuildById from "../../../../db/get-guild-by-id"
 import DiscordRegisterCommandInteraction from "../../../../../types/discord/register-command-interaction"
 import dbSaveTracker from "../../../../db/save-tracker"
-import discordReplyToInteraction from "../../../helpers/reply-to-interaction"
+import discordReplyToInteraction from "../../../api/reply-to-interaction"
 import dbSaveRepositoryWithoutCredentials from "../../../../db/save-repository-without-credentials"
 
 export default async function discordHandleRegisterCommand(data: APIApplicationCommandInteraction) {
@@ -68,7 +68,7 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
     // await discordReplyToInteractionWithText(data.id, data.token, "Registration initiated! Check your DMs for further instructions.")
     // const dm = await discordCreateDMChannel(targetUserId)
     await discordReplyToInteraction(data.id, data.token, {
-        type: InteractionResponseType.ChannelMessageWithSource,
+        type: InteractionResponseType.UpdateMessage,
         data: {
             content: "In order for the bot to track things that happen in your repository you need to create and provide a fine-granted access token with following permissions: \n\n- Webhooks (Read and Write)\n\nMake sure to select your repository in \"Repository access\" section beforehand. While we encrypt your tokens before saving them, it's recommended to select only those permissions and only one repository that you want to track events from in order to maintain security.",
             components: [
