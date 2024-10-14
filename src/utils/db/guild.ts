@@ -2,13 +2,11 @@ import AppDataSource from "../../db/data-source";
 import GuildEntity from "../../db/entity/guild.entity";
 import DatabaseError from "../../error/db/database.error";
 
-export default async function dbGetGuildById(guildId: string): Promise<GuildEntity | null> {
+export async function dbGetGuildById(guildId: GuildEntity["id"]): Promise<GuildEntity | null> {
     const guildRepository = AppDataSource.getRepository(GuildEntity)
     try {
-        return await guildRepository.findOne({
-            where: {
-                id: guildId
-            }
+        return await guildRepository.findOneBy({
+            id: guildId
         })
     } catch(e) {
         throw new DatabaseError(e as string)

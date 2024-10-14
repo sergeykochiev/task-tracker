@@ -1,6 +1,6 @@
 import GithubWebhookCreateOptions from "./options"
 
-interface GithubWebhookCreateResponseData extends GithubWebhookCreateOptions {
+interface GithubApiWebhookCreateResponseData extends GithubWebhookCreateOptions {
     type: string,
     id: number,
     updated_at: string,
@@ -16,4 +16,4 @@ interface GithubWebhookCreateResponseData extends GithubWebhookCreateOptions {
     }
 }
 
-export default GithubWebhookCreateResponseData
+export default GithubApiWebhookCreateResponseData

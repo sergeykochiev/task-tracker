@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Unique } from "t
 @Entity()
 @Unique(["owner", "name"])
 export default class RepositoryEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryColumn()
+    id: string
 
     @Column()
     owner: string
@@ -13,13 +13,13 @@ export default class RepositoryEntity {
     name: string
 
     @Column({ default: null })
-    webhook_id?: number
+    webhook_id: number
 
     @Column({ default: null })
-    webhook_secret?: string
+    webhook_secret: string
 
     @Column({ default: null })
-    github_token?: string
+    github_token: string
 
     @Column()
     slug: string

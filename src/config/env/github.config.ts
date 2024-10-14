@@ -1,14 +1,18 @@
 import "dotenv/config"
 
-const { GITHUB_ACCESS_TOKEN, GITHUB_WEBHOOK_KEY } = process.env
+const { GITHUB_WEBHOOK_KEY, GITHUB_APP_PRIVATE_KEY, GITHUB_APP_ID, GITHUB_APP_CLIENT_ID } = process.env
 
-if (!GITHUB_ACCESS_TOKEN || !GITHUB_WEBHOOK_KEY) {
+if (!GITHUB_WEBHOOK_KEY || !GITHUB_APP_PRIVATE_KEY || !GITHUB_APP_ID || !GITHUB_APP_CLIENT_ID) {
     throw new Error("Not enough env data: github")
 }
 
 const GithubConfig = {
-    ACCESS_TOKEN: GITHUB_ACCESS_TOKEN,
-    WEBHOOK_SECRET: GITHUB_WEBHOOK_KEY
+    WEBHOOK_SECRET: GITHUB_WEBHOOK_KEY,
+    APP: {
+        PRIVATE_KEY: GITHUB_APP_PRIVATE_KEY,
+        ID: GITHUB_APP_ID,
+        CLIENT_ID: GITHUB_APP_CLIENT_ID
+    }
 } as const
 
 export default GithubConfig

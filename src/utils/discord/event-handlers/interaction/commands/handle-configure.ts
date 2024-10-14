@@ -1,15 +1,19 @@
 import AppDataSource from "../../../../../db/data-source"
 import DiscordGuildEntity from "../../../../../db/entity/guild.entity"
 import ConfigureStatus from "../../../../../db/enum/configure-status"
-import RegisterStatus from "../../../../../db/enum/register-status"
 import DatabaseError from "../../../../../error/db/database.error"
 import discordReplyToInteraction from "../../../api/reply-to-interaction"
 import { APIApplicationCommandInteraction, InteractionResponseType } from "discord-api-types/v10"
+import discordReplyToInteractionWithText from "../../../api/send-plain-text-as-interaction-reply"
+import { dbGetGuildById } from "../../../../db/guild"
 
 export default async function discordHandleConfigureCommand(data: APIApplicationCommandInteraction) {
-    const guildRepository = AppDataSource.getRepository(DiscordGuildEntity)
-    console.log("Guild id", data.guild_id)
     if (!data.guild_id) return
+    const perhapsThereIsGuild = await dbGetGuildById(data.guild_id)
+    if(perhapsThereIsGuild && (perhapsThereIsGuild.configure_status in [ConfigureStatus.Configured, ConfigureStatus.Default])) {
+        await discordReplyToInteractionWithText(data.id, data.token, "Server already configured, there's no need for such trouble now")
+    }
+    const guildRepository = AppDataSource.getRepository(DiscordGuildEntity)
     try { 
         await guildRepository.save({
             id: data.guild_id,

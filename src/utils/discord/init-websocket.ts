@@ -4,7 +4,7 @@ import discordHandleCommands from "./event-handlers/interaction/handle-applicati
 import discordHandleModalSubmit from "./event-handlers/interaction/handle-modal-submit"
 import discordHandleButtonComponent from "./event-handlers/interaction/message-component/handle-button"
 
-export default async function discordOpenAndInitWebSocket() {
+export default async function discordInitWebsocket() {
     const wssUrl = await getDiscordWebSocketUrl()
     const discordWebsocketConnection = new DiscordWebsocketConnection(wssUrl)
     discordWebsocketConnection.onCommand = discordHandleCommands

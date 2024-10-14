@@ -1,11 +1,12 @@
-import GithubConst from "../../const/github/github";
+import { GITHUB_API_ROOT, GITHUB_HEADERS } from "../../const/api/github.api";
 import ApiRequestError from "../../error/app/request.error";
+import githubGetAuthHeaders from "./auth/get-auth-headers";
 
-async function githubMakeRequest(endpoint: string, options: Record<string, any>, token?: string): Promise<Response> {
-    const url = GithubConst.URL.API_ROOT + endpoint
-    if (options.body) options.body = JSON.stringify(options.body)
+async function githubMakeRequest(endpoint: string, token?: string, options?: Record<string, any>): Promise<Response> {
+    const url = GITHUB_API_ROOT + endpoint
+    if (options && options.body) options.body = JSON.stringify(options.body)
     const res = await fetch(url, {
-        headers: token ? GithubConst.AUTH_HEADERS(token) : undefined,
+        headers: token ? githubGetAuthHeaders(token) : GITHUB_HEADERS,
         ...options
     })
     if (!res.ok) {
