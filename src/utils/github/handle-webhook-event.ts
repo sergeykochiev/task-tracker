@@ -1,6 +1,6 @@
 import GithubEventType from "../../enum/github/event-type";
 import GithubWebhookEventHandlerArgs from "../../types/utils/handle-github-webhook-event-args";
-import handleIssueComment from "./event-handlers/handle-issue-comment";
+import handleIssueComment from "./event-handlers/issue-comment";
 import handleIssues from "./event-handlers/handle-issues";
 import handlelabel from "./event-handlers/handle-label";
 import handleMilestone from "./event-handlers/handle-milestone";

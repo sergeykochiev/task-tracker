@@ -35,3 +35,69 @@ messages on assinging labels on reviews.
 closing issue on closing pull request accociated with that issue
 
 assigning labels on issues when label assigned to pull request and an issue url is present in its description
+
+
+ISSUES EVENT
+
+Assigned
+replies with nofification message (later "notifies"), ideally tags discord users corresponding to target assignees (not yet possible)
+
+Closed
+notifies
+
+Deleted
+nofifies, closes the thread with comments
+
+Demilestoned
+notifies
+
+Edited
+edits the original message or adds an edit p.s. to it, notifies
+
+Labeled
+notifies with label name, adds a label? not sure what it would be. maybe labels thread
+
+Locked
+notifies
+
+Milestoned
+notifies
+
+Opened
+sends a message with all the info and opens a thread for comments if possible. if not, notification contains comment body
+
+Pinned
+literally pins original message and notifies
+
+Reopened
+notifies
+
+Transferred
+notifies
+
+Unassigned
+notifies, ideally tags discord users corresponding to target assignees (not yet possible)
+
+Unlabeled
+notifies
+
+Unlocked
+notifies
+
+Unpinned
+literally unpins original message and notifies
+
+
+ISSUE COMMENTS EVENT
+
+Created
+notifies, creates a message in comments thread of a related issue if possible, if not, sends comment in nofification message (theres a need to store commend entitites now)
+
+Deleted
+notifies, deletes a message with comment (from a thread or a notification) (or perhaps just makes all the text in that message crossed - or just a heading)
+
+Edited
+edits the original message or adds an edit p.s. to it, notifies
+
+
+

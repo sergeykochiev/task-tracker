@@ -2,7 +2,7 @@ import { IssuesEvent } from "@octokit/webhooks-types";
 import GithubIssueAction from "../../../enum/github/issue-action";
 import githubHandleIssuesOpenedEvent from "./issues/handle-opened";
 
-export default async function githubHandleIssuesEvent(data: IssuesEvent) {
+export default function githubHandleIssuesEvent(data: IssuesEvent) {
     console.log("Handling issues", data.action, "event")
     switch(data.action) {
         case GithubIssueAction.Assigned: break

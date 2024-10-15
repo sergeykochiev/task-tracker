@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from "typeorm";
 import RegisterStatus from "../enum/register-status";
 import GithubRepoEntity from "./repository.entity";
-import DiscordGuildEntity from "./guild.entity";
+import RoleEntity from "./role";
 
 @Entity()
 export default class TrackerEntity {
@@ -12,9 +12,8 @@ export default class TrackerEntity {
     @JoinColumn()
     github_repository: GithubRepoEntity
 
-    @ManyToOne(() => DiscordGuildEntity, { eager: true })
-    @JoinColumn()
-    discord_guild: DiscordGuildEntity
+    @Column()
+    discord_guild_id: string
 
     @Column()
     registrar_id: string
@@ -24,4 +23,10 @@ export default class TrackerEntity {
     
     @Column()
     register_status: RegisterStatus
+
+    @ManyToOne(() => RoleEntity, {
+        nullable: true
+    })
+    @JoinColumn()
+    role_to_ping?: RoleEntity
 }

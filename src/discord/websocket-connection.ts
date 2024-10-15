@@ -1,8 +1,9 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIMessageComponentInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData, APIModalSubmitInteraction, ComponentType, APIMessageComponentButtonInteraction } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIMessageComponentInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData, APIModalSubmitInteraction, ComponentType, APIMessageComponentButtonInteraction, APIMessageComponentSelectMenuInteraction } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
-import DEFAULT_IDENTIFY_PAYLOAD from "../const/discord/default-identification-payload"
 import DiscordConfig from "../config/env/discord.config"
 import DiscordGatewayClosedError from "../error/discord/gateway-closed.error"
+import { DISCORD_DEFAULT_IDENTIFY_PAYLOAD } from "../const/discord/default"
+import APIMessageComponentRoleSelectInteraction from "../types/discord/api-message-component-role-select-interaction"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -22,6 +23,7 @@ export default class DiscordWebsocketConnection {
     public onMessageComponent: (data: APIMessageComponentInteraction) => Promise<void> | void
     public onModalSubmit: (data: APIModalSubmitInteraction) => Promise<void> | void
     public onButtonComponent: (data: APIMessageComponentButtonInteraction) => Promise<void> | void
+    public onRoleSelect: (data: APIMessageComponentRoleSelectInteraction) => Promise<void> | void
 
     constructor(
         private wssUrl: string
@@ -175,7 +177,7 @@ export default class DiscordWebsocketConnection {
     }
 
     private identify() {
-        this.sendPayload(DEFAULT_IDENTIFY_PAYLOAD)
+        this.sendPayload(DISCORD_DEFAULT_IDENTIFY_PAYLOAD)
         return
     }
 
@@ -211,6 +213,7 @@ export default class DiscordWebsocketConnection {
                 }
                 switch(data.data.component_type) {
                     case ComponentType.Button: this.onButtonComponent && this.onButtonComponent(data as APIMessageComponentButtonInteraction); break
+                    case ComponentType.RoleSelect: this.onRoleSelect && this.onRoleSelect(data as APIMessageComponentRoleSelectInteraction)
                 }
                 break
             }

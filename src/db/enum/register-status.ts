@@ -1,6 +1,7 @@
 enum RegisterStatus {
     Failed,
-    PendingToken,
-    Registered
+    Registered,
+    PendingInstallation,
+    PendingRole
 }
 export default RegisterStatus

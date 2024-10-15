@@ -1,6 +1,6 @@
 import GithubEventType from "../../../../enum/github/event-type"
 
-interface GithubWebhookCreateOptions {
+interface GithubApiWebhookCreateOptions {
     name: "web",
     // Use web to create a webhook. Default: web. This parameter only accepts the value web.
 
@@ -29,4 +29,4 @@ interface GithubWebhookCreateOptions {
 }
 //source -- https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#create-a-repository-webhook
 
-export default GithubWebhookCreateOptions
+export default GithubApiWebhookCreateOptions

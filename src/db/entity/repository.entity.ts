@@ -1,10 +1,11 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
+import InstallationEntity from "./installation";
 
 @Entity()
 @Unique(["owner", "name"])
 export default class RepositoryEntity {
     @PrimaryGeneratedColumn()
-    id: number
+    id: string
 
     @Column()
     owner: string
@@ -12,15 +13,9 @@ export default class RepositoryEntity {
     @Column()
     name: string
 
-    @Column({ default: null })
-    webhook_id?: number
-
-    @Column({ default: null })
-    webhook_secret?: string
-
-    @Column({ default: null })
-    github_token?: string
-
-    @Column()
-    slug: string
+    @ManyToOne(() => InstallationEntity, {
+        nullable: true
+    })
+    @JoinColumn()
+    installation?: InstallationEntity
 }
