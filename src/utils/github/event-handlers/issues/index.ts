@@ -1,26 +1,39 @@
 import { IssuesEvent } from "@octokit/webhooks-types";
-import GithubIssueAction from "../../../../enum/github/issue-action";
 import githubHandleIssuesOpenedEvent from "./opened";
+import githubHandleIssuesAssignedEvent from "./assigned";
+import githubHandleIssuesClosedEvent from "./closed";
+import githubHandleIssuesDeletedEvent from "./deleted";
+import githubHandleIssuesEditedEvent from "./edited";
+import githubHandleIssuesLabeledEvent from "./labeled";
+import githubHandleIssuesLockedEvent from "./locked";
+import githubHandleIssuesMilestonedEvent from "./milestoned";
+import githubHandleIssuesPinnedEvent from "./pinned";
+import githubHandleIssuesReopenedEvent from "./reopened";
+import githubHandleIssuesTransferredEvent from "./transferred";
+import githubHandleIssuesUnassignedEvent from "./unassigned";
+import githubHandleIssuesUnlabeledEvent from "./unlabeled";
+import githubHandleIssuesUnlockedEvent from "./unlocked";
+import githubHandleIssuesUnpinnedEvent from "./unpinned";
 
 export default function githubHandleIssuesEvent(data: IssuesEvent) {
     console.log("Handling issues", data.action, "event")
     switch(data.action) {
-        case GithubIssueAction.Assigned: break
-        case GithubIssueAction.Closed: break
-        case GithubIssueAction.Deleted: break
-        case GithubIssueAction.Demilestoned: break
-        case GithubIssueAction.Edited: break
-        case GithubIssueAction.Labeled: break
-        case GithubIssueAction.Locked: break
-        case GithubIssueAction.Milestoned: break
-        case GithubIssueAction.Opened: githubHandleIssuesOpenedEvent(data)
-        case GithubIssueAction.Pinned: break
-        case GithubIssueAction.Reopened: break
-        case GithubIssueAction.Transferred: break
-        case GithubIssueAction.Unassigned: break
-        case GithubIssueAction.Unlabeled: break
-        case GithubIssueAction.Unlocked: break
-        case GithubIssueAction.Unpinned: break
+        case "assigned": githubHandleIssuesAssignedEvent(data); break
+        case "closed": githubHandleIssuesClosedEvent(data); break
+        case "deleted": githubHandleIssuesDeletedEvent(data); break
+        case "demilestoned": break
+        case "edited": githubHandleIssuesEditedEvent(data); break
+        case "labeled": githubHandleIssuesLabeledEvent(data); break
+        case "locked": githubHandleIssuesLockedEvent(data); break
+        case "milestoned": githubHandleIssuesMilestonedEvent(data); break
+        case "opened": githubHandleIssuesOpenedEvent(data); break
+        case "pinned": githubHandleIssuesPinnedEvent(data); break
+        case "reopened": githubHandleIssuesReopenedEvent(data); break
+        case "transferred": githubHandleIssuesTransferredEvent(data); break
+        case "unassigned": githubHandleIssuesUnassignedEvent(data); break
+        case "unlabeled": githubHandleIssuesUnlabeledEvent(data); break
+        case "unlocked": githubHandleIssuesUnlockedEvent(data); break
+        case "unpinned": githubHandleIssuesUnpinnedEvent(data); break
     }
     return
 }

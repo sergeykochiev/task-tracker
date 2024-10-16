@@ -1,4 +1,4 @@
-import { APIModalInteractionResponseCallbackData, ComponentType, GatewayIdentify, GatewayIntentBits, GatewayOpcodes } from "discord-api-types/v10"
+import { APIActionRowComponent, APIMessageActionRowComponent, APIModalInteractionResponseCallbackData, ComponentType, GatewayIdentify, GatewayIntentBits, GatewayOpcodes } from "discord-api-types/v10"
 import DiscordConfig from "../../config/env/discord.config"
 import os from "node:os"
 import INITIAL_PRESENCE_UPDATE_PAYLOAD from "./initial-presence-update-payload"
@@ -19,3 +19,15 @@ export const DISCORD_DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
 } as const
 
 export const DISCORD_REGISTRATION_ROLE_SELECT_ID = "registration_ping_role_select"
+
+export const DISCORD_PING_ROLE_SELECT: APIActionRowComponent<APIMessageActionRowComponent> = {
+    type: ComponentType.ActionRow,
+    components: [
+        {
+            type: ComponentType.RoleSelect,
+            custom_id: DISCORD_REGISTRATION_ROLE_SELECT_ID,
+            max_values: 1,
+            min_values: 1
+        }
+    ]
+}

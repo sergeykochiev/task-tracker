@@ -1,27 +1,29 @@
 import GithubEventType from "../../../enum/github/event-type";
 import GithubWebhookEventHandlerArgs from "../../../types/utils/handle-github-webhook-event-args";
-import handleIssueComment from "./issue-comment";
-import handleIssues from "./issues";
-import handlelabel from "./label";
-import handleMilestone from "./milestone";
-import handlePing from "./ping";
-import handlePullRequest from "./pull-request";
-import handlePullRequestReview from "./pull-request-review";
-import handlePullRequestReviewComment from "./pull-request-review-comment";
-import handlePullRequestReviewThread from "./pull-request-review-thread";
+import githubHandleInstallationEvent from "./installation";
+import githubHandleIssueCommentEvent from "./issue-comment";
+import githubHandleIssuesEvent from "./issues";
+import githubHandlelabelEvent from "./label";
+import githubHandleMilestoneEvent from "./milestone";
+import githubHandlePingEvent from "./ping";
+import githubHandlePullRequestEvent from "./pull-request";
+import githubHandlePullRequestReviewEvent from "./pull-request-review";
+import githubHandlePullRequestReviewCommentEvent from "./pull-request-review-comment";
+import githubHandlePullRequestReviewThreadEvent from "./pull-request-review-thread";
 
 export default function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
     console.log("Received github webhook event:", args.eventType)
     switch(args.eventType) {
-        case GithubEventType.Issues: handleIssues(args.data); break
-        case GithubEventType.IssueComment: handleIssueComment(args.data); break
-        case GithubEventType.Label: handlelabel(args.data); break
-        case GithubEventType.Milestone: handleMilestone(args.data); break
-        case GithubEventType.Ping: handlePing(args.data); break
-        case GithubEventType.PullRequest: handlePullRequest(args.data); break
-        case GithubEventType.PullRequestReviewComment: handlePullRequestReviewComment(args.data); break
-        case GithubEventType.PullRequestReview: handlePullRequestReview(args.data); break
-        case GithubEventType.PullRequestReviewThread: handlePullRequestReviewThread(args.data); break
+        case GithubEventType.Installation: githubHandleInstallationEvent(args.data); break
+        case GithubEventType.Issues: githubHandleIssuesEvent(args.data); break
+        case GithubEventType.IssueComment: githubHandleIssueCommentEvent(args.data); break
+        case GithubEventType.Label: githubHandlelabelEvent(args.data); break
+        case GithubEventType.Milestone: githubHandleMilestoneEvent(args.data); break
+        case GithubEventType.Ping: githubHandlePingEvent(args.data); break
+        case GithubEventType.PullRequest: githubHandlePullRequestEvent(args.data); break
+        case GithubEventType.PullRequestReviewComment: githubHandlePullRequestReviewCommentEvent(args.data); break
+        case GithubEventType.PullRequestReview: githubHandlePullRequestReviewEvent(args.data); break
+        case GithubEventType.PullRequestReviewThread: githubHandlePullRequestReviewThreadEvent(args.data); break
     }
     return
 }
