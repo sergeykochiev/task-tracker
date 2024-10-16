@@ -27,7 +27,8 @@ export default async function githubHandleInstallationCreate(data: InstallationC
         const trackers = await dbBulkGetTrackersBy({
             github_repository: {
                 id: targetRepository.id
-            }
+            },
+            register_status: RegisterStatus.PendingInstallation
         })
         trackers.map(async (targetTracker) => {
             await discordSendMessageToChannel(targetTracker.discord_channel_id, {
