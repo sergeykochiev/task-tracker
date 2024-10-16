@@ -1,0 +1,27 @@
+import GithubEventType from "../../../enum/github/event-type";
+import GithubWebhookEventHandlerArgs from "../../../types/utils/handle-github-webhook-event-args";
+import handleIssueComment from "./issue-comment";
+import handleIssues from "./issues";
+import handlelabel from "./label";
+import handleMilestone from "./milestone";
+import handlePing from "./ping";
+import handlePullRequest from "./pull-request";
+import handlePullRequestReview from "./pull-request-review";
+import handlePullRequestReviewComment from "./pull-request-review-comment";
+import handlePullRequestReviewThread from "./pull-request-review-thread";
+
+export default function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
+    console.log("Received github webhook event:", args.eventType)
+    switch(args.eventType) {
+        case GithubEventType.Issues: handleIssues(args.data); break
+        case GithubEventType.IssueComment: handleIssueComment(args.data); break
+        case GithubEventType.Label: handlelabel(args.data); break
+        case GithubEventType.Milestone: handleMilestone(args.data); break
+        case GithubEventType.Ping: handlePing(args.data); break
+        case GithubEventType.PullRequest: handlePullRequest(args.data); break
+        case GithubEventType.PullRequestReviewComment: handlePullRequestReviewComment(args.data); break
+        case GithubEventType.PullRequestReview: handlePullRequestReview(args.data); break
+        case GithubEventType.PullRequestReviewThread: handlePullRequestReviewThread(args.data); break
+    }
+    return
+}

@@ -2,8 +2,8 @@ import { InstallationCreatedEvent, Organization } from "@octokit/webhooks-types"
 import { dbGetRepositoryByOwnerAndName, dbUpdateRepository } from "../../../db/repository";
 import InstallationEntity from "../../../../db/entity/installation";
 import { dbBulkGetTrackersBy, dbUpdateTrackerStatus } from "../../../db/tracker";
-import discordSendTextMessageToChannel from "../../../discord/api/send-plain-text-as-message";
-import discordSendMessageToChannel from "../../../discord/api/send-message";
+import discordSendTextMessageToChannel from "../../../discord/api/routes/messages/send-plain-text-as-message";
+import discordSendMessageToChannel from "../../../discord/api/routes/messages/send-message";
 import { ComponentType } from "discord-api-types/v10";
 import { DISCORD_REGISTRATION_ROLE_SELECT_ID } from "../../../../const/discord/default";
 import RegisterStatus from "../../../../db/enum/register-status";

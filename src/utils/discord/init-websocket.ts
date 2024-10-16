@@ -1,4 +1,4 @@
-import getDiscordWebSocketUrl from "./api/get-websocket-url"
+import getDiscordWebSocketUrl from "./api/routes/get-websocket-url"
 import DiscordWebsocketConnection from "../../discord/websocket-connection"
 import discordHandleCommands from "./event-handlers/interaction/commands"
 import githubHandleInteractionMessageComponentRoleSelect from "./event-handlers/interaction/message-component/role-select"

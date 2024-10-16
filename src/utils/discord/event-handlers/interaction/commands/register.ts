@@ -1,5 +1,5 @@
 import { APIApplicationCommandInteraction, InteractionContextType } from "discord-api-types/v10"
-import discordReplyToInteractionWithText from "../../../api/send-plain-text-as-interaction-reply"
+import discordReplyToInteractionWithText from "../../../api/routes/interactions/send-plain-text-as-interaction-reply"
 import RegisterStatus from "../../../../../db/enum/register-status"
 import DiscordRegisterCommandInteraction from "../../../../../types/discord/register-command-interaction"
 import getOwnerAndNameFromRepositoryUrl from "../../../../general/get-owner-and-name-from-repo-url"

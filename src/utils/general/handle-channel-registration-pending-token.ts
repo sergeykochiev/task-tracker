@@ -1,7 +1,7 @@
 import { APIModalSubmitInteraction } from "discord-api-types/v10"
 import createAndSaveNewGithubWebhookForRepository from "./create-and-save-new-webhook"
 import RegisterStatus from "../../db/enum/register-status"
-import discordSendTextMessage from "../discord/api/send-plain-text-as-message"
+import discordSendTextMessage from "../discord/api/routes/messages/send-plain-text-as-message"
 import handleChannelRegistrationFailure from "./handle-channel-registration-failure"
 import ApiRequestError from "../../error/app/request.error"
 import RegistrationFailedError from "../../error/app/registration-failed.error"
