@@ -14,7 +14,9 @@ export default class RepositoryEntity {
     name: string
 
     @ManyToOne(() => InstallationEntity, {
-        nullable: true
+        nullable: true,
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE"
     })
     @JoinColumn()
     installation?: InstallationEntity

@@ -8,7 +8,11 @@ export default class TrackerEntity {
     @PrimaryColumn()
     discord_channel_id: string
 
-    @ManyToOne(() => GithubRepoEntity, { eager: true })
+    @ManyToOne(() => GithubRepoEntity, {
+        eager: true,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
     github_repository: GithubRepoEntity
 
@@ -25,7 +29,9 @@ export default class TrackerEntity {
     register_status: RegisterStatus
 
     @ManyToOne(() => RoleEntity, {
-        nullable: true
+        nullable: true,
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL"
     })
     @JoinColumn()
     role_to_ping?: RoleEntity
