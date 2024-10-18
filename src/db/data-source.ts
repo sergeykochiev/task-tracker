@@ -6,6 +6,7 @@ import OriginalMessageEntity from "./entity/original-message.entity";
 import IssueTrackEntity from "./entity/issue-track.entity";
 import InstallationEntity from "./entity/installation";
 import RoleEntity from "./entity/role";
+import { Init1729181741692 } from "./migration/1729181741692-init";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -14,11 +15,11 @@ const AppDataSource = new DataSource({
     username: DatabaseConfig.USERNAME,
     password: DatabaseConfig.PASSWORD,
     database: DatabaseConfig.NAME,
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [TrackerEntity, RepositoryEntity, OriginalMessageEntity, IssueTrackEntity, InstallationEntity, RoleEntity],
     subscribers: [],
-    migrations: [],
+    migrations: [Init1729181741692],
 })
 
 AppDataSource.initialize()

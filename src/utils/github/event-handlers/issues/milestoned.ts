@@ -1,11 +1,13 @@
 import { IssuesMilestonedEvent } from "@octokit/webhooks-types";
-import { dbBulkGetOriginalMessagesByIssueId } from "../../../db/original-message";
-import discordSendTextMessageToChannelWithRefference from "../../../discord/api/routes/messages/send-text-message-to-channel-with-refference";
+import mapThroughIssueMessages from "../../../general/map-through-issue-messages";
+import discordIssueEventNotifyWithRef from "../../../discord/issue-event-notify-with-ref";
+import OriginalMessageEntity from "../../../../db/entity/original-message.entity";
+import { log } from "console";
 
 export default async function githubHandleIssuesMilestonedEvent(data: IssuesMilestonedEvent) {
-    const originalMessages = await dbBulkGetOriginalMessagesByIssueId(String(data.issue.id))
-    originalMessages.map(async (originalMessage) => {
-        await discordSendTextMessageToChannelWithRefference(originalMessage.tracker.discord_channel_id, `A new milestone was added the issue - ${data.milestone.title}!\n\nCheck the changes - ${originalMessage.issue.url}`, originalMessage.id)
+    await mapThroughIssueMessages(data.issue.id, async (originalMessage: OriginalMessageEntity) => {
+        const res = await discordIssueEventNotifyWithRef(originalMessage, data.action)
+        if (res.err) log(res.err)
     })
     return
 }

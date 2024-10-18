@@ -4,9 +4,7 @@ import AppConfig from '../../config/env/app.config';
 
 export default function githubInitWebhookApi() {
     const app = express()
-    const githubWebhookRouter = express.Router()
-    githubWebhookRouter.post("/", express.json(), handleGithubHookCall)
-    app.use('/github', githubWebhookRouter)
+    app.post('/github', express.json(), handleGithubHookCall)
     const PORT = AppConfig.PORT
     app.listen(PORT, () => {
         console.log('Listening on port', PORT)

@@ -1,36 +1,52 @@
 import { IssuesOpenedEvent } from "@octokit/webhooks-types";
+import { databaseBulkGetTrackersBy } from "../../../db/tracker";
+import { databaseSaveIssueTrack } from "../../../db/issue-track";
+import { databaseSaveOriginalMessage } from "../../../db/original-message";
+import TrackerEntity from "../../../../db/entity/tracker.entity";
+import discordIssueEventNotifyWithRef from "../../../discord/issue-event-notify-with-ref";
+import { log } from "console";
+import { InteractionResponseType } from "discord-api-types/v10";
 import discordSendMessageToChannel from "../../../discord/api/routes/messages/send-message";
-import { APIMessage } from "discord-api-types/v10"
-import { dbSaveIssueTrack } from "../../../db/issue-track";
-import { dbSaveOriginalMessage } from "../../../db/original-message";
-import discordSendTextMessageToChannel from "../../../discord/api/routes/messages/send-plain-text-as-message";
-import discordSendTextMessageToChannelWithRefference from "../../../discord/api/routes/messages/send-text-message-to-channel-with-refference";
-import { dbBulkGetTrackersBy } from "../../../db/tracker";
 
 export default async function githubHandleIssuesOpenedEvent(data: IssuesOpenedEvent) {
-    const targetTrackers = await dbBulkGetTrackersBy({
+    const getTrackersRes = await databaseBulkGetTrackersBy({
         github_repository: {
             owner: data.repository.owner.login,
             name: data.repository.name
         }
     })
+    if (getTrackersRes.err) {
+        log(getTrackersRes.err)
+        return
+    }
+    const targetTrackers = getTrackersRes.data
     if (!targetTrackers.length) return
-    const newIssue = await dbSaveIssueTrack({
+    const saveIssueTrackRes = await databaseSaveIssueTrack({
         id: String(data.issue.id),
         github_repository: targetTrackers[0].github_repository,
-        url: data.issue.url
+        url: data.issue.html_url
     })
-    for(let i = 0; i < targetTrackers.length; i++) {
-        const targetTracker = targetTrackers[i]
-        //incorrect type prbbly, here ↓
-        const targetMessage: APIMessage | null = await discordSendTextMessageToChannel(targetTracker.discord_channel_id, `New issue: ${data.issue.title}`)
-        await discordSendTextMessageToChannelWithRefference(targetTracker.discord_channel_id, `A new issue was opened!\n\nCheck the issue - ${data.issue.url}`, targetMessage.id)
-        if (!targetMessage) continue
-        await dbSaveOriginalMessage({
-            id: targetMessage.id,
-            issue: newIssue,
+    if (saveIssueTrackRes.err) return
+    targetTrackers.map(async (targetTracker: TrackerEntity) => {
+        const originalMessageRes = await discordSendMessageToChannel(targetTracker.discord_channel_id, {
+            content: `New issue: ${data.issue.title}`
+        })
+        if (originalMessageRes.err || !originalMessageRes.data.ok) {
+            log(originalMessageRes.err)
+            return
+        }
+        const originalMessageId = originalMessageRes.data.data.id
+        const saveOriginalMessageRes = await databaseSaveOriginalMessage({
+            id: originalMessageId,
+            issue: saveIssueTrackRes.data,
             tracker: targetTracker
         })
-    }
+        if (saveOriginalMessageRes.err) {
+            log(saveOriginalMessageRes.err)
+            return
+        }
+        const messageRefRes = await discordIssueEventNotifyWithRef(saveOriginalMessageRes.data, "opened")
+        if (messageRefRes.err || messageRefRes.data.ok) return
+    })
     return
 }

@@ -16,14 +16,14 @@ const REGISTER_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
     ]
 } as const
 
-const CONFIGURE_COMMAND = {
-    name: 'configure',
-    description: 'Configures roles and users that are able to register chats',
+const UNREGISTER_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
+    name: 'unregister',
+    description: 'Unregisters a chat from tracking a specific GitHub repository',
     type: ApplicationCommandType.ChatInput,
     integration_types: [ApplicationIntegrationType.GuildInstall],
-    contexts: [InteractionContextType.Guild]
+    contexts: [InteractionContextType.Guild],
 } as const
 
-const ALL_COMMANDS = [REGISTER_COMMAND, CONFIGURE_COMMAND] as const
+const ALL_COMMANDS = [REGISTER_COMMAND, UNREGISTER_COMMAND] as const
 
 export default ALL_COMMANDS

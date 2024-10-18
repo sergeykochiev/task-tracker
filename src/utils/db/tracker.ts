@@ -1,56 +1,32 @@
-import { FindOptionsWhere, UpdateResult } from "typeorm";
-import AppDataSource from "../../db/data-source";
+import { FindOptionsWhere } from "typeorm";
 import TrackerEntity from "../../db/entity/tracker.entity";
-import DatabaseError from "../../error/db/database.error";
 import RegisterStatus from "../../db/enum/register-status";
+import { makeDatabaseRequest } from "./repository-request";
 
-type UpdateTrackerCredentialsDto = Partial<TrackerEntity>
-
-export async function dbBulkGetTrackersBy(where: FindOptionsWhere<TrackerEntity> | FindOptionsWhere<TrackerEntity>[]): Promise<TrackerEntity[]> {
-    const trackerRepository = AppDataSource.getRepository(TrackerEntity)
-    try {
-        return await trackerRepository.findBy(where)
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseBulkGetTrackersBy(where: FindOptionsWhere<TrackerEntity> | FindOptionsWhere<TrackerEntity>[]) {
+    return await makeDatabaseRequest(TrackerEntity, "findBy", where)
 }
 
-export default async function dbGetTrackerById(discordChannelid: TrackerEntity["discord_channel_id"]): Promise<TrackerEntity | null> {
-    const trackerRepository = AppDataSource.getRepository(TrackerEntity)
-    try {
-        return await trackerRepository.findOneBy({
-            discord_channel_id: discordChannelid
-        })
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseGetTrackerById(id: TrackerEntity["discord_channel_id"]) {
+    return await makeDatabaseRequest(TrackerEntity, "findOneBy", {
+        discord_channel_id: id
+    })
 }
 
-export async function dbUpdateTracker(id: TrackerEntity["discord_channel_id"], updateTrackerCredentialsDto: UpdateTrackerCredentialsDto): Promise<UpdateResult> {
-    const trackerRepository = AppDataSource.getRepository(TrackerEntity)
-    try {
-        return await trackerRepository.update(id, updateTrackerCredentialsDto)
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseUpdateTracker(id: TrackerEntity["discord_channel_id"], updateTrackerDto: Partial<TrackerEntity>) {
+    return await makeDatabaseRequest(TrackerEntity, "update", id, updateTrackerDto)
 }
 
-export async function dbSaveTracker(saveTrackerEntityDto: TrackerEntity): Promise<TrackerEntity> {
-    const trackerRepository = AppDataSource.getRepository(TrackerEntity)
-    try {
-        return await trackerRepository.save(saveTrackerEntityDto)
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseSaveTracker(saveTrackerDto: TrackerEntity) {
+    return await makeDatabaseRequest(TrackerEntity, "save", saveTrackerDto)
 }
 
-export async function dbUpdateTrackerStatus(discordChannelId: string, newStatus: RegisterStatus): Promise<UpdateResult> {
-    const trackerRepository = AppDataSource.getRepository(TrackerEntity)
-    try {
-        return await trackerRepository.update(discordChannelId, {
-            register_status: newStatus
-        })
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseUpdateTrackerStatus(id: string, newStatus: RegisterStatus) {
+    return await makeDatabaseRequest(TrackerEntity, "update", id, {
+        register_status: newStatus
+    })
+}
+
+export async function databaseDeleteTracker(id: TrackerEntity["discord_channel_id"]) {
+    return await makeDatabaseRequest(TrackerEntity, "delete", id)
 }

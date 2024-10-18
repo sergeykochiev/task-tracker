@@ -8,7 +8,8 @@ export default class IssueTrackEntity {
 
     @ManyToOne(() => RepositoryEntity, {
         onUpdate: "CASCADE",
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        eager: true
     })
     @JoinColumn()
     github_repository: RepositoryEntity

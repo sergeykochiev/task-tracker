@@ -1,13 +1,19 @@
 import { IssuesPinnedEvent } from "@octokit/webhooks-types";
-import { dbBulkGetOriginalMessagesByIssueId } from "../../../db/original-message";
-import discordSendTextMessageToChannelWithRefference from "../../../discord/api/routes/messages/send-text-message-to-channel-with-refference";
 import discordChangeMessagePinState from "../../../discord/api/routes/messages/change-message-pin-state";
+import mapThroughIssueMessages from "../../../general/map-through-issue-messages";
+import OriginalMessageEntity from "../../../../db/entity/original-message.entity";
+import discordIssueEventNotifyWithRef from "../../../discord/issue-event-notify-with-ref";
+import { log } from "console";
 
 export default async function githubHandleIssuesPinnedEvent(data: IssuesPinnedEvent) {
-    const originalMessages = await dbBulkGetOriginalMessagesByIssueId(String(data.issue.id))
-    originalMessages.map(async (originalMessage) => {
-        await discordChangeMessagePinState(originalMessage.tracker.discord_channel_id, originalMessage.id, true)
-        await discordSendTextMessageToChannelWithRefference(originalMessage.tracker.discord_channel_id, `An issue was pinned!\n\nCheck the changes - ${originalMessage.issue.url}`, originalMessage.id)
+    await mapThroughIssueMessages(data.issue.id, async (originalMessage: OriginalMessageEntity) => {
+        const res1 = await discordChangeMessagePinState(originalMessage.tracker.discord_channel_id, originalMessage.id, true)
+        if (res1.err) {
+            log(res1.err)
+            return
+        }
+        const res2 = await discordIssueEventNotifyWithRef(originalMessage, data.action)
+        if (res2.err) log(res2.err)
     })
     return
 }

@@ -1,12 +1,6 @@
-import AppDataSource from "../../db/data-source"
 import RoleEntity from "../../db/entity/role"
-import DatabaseError from "../../error/db/database.error"
+import { makeDatabaseRequest } from "./repository-request"
 
-export async function dbSaveRole(role: RoleEntity) {
-    const roleRepository = AppDataSource.getRepository(RoleEntity)
-    try {
-        return await roleRepository.save(role)
-    } catch(e) {
-        throw new DatabaseError(String(e))
-    }
+export async function databaseSaveRole(saveRoleDto: RoleEntity) {
+    return await makeDatabaseRequest(RoleEntity, "save", saveRoleDto)
 }

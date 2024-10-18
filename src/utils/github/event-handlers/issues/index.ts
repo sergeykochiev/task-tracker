@@ -14,6 +14,7 @@ import githubHandleIssuesUnassignedEvent from "./unassigned";
 import githubHandleIssuesUnlabeledEvent from "./unlabeled";
 import githubHandleIssuesUnlockedEvent from "./unlocked";
 import githubHandleIssuesUnpinnedEvent from "./unpinned";
+import githubHandleIssuesDemilestonedEvent from "./demilestoned";
 
 export default function githubHandleIssuesEvent(data: IssuesEvent) {
     console.log("Handling issues", data.action, "event")
@@ -21,7 +22,7 @@ export default function githubHandleIssuesEvent(data: IssuesEvent) {
         case "assigned": githubHandleIssuesAssignedEvent(data); break
         case "closed": githubHandleIssuesClosedEvent(data); break
         case "deleted": githubHandleIssuesDeletedEvent(data); break
-        case "demilestoned": break
+        case "demilestoned": githubHandleIssuesDemilestonedEvent(data); break
         case "edited": githubHandleIssuesEditedEvent(data); break
         case "labeled": githubHandleIssuesLabeledEvent(data); break
         case "locked": githubHandleIssuesLockedEvent(data); break

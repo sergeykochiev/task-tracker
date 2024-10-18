@@ -8,13 +8,17 @@ export default class OriginalMessageEntity {
     id: string
 
     @ManyToOne(() => TrackerEntity, {
-        onUpdate: "CASCADE"
+        onUpdate: "CASCADE",
+        cascade: true,
+        eager: true
     })
     @JoinColumn()
     tracker: TrackerEntity
 
     @ManyToOne(() => IssueTrackEntity, {
-        onUpdate: "CASCADE"
+        onUpdate: "CASCADE",
+        cascade: true,
+        eager: true
     })
     @JoinColumn()
     issue: IssueTrackEntity

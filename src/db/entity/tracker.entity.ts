@@ -31,7 +31,9 @@ export default class TrackerEntity {
     @ManyToOne(() => RoleEntity, {
         nullable: true,
         onUpdate: "CASCADE",
-        onDelete: "SET NULL"
+        onDelete: "SET NULL",
+        eager: true,
+        cascade: true
     })
     @JoinColumn()
     role_to_ping?: RoleEntity
