@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from "typeorm";
 import RegisterStatus from "../enum/register-status";
 import GithubRepoEntity from "./repository.entity";
-import RoleEntity from "./role";
+import RoleEntity from "./role.entity";
 
 @Entity()
 export default class TrackerEntity {
@@ -25,7 +25,10 @@ export default class TrackerEntity {
     @Column()
     time_created: string
     
-    @Column()
+    @Column({
+        type: "enum",
+        enum: RegisterStatus
+    })
     register_status: RegisterStatus
 
     @ManyToOne(() => RoleEntity, {

@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
-import InstallationEntity from "./installation";
+import InstallationEntity from "./installation.entity";
 
 @Entity()
 @Unique(["owner", "name"])

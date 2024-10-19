@@ -1,16 +1,19 @@
 import { WebhookEventMap } from "@octokit/webhooks-types"
 import GithubEventType from "../../../../enum/github/event-type"
 
+type WithAction = {
+    action: string
+}
 type GithubWebhookEventPayloadMap = {
-    [ET in GithubEventType]: ET extends keyof WebhookEventMap ? WebhookEventMap[ET] : object
+    [ET in GithubEventType]: ET extends keyof WebhookEventMap ? WebhookEventMap[ET] : WithAction
 } & {
-    [GithubEventType.PersonalAccessTokenRequest]: {}
-    [GithubEventType.ProjectsV2]: {}
-    [GithubEventType.ProjectsV2StatusUpdate]: {}
-    [GithubEventType.RepositoryAdvisory]: {}
-    [GithubEventType.RepositoryRuleset]: {}
-    [GithubEventType.SecurityAndAnalysis]: {}
-    [GithubEventType.SubIssues]: {}
+    [GithubEventType.PersonalAccessTokenRequest]: WithAction
+    [GithubEventType.ProjectsV2]: WithAction
+    [GithubEventType.ProjectsV2StatusUpdate]: WithAction
+    [GithubEventType.RepositoryAdvisory]: WithAction
+    [GithubEventType.RepositoryRuleset]: WithAction
+    [GithubEventType.SecurityAndAnalysis]: WithAction
+    [GithubEventType.SubIssues]: WithAction
 }
 
 export default GithubWebhookEventPayloadMap

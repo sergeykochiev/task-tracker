@@ -1,10 +1,14 @@
 export const GITHUB_ENDPOINTS = {
-    HOOKS: (owner: string, repo: string) => `/repos/${owner}/${repo}/hooks`,
-    LIST_REPOS: "/user/repos",
     GET_REPO_BY_ID: (repoId: string) => `/repositories/${repoId}`,
-    GET_REPO: (owner: string, repo: string) => `/repos/${owner}/${repo}`,
-    GET_INSTALL_ID_BY_REPO: (owner: string, repo: string) => `/repos/{${owner}}/${repo}/installation`,
-    GET_ACCESS_TOKEN: (installId: string) => `/app/installations/${installId}}/access_tokens`
+    GET_ACCESS_TOKEN: (installId: string) => `/app/installations/${installId}}/access_tokens`,
+    REPO: (owner: string, repo: string) => {
+        const root = `/repos/${owner}/${repo}`
+        return {
+            HOOKS: root + "/hooks",
+            INSTALLATION: root + "/installation",
+            GET: root
+        }
+    }
 } as const
 
 export const GITHUB_API_ROOT = "https://api.github.com"

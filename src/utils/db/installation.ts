@@ -1,4 +1,4 @@
-import InstallationEntity from "../../db/entity/installation"
+import InstallationEntity from "../../db/entity/installation.entity"
 import { makeDatabaseRequest } from "./repository-request"
 
 export async function databaseSaveInstallation(installation: InstallationEntity) {

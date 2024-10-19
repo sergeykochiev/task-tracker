@@ -1,5 +1,5 @@
 import { InstallationCreatedEvent, Organization } from "@octokit/webhooks-types";
-import InstallationEntity from "../../../../db/entity/installation";
+import InstallationEntity from "../../../../db/entity/installation.entity";
 import discordSendMessageToChannel from "../../../discord/api/routes/messages/send-message";
 import { DISCORD_PING_ROLE_SELECT } from "../../../../const/discord/default";
 import RegisterStatus from "../../../../db/enum/register-status";

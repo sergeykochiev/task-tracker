@@ -19,7 +19,7 @@ export default async function discordHandleUnregisterCommand(data: APIApplicatio
     const targetTracker = getTrackerRes.data
     if(!targetTracker || targetTracker.register_status != RegisterStatus.Registered) {
         await discordMessageToInteraction(data.id, data.token, {
-            content: "Channel is not registered. To register, user /register command with the repository you want to link this chat to."
+            content: "Channel is not registered. To register, use /register command with the repository you want to link this chat to."
         })
         return
     }

@@ -4,8 +4,8 @@ import TrackerEntity from "./entity/tracker.entity";
 import RepositoryEntity from "./entity/repository.entity";
 import OriginalMessageEntity from "./entity/original-message.entity";
 import IssueTrackEntity from "./entity/issue-track.entity";
-import InstallationEntity from "./entity/installation";
-import RoleEntity from "./entity/role";
+import InstallationEntity from "./entity/installation.entity";
+import RoleEntity from "./entity/role.entity";
 import { Init1729181741692 } from "./migration/1729181741692-init";
 import { Oneventchanges1729329967094 } from "./migration/1729329967094-oneventchanges";
 
