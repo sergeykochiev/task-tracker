@@ -9,6 +9,7 @@ export default class OriginalMessageEntity {
 
     @ManyToOne(() => TrackerEntity, {
         onUpdate: "CASCADE",
+        onDelete: "CASCADE",
         cascade: true,
         eager: true
     })
@@ -18,7 +19,8 @@ export default class OriginalMessageEntity {
     @ManyToOne(() => IssueTrackEntity, {
         onUpdate: "CASCADE",
         cascade: true,
-        eager: true
+        eager: true,
+        onDelete: "CASCADE"
     })
     @JoinColumn()
     issue: IssueTrackEntity

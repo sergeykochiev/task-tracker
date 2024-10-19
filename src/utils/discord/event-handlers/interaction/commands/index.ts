@@ -1,6 +1,6 @@
 import { APIApplicationCommandInteraction } from "discord-api-types/v10"
 import discordHandleRegisterCommand from "./register"
-import discordHandleUnregisterCommand from "./unregistered";
+import discordHandleUnregisterCommand from "./unregister";
 
 export default async function discordHandleApplicationCommandInteraction(data: APIApplicationCommandInteraction): Promise<void> {
     switch(data.data.name) {

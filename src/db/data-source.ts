@@ -7,6 +7,7 @@ import IssueTrackEntity from "./entity/issue-track.entity";
 import InstallationEntity from "./entity/installation";
 import RoleEntity from "./entity/role";
 import { Init1729181741692 } from "./migration/1729181741692-init";
+import { Oneventchanges1729329967094 } from "./migration/1729329967094-oneventchanges";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -19,7 +20,7 @@ const AppDataSource = new DataSource({
     logging: false,
     entities: [TrackerEntity, RepositoryEntity, OriginalMessageEntity, IssueTrackEntity, InstallationEntity, RoleEntity],
     subscribers: [],
-    migrations: [Init1729181741692],
+    migrations: [Init1729181741692, Oneventchanges1729329967094],
 })
 
 AppDataSource.initialize()

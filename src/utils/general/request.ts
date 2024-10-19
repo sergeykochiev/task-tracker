@@ -15,10 +15,16 @@ export type RequestReturn<T extends ParsedBody, E extends ParsedBody> = {
 
 async function innerMakeRequest(url: string, options: RequestInit) {
     const res = await fetch(url, options)
+    let data;
+    try {
+        data = await res.json()
+    } catch {
+        data = undefined
+    }
     return {
         ok: res.ok,
         status: res.status,
-        data: await res.json()
+        data: data
     }
 }
 
