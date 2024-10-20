@@ -1,4 +1,4 @@
-import githubGenerateJwt from "../github/auth/generate-jwt";
+import githubGenerateJwt from "../github/generate-jwt";
 
 function jwtVault() {
     let jwt: string;

@@ -8,6 +8,8 @@ import InstallationEntity from "./entity/installation.entity";
 import RoleEntity from "./entity/role.entity";
 import { Init1729181741692 } from "./migration/1729181741692-init";
 import { Oneventchanges1729329967094 } from "./migration/1729329967094-oneventchanges";
+import MacroActionEntity from "./entity/macro-action.entity";
+import MacroEventEntity from "./entity/macro-event.entity";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -18,7 +20,7 @@ const AppDataSource = new DataSource({
     database: DatabaseConfig.NAME,
     synchronize: false,
     logging: false,
-    entities: [TrackerEntity, RepositoryEntity, OriginalMessageEntity, IssueTrackEntity, InstallationEntity, RoleEntity],
+    entities: [TrackerEntity, RepositoryEntity, OriginalMessageEntity, IssueTrackEntity, InstallationEntity, RoleEntity, MacroActionEntity, MacroEventEntity],
     subscribers: [],
     migrations: [Init1729181741692, Oneventchanges1729329967094],
 })

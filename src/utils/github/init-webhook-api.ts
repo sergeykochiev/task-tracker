@@ -1,5 +1,5 @@
 import express from 'express';
-import handleGithubHookCall from './handle-webhook-call';
+import handleGithubHookCall from '../../github/webhook/event-handlers/handle-webhook-call';
 import AppConfig from '../../config/env/app.config';
 
 export default function githubInitWebhookApi() {

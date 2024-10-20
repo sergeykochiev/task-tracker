@@ -1,7 +1,7 @@
 import RegisterStatus from "../../db/enum/register-status";
 import { databaseGetTrackerById, databaseUpdateTrackerStatus } from "../db/tracker";
-import discordEditOriginalInteractionResponse from "../discord/api/routes/interactions/edit-original-interaction-response";
-import discordSendMessageToChannel from "../discord/api/routes/messages/send-message";
+import discordEditOriginalInteractionResponse from "../../discord/api/interactions/edit-original-interaction-response";
+import discordSendMessageToChannel from "../../discord/api/messages/send-message";
 
 export default async function handleChannelRegistrationFailure(channelId: string, reason: string, interactionToken?: string) {
     const getTrackerRes = await databaseGetTrackerById(channelId)
