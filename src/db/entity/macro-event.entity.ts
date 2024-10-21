@@ -33,5 +33,5 @@ export default class MacroEventEntity<T extends GithubEventType | GatewayDispatc
         type: "varchar",
         length: 30
     })
-    event: T extends GithubEventType ? Uppercase<`${T}${"action" extends keyof GithubWebhookEventPayloadMap[T] ? `_${GithubEventsActionsMap[T]}` : never}`> : T extends GatewayDispatchEvents ? T : string
+    event: T extends GithubEventType ? Uppercase<`${T}${"action" extends keyof GithubWebhookEventPayloadMap[T] ? `-${GithubEventsActionsMap[T]}` : never}`> : T extends GatewayDispatchEvents ? T : string
 }
