@@ -16,6 +16,8 @@
   },
   "author": "Sergey Kochiev",
   "dependencies": {
+    "-": "^0.0.1",
+    "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "discord-interactions": "^4.0.0",
     "dotenv": "^16.0.3",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@octokit/types": "^13.6.1",
     "@octokit/webhooks-types": "^7.6.1",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.5",
