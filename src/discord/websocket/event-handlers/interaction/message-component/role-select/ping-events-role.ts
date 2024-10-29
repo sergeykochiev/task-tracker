@@ -1,16 +1,17 @@
 import { APIRole } from "discord-api-types/v10";
 import RegisterStatus from "../../../../../../db/enum/register-status";
 import APIMessageComponentRoleSelectInteraction from "../../../../../../types/discord/api-message-component-role-select-interaction";
-import { databaseGetTrackerById, databaseUpdateTracker } from "../../../../../../utils/db/tracker";
-import { databaseSaveRole } from "../../../../../../utils/db/role";
 import { log } from "console";
 import discordMessageToInteraction from "../../../../../api/interactions/reply/reply-channel-message-with-source";
 import handleChannelRegistrationFailure from "../../../../../../utils/general/handle-channel-registration-failure";
 import discordSendMessageToChannel from "../../../../../api/messages/send-message";
+import { makeDatabaseRequest } from "../../../../../../utils/db/repository-request";
+import TrackerEntity from "../../../../../../db/entity/tracker.entity";
+import RoleEntity from "../../../../../../db/entity/role.entity";
 
 export default async function discordHandlePingRoleSelect(data: APIMessageComponentRoleSelectInteraction) {
     const targetChannelId = data.channel.id
-    const getTrackerRes = await databaseGetTrackerById(targetChannelId)
+    const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", targetChannelId)
     if (getTrackerRes.err) {
         handleChannelRegistrationFailure(targetChannelId, "Coulnd't setup role")
         log(getTrackerRes.err)
@@ -27,7 +28,7 @@ export default async function discordHandlePingRoleSelect(data: APIMessageCompon
         }
     }
     const role = (Object.values(data.data.resolved.roles) as APIRole[])[0]
-    const saveRoleRes = await databaseSaveRole({
+    const saveRoleRes = await makeDatabaseRequest(RoleEntity, "save", {
         id: role.id,
         name: role.name
     })
@@ -36,7 +37,7 @@ export default async function discordHandlePingRoleSelect(data: APIMessageCompon
         log(saveRoleRes.err)
         return
     }
-    const updateTrackerRes = await databaseUpdateTracker(targetChannelId, {
+    const updateTrackerRes = await makeDatabaseRequest(TrackerEntity, "update", targetChannelId, {
         role_to_ping: saveRoleRes.data,
         register_status: RegisterStatus.Registered
     })

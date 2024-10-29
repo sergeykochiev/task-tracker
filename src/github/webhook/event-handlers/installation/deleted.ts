@@ -1,15 +1,16 @@
 import { InstallationDeletedEvent, Organization } from "@octokit/webhooks-types";
 import iterateOnEveryTrackerOfRepository from "../../../../utils/general/iterate-on-every-tracker-of-repository";
-import { databaseDeleteInstallation } from "../../../../utils/db/installation";
 import { log } from "console";
 import TrackerEntity from "../../../../db/entity/tracker.entity";
 import discordSendMessageToChannel from "../../../../discord/api/messages/send-message";
 import GITHUB_APP_INSTALL_URL from "../../../../const/github/new-install-url";
-import { databaseUpdateTrackerStatus } from "../../../../utils/db/tracker";
 import RegisterStatus from "../../../../db/enum/register-status";
+import { makeDatabaseRequest } from "../../../../utils/db/repository-request";
 
 async function trackerDeleteNotifyCallback(tracker: TrackerEntity) {
-    await databaseUpdateTrackerStatus(tracker.discord_channel_id, RegisterStatus.PendingInstallation)
+    await makeDatabaseRequest(TrackerEntity, "update", tracker.discord_channel_id, {
+        register_status: RegisterStatus.PendingInstallation
+    })
     await discordSendMessageToChannel(tracker.discord_channel_id, {
         content: `Owner of this repository uninstalled the Github App. To continue receiving updates, you need to [install](${GITHUB_APP_INSTALL_URL}) it again`,
         embeds: []
@@ -20,7 +21,7 @@ export default async function githubHandleInstallationDeletedEvent(data: Install
     organization?: Organization
 }) {
     if (!data.repositories) return
-    const deleteInstallationRes = await databaseDeleteInstallation(String(data.installation.id))
+    const deleteInstallationRes = await makeDatabaseRequest(TrackerEntity, "delete", String(data.installation.id))
     if (deleteInstallationRes.err) {
         log(deleteInstallationRes.err)
         return

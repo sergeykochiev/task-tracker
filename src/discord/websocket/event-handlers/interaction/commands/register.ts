@@ -4,18 +4,21 @@ import DiscordRegisterCommandInteraction from "../../../../../types/discord/regi
 import getOwnerAndNameFromRepositoryUrl from "../../../../../utils/general/get-owner-and-name-from-repo-url"
 import GITHUB_REPOSITORY_URL_REGEXP from "../../../../../const/github/repository-url-regexp"
 import RepositoryEntity from "../../../../../db/entity/repository.entity"
-import { databaseGetRepositoryByOwnerAndName, databaseSaveRepository } from "../../../../../utils/db/repository"
-import { databaseGetTrackerById, databaseSaveTracker, databaseUpdateTracker } from "../../../../../utils/db/tracker"
 import { log } from "console"
 import { gotoRoleSelectRegisterationPhase } from "../../../../../github/webhook/event-handlers/installation/create"
 import GITHUB_APP_INSTALL_URL from "../../../../../const/github/new-install-url"
 import discordMessageToInteraction from "../../../../api/interactions/reply/reply-channel-message-with-source"
+import { makeDatabaseRequest } from "../../../../../utils/db/repository-request"
+import TrackerEntity from "../../../../../db/entity/tracker.entity"
 
 async function getOrAddRepository(owner: RepositoryEntity["owner"], name: RepositoryEntity["name"]) {
     let repository
-    repository = await databaseGetRepositoryByOwnerAndName(owner, name)
+    repository = await makeDatabaseRequest(RepositoryEntity, "findOneBy", {
+        owner: owner,
+        name: name
+    })
     if (!repository) {
-        repository = await databaseSaveRepository({
+        repository = await makeDatabaseRequest(RepositoryEntity, "save", {
             owner: owner,
             name: name
         })
@@ -29,7 +32,7 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
         })
         return
     }
-    const getTrackerRes = await databaseGetTrackerById(data.channel.id)
+    const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", data.channel.id)
     if (getTrackerRes.err) {
         log(getTrackerRes.err)
         return
@@ -58,13 +61,13 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
     const interactionUserId = data.member!.user.id
     let saveOrUpdateTrackerRes;
     if (targetTracker) {
-        saveOrUpdateTrackerRes = await databaseUpdateTracker(targetTracker.discord_channel_id, {
+        saveOrUpdateTrackerRes = await makeDatabaseRequest(TrackerEntity, "update", targetTracker.discord_channel_id, {
             registrar_id: interactionUserId,
             github_repository: targetRepository,
             register_status: RegisterStatus.PendingInstallation
         })
     } else {
-        saveOrUpdateTrackerRes = await databaseSaveTracker({
+        saveOrUpdateTrackerRes = await makeDatabaseRequest(TrackerEntity, "save", {
             discord_channel_id: data.channel.id,
             github_repository: targetRepository,
             discord_guild_id: data.guild_id,
@@ -82,8 +85,7 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
         return
     }
     await discordMessageToInteraction(data.id, data.token, {
-        content: `Registration initiated. You need to [install](${GITHUB_APP_INSTALL_URL})TaskTracer app on Github.`,
-        embeds: []
+        content: `Registration initiated. You need to [install]<(${GITHUB_APP_INSTALL_URL})>TaskTracer app on Github.`
     })
     return
 }

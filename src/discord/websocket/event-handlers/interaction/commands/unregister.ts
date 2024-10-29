@@ -1,8 +1,9 @@
-import { APIApplicationCommandInteraction, InteractionContextType, InteractionResponseType } from "discord-api-types/v10";
-import { databaseDeleteTracker, databaseGetTrackerById } from "../../../../../utils/db/tracker";
+import { APIApplicationCommandInteraction, InteractionContextType } from "discord-api-types/v10";
 import { log } from "console";
 import RegisterStatus from "../../../../../db/enum/register-status";
 import discordMessageToInteraction from "../../../../api/interactions/reply/reply-channel-message-with-source";
+import { makeDatabaseRequest } from "../../../../../utils/db/repository-request";
+import TrackerEntity from "../../../../../db/entity/tracker.entity";
 
 export default async function discordHandleUnregisterCommand(data: APIApplicationCommandInteraction) {
     if (!(data.context == InteractionContextType.Guild) || !data.guild_id) {
@@ -11,7 +12,7 @@ export default async function discordHandleUnregisterCommand(data: APIApplicatio
         })
         return
     }
-    const getTrackerRes = await databaseGetTrackerById(data.channel.id)
+    const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", data.channel.id)
     if (getTrackerRes.err) {
         log(getTrackerRes.err)
         return
@@ -23,7 +24,7 @@ export default async function discordHandleUnregisterCommand(data: APIApplicatio
         })
         return
     }
-    const deleteChannelRes = await databaseDeleteTracker(targetTracker.discord_channel_id)
+    const deleteChannelRes = await makeDatabaseRequest(TrackerEntity, "delete", targetTracker.discord_channel_id)
     if (deleteChannelRes.err) {
         log(deleteChannelRes.err)
         await discordMessageToInteraction(data.id, data.token, {
