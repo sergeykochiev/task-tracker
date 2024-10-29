@@ -1,5 +1,5 @@
 import { IncomingHttpHeaders } from "http"
-import GithubEventType from "../../../enum/github/event-type"
+import GithubEventType from "../../../github/enum/github/event-type"
 import ContentType from "../../utils/content-type"
 
 interface GithubWebhookHeaders<CT extends ContentType = ContentType, ET extends GithubEventType = GithubEventType> extends IncomingHttpHeaders {

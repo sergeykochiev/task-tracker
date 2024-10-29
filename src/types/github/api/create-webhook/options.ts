@@ -1,4 +1,4 @@
-import GithubEventType from "../../../../enum/github/event-type"
+import GithubEventType from "../../../../github/enum/github/event-type"
 
 interface GithubApiWebhookCreateOptions {
     name: "web",

@@ -1,10 +1,6 @@
 import getDiscordWebSocketUrl from "../../discord/api/get-websocket-url"
 import DiscordWebsocketConnection from "../../discord/websocket/websocket-connection"
-import githubHandleInteractionMessageComponentRoleSelect from "../../discord/websocket/event-handlers/interaction/message-component/role-select"
-import discordHandleApplicationCommandInteraction from "../../discord/websocket/event-handlers/interaction/commands"
-import discordInstallGlobalCommands from "../../discord/api/install-global-commands"
-import DiscordConfig from "../../config/env/discord.config"
-import ALL_COMMANDS from "../../const/discord/global-commands"
+import discordHandleGatewayEvent from "../../discord/websocket/event-handlers"
 
 export default async function discordInitWebsocket() {
     const wssUrl = await getDiscordWebSocketUrl()
@@ -17,8 +13,7 @@ export default async function discordInitWebsocket() {
     //     throw null
     // }
     const discordWebsocketConnection = new DiscordWebsocketConnection(wssUrl)
-    discordWebsocketConnection.onCommand = discordHandleApplicationCommandInteraction
-    discordWebsocketConnection.onRoleSelect = githubHandleInteractionMessageComponentRoleSelect
+    discordWebsocketConnection.onEvent = discordHandleGatewayEvent
     discordWebsocketConnection.openAndInit()
     return discordWebsocketConnection
 }

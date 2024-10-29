@@ -1,4 +1,4 @@
-import GithubEventType from "../../../enum/github/event-type";
+import GithubEventType from "../../enum/github/event-type";
 import GithubWebhookEventHandlerArgs from "../../../types/utils/handle-github-webhook-event-args";
 import githubHandleInstallationEvent from "./installation";
 import githubHandleIssueCommentEvent from "./issue-comment";

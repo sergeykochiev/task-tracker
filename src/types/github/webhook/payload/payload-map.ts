@@ -1,5 +1,5 @@
 import { WebhookEventMap } from "@octokit/webhooks-types"
-import GithubEventType from "../../../../enum/github/event-type"
+import GithubEventType from "../../../../github/enum/github/event-type"
 
 type WithAction = {
     action: string

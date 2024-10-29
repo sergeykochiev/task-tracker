@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import handleGithubWebhookEvent from ".";
-import GithubWebhookEventHandlerArgs from "../../../types/utils/handle-github-webhook-event-args";
-import validateWebhookSignature from "../../../utils/github/validate-webhook-call";
+import handleGithubWebhookEvent from "./event-handlers";
+import GithubWebhookEventHandlerArgs from "../../types/utils/handle-github-webhook-event-args";
+import validateWebhookSignature from "../../utils/github/validate-webhook-call";
 
 export default async function githubHandleWebhookCall(req: Request, res: Response) {
     console.log("Received github webhook call")

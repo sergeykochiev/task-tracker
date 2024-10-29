@@ -4,3 +4,5 @@ build
 .vercel
 .vscode/
 src/db/migration/
+create-macro-page/
+static
