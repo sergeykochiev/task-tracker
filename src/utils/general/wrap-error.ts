@@ -1,5 +1,5 @@
 export type ErrorWrapperReturnType<Data> = {
-    err: Error,
+    err: Error | string,
     data: null
 } | {
     err: null,

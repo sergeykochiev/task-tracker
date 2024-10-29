@@ -1,16 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import GithubEventType from "../../enum/github/event-type";
-import GithubWebhookEventPayloadMap from "../../types/github/webhook/payload/payload-map";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import TrackerEntity from "./tracker.entity";
-import { GatewayDispatchEvents } from "discord-api-types/v10";
 import MacroTarget from "../enum/macro-target";
+import GithubEvents from "../enum/github-event";
+import DiscordEvents from "../enum/discord-event";
 
-type GithubEventsActionsMap = {
-    [K in GithubEventType]: "action" extends keyof GithubWebhookEventPayloadMap[K] ? GithubWebhookEventPayloadMap[K]["action"] : null
-}
-
-@Entity()
-export default class MacroEventEntity<T extends GithubEventType | GatewayDispatchEvents> {
+@Entity({ name: "MacroEvent" })
+@Unique(["tracker", "origin", "event"])
+export default class MacroEventEntity<Origin extends MacroTarget> {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -27,11 +23,11 @@ export default class MacroEventEntity<T extends GithubEventType | GatewayDispatc
         type: "enum",
         enum: MacroTarget
     })
-    origin: T extends GithubEventType ? MacroTarget.GITHUB : T extends GatewayDispatchEvents ? MacroTarget.DISCORD : never
+    origin: Origin
 
     @Column({
         type: "varchar",
         length: 30
     })
-    event: T extends GithubEventType ? Uppercase<`${T}${"action" extends keyof GithubWebhookEventPayloadMap[T] ? `-${GithubEventsActionsMap[T]}` : never}`> : T extends GatewayDispatchEvents ? T : string
+    event: Origin extends MacroTarget.DISCORD ? DiscordEvents : Origin extends MacroTarget.GITHUB ? GithubEvents : never
 }

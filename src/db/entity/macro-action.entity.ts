@@ -1,15 +1,13 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import GithubEventType from "../../enum/github/event-type";
-import GithubMacroAction from "../enum/github-event-action";
 import MacroEventEntity from "./macro-event.entity";
-import { GatewayDispatchEvents } from "discord-api-types/v10";
-import GithubMacroActionInfoMap from "../../types/db/github-macro-action-info-map";
-import DiscordMacroActionInfoMap from "../../types/db/discord-macro-action-info-map";
-import DiscordMacroAction from "../enum/discord-event-action";
 import MacroTarget from "../enum/macro-target";
+import GithubActions from "../enum/github-action";
+import DiscordActions from "../enum/discord-action";
 
-@Entity()
-export default class MacroActionEntity<A extends GithubMacroAction | DiscordMacroAction, T extends GithubEventType | GatewayDispatchEvents> {
+export type TargetBasedOn<Origin extends MacroTarget> = Origin extends MacroTarget.DISCORD ? MacroTarget.DISCORD : MacroTarget
+
+@Entity({ name: "MacroAction" })
+export default class MacroActionEntity<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>> {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -17,13 +15,13 @@ export default class MacroActionEntity<A extends GithubMacroAction | DiscordMacr
         type: "varchar",
         length: 30
     })
-    action: A extends GithubMacroAction ? GithubMacroAction : A extends DiscordMacroAction ? DiscordMacroAction : never
+    action: Target extends MacroTarget.DISCORD ? DiscordActions : Target extends MacroTarget.GITHUB ? GithubActions : never
 
     @Column({
         type: "enum",
         enum: MacroTarget
     })
-    target: T extends GithubMacroAction ? MacroTarget.GITHUB : T extends DiscordMacroAction ? MacroTarget.DISCORD : never
+    target: Target
 
     @ManyToOne(() => MacroEventEntity, {
         eager: true,
@@ -33,10 +31,12 @@ export default class MacroActionEntity<A extends GithubMacroAction | DiscordMacr
         nullable: true
     })
     @JoinColumn()
-    event: A extends GithubMacroAction ? MacroEventEntity<T> : A extends DiscordMacroAction ? MacroEventEntity<GatewayDispatchEvents> : string
+    event: MacroEventEntity<Origin>
 
     @Column({
-        type: "varchar"
+        type: "json",
+        nullable: true,
+        default: null
     })
-    additional_info: A extends GithubMacroAction ? GithubMacroActionInfoMap[A] : A extends DiscordMacroAction ? DiscordMacroActionInfoMap[A] : string
+    additional_info?: string
 }

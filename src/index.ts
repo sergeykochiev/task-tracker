@@ -1,6 +1,6 @@
 import "reflect-metadata"
-import githubInitWebhookApi from "./utils/github/init-webhook-api"
 import discordInitWebsocket from "./utils/discord/init-websocket"
+import expressInit from "./utils/general/express-init"
 
-discordInitWebsocket()
-githubInitWebhookApi()
+// discordInitWebsocket()
+expressInit()
