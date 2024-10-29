@@ -1,9 +1,8 @@
-import { APIApplicationCommandInteraction, GatewayCloseCodes, GatewayDispatchEvents, GatewayDispatchPayload, GatewayOpcodes, GatewayReceivePayload, GatewaySendPayload, InteractionType, GatewayHeartbeatData, GatewayInvalidSessionData, GatewayHelloData, APIMessageComponentInteraction, GatewayReadyDispatchData, GatewayInteractionCreateDispatchData, GatewayMessageCreateDispatchData, GatewayMessageUpdateDispatchData, GatewayMessageDeleteDispatchData, GatewayMessageDeleteBulkDispatchData, GatewayChannelPinsUpdateDispatchData, APIModalSubmitInteraction, ComponentType, APIMessageComponentButtonInteraction, APIMessageComponentSelectMenuInteraction } from "discord-api-types/v10"
 import { WebSocket, WebSocketEventMap } from "ws"
 import DiscordConfig from "../../config/env/discord.config"
 import DiscordGatewayClosedError from "../../error/discord/gateway-closed.error"
 import { DISCORD_DEFAULT_IDENTIFY_PAYLOAD } from "../../const/discord/default"
-import APIMessageComponentRoleSelectInteraction from "../../types/discord/api-message-component-role-select-interaction"
+import { GatewayDispatchPayload, GatewayCloseCodes, GatewayReceivePayload, GatewayOpcodes, GatewayHelloData, GatewayHeartbeatData, GatewayInvalidSessionData, GatewaySendPayload, GatewayDispatchEvents, GatewayReadyDispatchData } from "discord-api-types/v10"
  
 export default class DiscordWebsocketConnection {
     private socket: WebSocket
@@ -13,17 +12,7 @@ export default class DiscordWebsocketConnection {
     private receivedHeartbeatAck: boolean = false
     private resumeWssUrl: string
     private sessionId: string
-    public onCommand: (data: APIApplicationCommandInteraction) => Promise<void> | void
-    public onReady: (data: GatewayReadyDispatchData) => Promise<void> | void
-    public onMessageCreate: (data: GatewayMessageCreateDispatchData) => Promise<void> | void
-    public onMessageDelete: (data: GatewayMessageDeleteDispatchData) => Promise<void> | void
-    public onMessageDeleteBulk: (data: GatewayMessageDeleteBulkDispatchData) => Promise<void> | void
-    public onMessageUpdate: (data: GatewayMessageUpdateDispatchData) => Promise<void> | void
-    public onChannelPinsUpdate: (data: GatewayChannelPinsUpdateDispatchData) => Promise<void> | void
-    public onMessageComponent: (data: APIMessageComponentInteraction) => Promise<void> | void
-    public onModalSubmit: (data: APIModalSubmitInteraction) => Promise<void> | void
-    public onButtonComponent: (data: APIMessageComponentButtonInteraction) => Promise<void> | void
-    public onRoleSelect: (data: APIMessageComponentRoleSelectInteraction) => Promise<void> | void
+    public onEvent: (event: GatewayDispatchPayload) => any
 
     constructor(
         private wssUrl: string
@@ -184,41 +173,13 @@ export default class DiscordWebsocketConnection {
     private handleDispatched(payload: GatewayDispatchPayload) {
         if (payload.s) this.sequenceNumber = payload.s
         console.log("Received dispatch event:", payload.t)
-        switch(payload.t) {
-            case GatewayDispatchEvents.Ready: this.handleReady(payload.d); break
-            case GatewayDispatchEvents.InteractionCreate: this.handleInteractionCreate(payload.d); break
-            case GatewayDispatchEvents.MessageCreate: this.onMessageCreate && this.onMessageCreate(payload.d); break
-            case GatewayDispatchEvents.MessageDelete: this.onMessageDelete && this.onMessageDelete(payload.d); break
-            case GatewayDispatchEvents.MessageDeleteBulk: this.onMessageDeleteBulk && this.onMessageDeleteBulk(payload.d); break
-            case GatewayDispatchEvents.MessageUpdate: this.onMessageUpdate && this.onMessageUpdate(payload.d); break
-            case GatewayDispatchEvents.ChannelPinsUpdate: this.onChannelPinsUpdate && this.onChannelPinsUpdate(payload.d); break
-        }
-        return
+        if(payload.t == GatewayDispatchEvents.Ready) this.handleReady(payload.d)
+        this.onEvent(payload)
     }
 
     private handleReady(data: GatewayReadyDispatchData) {
         this.sessionId = data.session_id
         this.resumeWssUrl = data.resume_gateway_url
-        this.onReady && this.onReady(data)
-        return
-    }
-
-    private handleInteractionCreate(data: GatewayInteractionCreateDispatchData) {
-        switch(data.type) {
-            case InteractionType.ApplicationCommand: this.onCommand && this.onCommand(data); break
-            case InteractionType.MessageComponent: {
-                if (this.onMessageComponent) {
-                    this.onMessageComponent(data)
-                    break
-                }
-                switch(data.data.component_type) {
-                    case ComponentType.Button: this.onButtonComponent && this.onButtonComponent(data as APIMessageComponentButtonInteraction); break
-                    case ComponentType.RoleSelect: this.onRoleSelect && this.onRoleSelect(data as APIMessageComponentRoleSelectInteraction)
-                }
-                break
-            }
-            case InteractionType.ModalSubmit: this.onModalSubmit && this.onModalSubmit(data); break
-        }
         return
     }
 }
