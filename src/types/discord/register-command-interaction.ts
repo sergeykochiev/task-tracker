@@ -1,7 +1,7 @@
-import { APIApplicationCommandInteractionDataStringOption, APIChatInputApplicationCommandInteraction, APIChatInputApplicationCommandInteractionData } from "discord-api-types/v10";
+import { APIApplicationCommandInteractionDataRoleOption, APIApplicationCommandInteractionDataStringOption, APIChatInputApplicationCommandInteraction, APIChatInputApplicationCommandInteractionData } from "discord-api-types/v10";
 
 interface DiscordRegisterCommandInteractionData extends APIChatInputApplicationCommandInteractionData {
-    options: [APIApplicationCommandInteractionDataStringOption]
+    options: [APIApplicationCommandInteractionDataStringOption, APIApplicationCommandInteractionDataRoleOption]
 }
 
 interface DiscordRegisterCommandInteraction extends APIChatInputApplicationCommandInteraction {
