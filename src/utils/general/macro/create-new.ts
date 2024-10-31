@@ -7,7 +7,7 @@ import DiscordEvents from "../../../db/enum/discord-event";
 import DiscordActions from "../../../db/enum/discord-action";
 import GithubActions from "../../../db/enum/github-action";
 import { makeDatabaseRequest } from "../../db/repository-request";
-import { ErrorWrapperReturnType } from "../wrap-error";
+import { ErrorWrapperReturnType } from "../error-wrapper";
 
 export interface MacroPayload<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>> {
     origin: Origin
@@ -16,12 +16,12 @@ export interface MacroPayload<Origin extends MacroTarget, Target extends TargetB
     action: Target extends MacroTarget.DISCORD ? DiscordActions : Target extends MacroTarget.GITHUB ? GithubActions : never
 }
 
-export default async function macroCreateNew<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>>(channelId: string, payload: MacroPayload<Origin, Target>, info?: string): Promise<ErrorWrapperReturnType<{
+export default async function macroCreateNew<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>>(channelId: string, payload: MacroPayload<Origin, Target>, info?: string, infoRequiresFetching?: boolean): Promise<ErrorWrapperReturnType<{
     event: MacroEventEntity<Origin>,
     action: MacroActionEntity<Origin, Target>
 }>> {
     const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", channelId)
-    if(getTrackerRes.err) return getTrackerRes
+    if(getTrackerRes.err !== null) return getTrackerRes
     if(!getTrackerRes.data) {
         return {
             err: "No tracker registered on this channel",
@@ -35,14 +35,15 @@ export default async function macroCreateNew<Origin extends MacroTarget, Target 
     }
     const createEventRes = await makeDatabaseRequest(MacroEventEntity, "save", newMacroEvent)
     if(createEventRes.err) return createEventRes
-    const newMacroAction: Omit<MacroActionEntity<Origin, Target>, "id"> = {
+    const newMacroAction = {
         action: payload.action,
         event: createEventRes.data as MacroEventEntity<Origin>,
         target: payload.target,
-        additional_info: info
+        additional_info: info,
+        info_requires_fetching: infoRequiresFetching
     }
     const createActionRes = await makeDatabaseRequest(MacroActionEntity, "save", newMacroAction)
-    if(createActionRes.err) return createActionRes
+    if(createActionRes.err !== null) return createActionRes
     return {
         err: null, 
         data: {

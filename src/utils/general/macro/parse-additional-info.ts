@@ -1,14 +1,12 @@
-type ParsedAdditionalInfo = Record<string, {
-    value: string,
-    include: {
-        recursivename: string[]
-        fetchfrom: string[]
-        index: number
-    }[]
-}>
+import ParsedAdditionalInfo from "../../../types/parsed-additional-info"
+import { ErrorWrapperReturnType } from "../error-wrapper"
 
-export default function macroParseAdditionalInfo(additionalInfo: Record<string, any>): ParsedAdditionalInfo {
+export default function macroParseAdditionalInfo(additionalInfo: Record<string, any>): {
+    additionalInfo: ParsedAdditionalInfo,
+    shouldBeFetched: boolean
+} {
     const values = Object.keys(additionalInfo)
+    let shouldbefetched = false
     for(let key = 0; key < values.length; key++) {
         const value = additionalInfo[values[key]]
         let newvalue = ""
@@ -46,6 +44,7 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
                     fetchfrom: currfetchslice >= 0 ? currvar.slice(0, currfetchslice) : [],
                     index: varindex
                 })
+                if(!shouldbefetched && currfetchslice >= 0) shouldbefetched = true
                 varindex = -1
                 currfetchslice = 0
                 currvar = [""]
@@ -75,5 +74,8 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
             include: include
         }
     }
-    return additionalInfo
+    return {
+        additionalInfo: additionalInfo,
+        shouldBeFetched: shouldbefetched,
+    }
 }

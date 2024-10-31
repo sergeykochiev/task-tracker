@@ -10,9 +10,16 @@ import githubHandlePullRequestEvent from "./pull-request";
 import githubHandlePullRequestReviewEvent from "./pull-request-review";
 import githubHandlePullRequestReviewCommentEvent from "./pull-request-review-comment";
 import githubHandlePullRequestReviewThreadEvent from "./pull-request-review-thread";
+import MacroTarget from "../../../db/enum/macro-target";
+import macroExecuteEventActions from "../../../utils/general/macro/execute-actions";
+import macroGetActionsByEvent from "../../../utils/general/macro/get-actions-by-event";
+import GithubEvents from "../../../db/enum/github-event";
 
-export default function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
+export default async function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
     console.log("Received github webhook event:", args.eventType)
+    // @ts-ignore
+    const event = `${args.eventType}${args.data.hasOwnProperty("action") ? `/${args.data.action}` : ""}`
+    console.log("event")
     switch(args.eventType) {
         case GithubEventType.Installation: githubHandleInstallationEvent(args.data); break
         case GithubEventType.Issues: githubHandleIssuesEvent(args.data); break
@@ -25,5 +32,9 @@ export default function githubHandleWebhookEvent(args: GithubWebhookEventHandler
         case GithubEventType.PullRequestReview: githubHandlePullRequestReviewEvent(args.data); break
         case GithubEventType.PullRequestReviewThread: githubHandlePullRequestReviewThreadEvent(args.data); break
     }
+    if(!(Object).values<string>(GithubEvents).includes(event)) return
+    const eventActions = await macroGetActionsByEvent(MacroTarget.GITHUB, event as unknown as GithubEvents)
+    if(eventActions.err !== null) return
+    await macroExecuteEventActions(eventActions.data, args.data)
     return
 }
