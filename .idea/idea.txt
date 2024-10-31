@@ -6,15 +6,16 @@ there needs to be a message with a request to use the configure command at each 
 
 commands
 
-/configure
-	needs to be invoked right after the bot lands on the server. its main function is to evaluate which roles and/or users can register chats for the bot to track. sample sequence:
-	1. init
-	2. request to send roles that have a right to /register
-	3. request to send users that have a right to /register
-	4. end
-	makes server entry in db have pending status on init and configured status on end. pending servers cannot be reconfigured. one conversation only goes with one user
+	***DEPRECATED FEATURES***
+	/configure
+		needs to be invoked right after the bot lands on the server. its main function is to evaluate which roles and/or users can register chats for the bot to track. sample sequence:
+		1. init
+		2. request to send roles that have a right to /register
+		3. request to send users that have a right to /register
+		4. end
+		makes server entry in db have pending status on init and configured status on end. pending servers cannot be reconfigured. one conversation only goes with one user
 
-	also right after there should be message that mentions all provided roles and users with a quick guide. it also should be moved to a inside-discord configuration on server join if there is one.
+		also right after there should be message that mentions all provided roles and users with a quick guide. it also should be moved to a inside-discord configuration on server join if there is one.
 
 /register
 	needs to be invoked in the chat messages of which needs to be tracked and transformed into github issues. main function is to evaluate which roles and/or users can create, assign to and close issues (tasks). sample sequence:
@@ -36,68 +37,73 @@ closing issue on closing pull request accociated with that issue
 
 assigning labels on issues when label assigned to pull request and an issue url is present in its description
 
+	***DEPRECATED FEATURES***
+	ISSUES EVENT
 
-ISSUES EVENT
+	Assigned
+	replies with nofification message (later "notifies"), ideally tags discord users corresponding to target assignees (not yet possible)
 
-Assigned
-replies with nofification message (later "notifies"), ideally tags discord users corresponding to target assignees (not yet possible)
+	Closed
+	notifies
 
-Closed
-notifies
+	Deleted
+	nofifies, closes the thread with comments
 
-Deleted
-nofifies, closes the thread with comments
+	Demilestoned
+	notifies
 
-Demilestoned
-notifies
+	Edited
+	edits the original message or adds an edit p.s. to it, notifies
 
-Edited
-edits the original message or adds an edit p.s. to it, notifies
+	Labeled
+	notifies with label name, adds a label? not sure what it would be. maybe labels thread
 
-Labeled
-notifies with label name, adds a label? not sure what it would be. maybe labels thread
+	Locked
+	notifies
 
-Locked
-notifies
+	Milestoned
+	notifies
 
-Milestoned
-notifies
+	Opened
+	sends a message with all the info and opens a thread for comments if possible. if not, notification contains comment body
 
-Opened
-sends a message with all the info and opens a thread for comments if possible. if not, notification contains comment body
+	Pinned
+	literally pins original message and notifies
 
-Pinned
-literally pins original message and notifies
+	Reopened
+	notifies
 
-Reopened
-notifies
+	Transferred
+	notifies
 
-Transferred
-notifies
+	Unassigned
+	notifies, ideally tags discord users corresponding to target assignees (not yet possible)
 
-Unassigned
-notifies, ideally tags discord users corresponding to target assignees (not yet possible)
+	Unlabeled
+	notifies
 
-Unlabeled
-notifies
+	Unlocked
+	notifies
 
-Unlocked
-notifies
-
-Unpinned
-literally unpins original message and notifies
-
-
-ISSUE COMMENTS EVENT
-
-Created
-notifies, creates a message in comments thread of a related issue if possible, if not, sends comment in nofification message (theres a need to store commend entitites now)
-
-Deleted
-notifies, deletes a message with comment (from a thread or a notification) (or perhaps just makes all the text in that message crossed - or just a heading)
-
-Edited
-edits the original message or adds an edit p.s. to it, notifies
+	Unpinned
+	literally unpins original message and notifies
 
 
+	ISSUE COMMENTS EVENT
 
+	Created
+	notifies, creates a message in comments thread of a related issue if possible, if not, sends comment in nofification message (theres a need to store commend entitites now)
+
+	Deleted
+	notifies, deletes a message with comment (from a thread or a notification) (or perhaps just makes all the text in that message crossed - or just a heading)
+
+	Edited
+	edits the original message or adds an edit p.s. to it, notifies
+
+idea for macros:
+create a match section for action. there you can pick two fields that on action execute should be compared and if the compare operation returns true then it runs otherwhise it doesnt
+
+add selecting label name etc. based on repository
+
+frontend:
+variable present in input should be highlighted in variables list
