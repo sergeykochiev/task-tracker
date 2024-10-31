@@ -34,9 +34,19 @@ export default class MacroActionEntity<Origin extends MacroTarget, Target extend
     event: MacroEventEntity<Origin>
 
     @Column({
-        type: "json",
+        type: "varchar",
         nullable: true,
         default: null
     })
     additional_info?: string
+
+    parseAdditionalInfo() {
+        if(!this.additional_info) return null
+        return JSON.parse(this.additional_info)
+    }
+
+    @Column({
+        default: false
+    })
+    info_requires_fetching: boolean
 }

@@ -7,7 +7,7 @@ type GithubRequestErrorBody = any
 
 async function githubMakeRequest<T extends ParsedBody = never>(endpoint: string, token?: string, options?: Omit<UnparsedBodyRequestInit, "headers">) {
     return await makeRequest<T, GithubRequestErrorBody>(GITHUB_API_ROOT + endpoint, {
-        headers: token ? githubGetAuthHeaders(token) : GITHUB_HEADERS,
+        headers: token !== undefined ? githubGetAuthHeaders(token) : GITHUB_HEADERS,
         ...options
     })
 }

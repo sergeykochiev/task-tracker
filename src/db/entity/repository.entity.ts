@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
-import InstallationEntity from "./installation.entity";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
-@Entity()
+@Entity({ name: "GithubRepository" })
 @Unique(["owner", "name"])
 export default class RepositoryEntity {
     @PrimaryGeneratedColumn()
@@ -13,13 +12,9 @@ export default class RepositoryEntity {
     @Column()
     name: string
 
-    @ManyToOne(() => InstallationEntity, {
+    @Column({
         nullable: true,
-        onDelete: "SET NULL",
-        onUpdate: "CASCADE",
-        eager: true,
-        cascade: true
+        default: null
     })
-    @JoinColumn()
-    installation?: InstallationEntity
+    installationId?: string
 }
