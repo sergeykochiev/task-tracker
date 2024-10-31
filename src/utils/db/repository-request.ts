@@ -1,6 +1,6 @@
 import { EntityTarget, ObjectLiteral, Repository } from "typeorm";
 import AppDataSource from "../../db/data-source";
-import { ErrorWrapperReturnType, wrapErrorAsync } from "../general/wrap-error";
+import { ErrorWrapperReturnType, wrapErrorAsync } from "../general/error-wrapper";
 
 type AllowedMethods = keyof Pick<Repository<ObjectLiteral>, "save" | "update" | "findBy" | "findOneBy" | "delete" | "findOneById">
 

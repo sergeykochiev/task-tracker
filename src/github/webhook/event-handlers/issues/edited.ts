@@ -1,6 +1,6 @@
 import { IssuesEditedEvent } from "@octokit/webhooks-types";
-import discordEditMessage from "../../../../discord/api/messages/edit-message";
-import discordGetMessage from "../../../../discord/api/messages/get-message";
+import discordEditMessage from "../../../../utils/discord/api/messages/edit-message";
+import discordGetMessage from "../../../../utils/discord/api/messages/get-message";
 import OriginalMessageEntity from "../../../../db/entity/original-message.entity";
 import mapThroughIssueMessages from "../../../../utils/general/map-through-issue-messages";
 import discordIssueEventNotifyWithRef from "../../../../utils/discord/issue-event-notify-with-ref";

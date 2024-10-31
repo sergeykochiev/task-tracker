@@ -1,9 +1,9 @@
-import { ErrorWrapperReturnType, wrapErrorAsync } from "./wrap-error"
+import { ErrorWrapperReturnType, wrapErrorAsync } from "./error-wrapper"
 
 export type RequestBody = Record<string, any>
 export type ParsedBody = RequestBody | null | undefined
 export type UnparsedBodyRequestInit = Omit<RequestInit, "body"> & { body?: any }
-export type RequestReturn<T extends ParsedBody, E extends ParsedBody> = {
+export type RequestReturn<T extends ParsedBody = any, E extends ParsedBody = any> = {
     status: number,
 } & ({
     ok: true,

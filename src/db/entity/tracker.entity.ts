@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import RegisterStatus from "../enum/register-status";
 import GithubRepoEntity from "./repository.entity";
 import RoleEntity from "./role.entity";
 
-@Entity()
+@Entity({ name: "ChannelTracker" })
 export default class TrackerEntity {
     @PrimaryColumn()
     discord_channel_id: string

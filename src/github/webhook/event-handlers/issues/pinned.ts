@@ -1,5 +1,5 @@
 import { IssuesPinnedEvent } from "@octokit/webhooks-types";
-import discordChangeMessagePinState from "../../../../discord/api/messages/change-message-pin-state";
+import discordChangeMessagePinState from "../../../../utils/discord/api/messages/change-message-pin-state";
 import mapThroughIssueMessages from "../../../../utils/general/map-through-issue-messages";
 import OriginalMessageEntity from "../../../../db/entity/original-message.entity";
 import discordIssueEventNotifyWithRef from "../../../../utils/discord/issue-event-notify-with-ref";

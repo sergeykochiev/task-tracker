@@ -1,7 +1,7 @@
 import TrackerEntity from "../../db/entity/tracker.entity";
 import RegisterStatus from "../../db/enum/register-status";
-import discordEditOriginalInteractionResponse from "../../discord/api/interactions/edit-original-interaction-response";
-import discordSendMessageToChannel from "../../discord/api/messages/send-message";
+import discordEditOriginalInteractionResponse from "../discord/api/interactions/edit-original-interaction-response";
+import discordSendMessageToChannel from "../discord/api/messages/send-message";
 import { makeDatabaseRequest } from "../db/repository-request";
 
 export default async function handleChannelRegistrationFailure(channelId: string, reason: string, interactionToken?: string) {

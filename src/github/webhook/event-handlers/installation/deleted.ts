@@ -2,7 +2,7 @@ import { InstallationDeletedEvent, Organization } from "@octokit/webhooks-types"
 import iterateOnEveryTrackerOfRepository from "../../../../utils/general/iterate-on-every-tracker-of-repository";
 import { log } from "console";
 import TrackerEntity from "../../../../db/entity/tracker.entity";
-import discordSendMessageToChannel from "../../../../discord/api/messages/send-message";
+import discordSendMessageToChannel from "../../../../utils/discord/api/messages/send-message";
 import GITHUB_APP_INSTALL_URL from "../../../../const/github/new-install-url";
 import RegisterStatus from "../../../../db/enum/register-status";
 import { makeDatabaseRequest } from "../../../../utils/db/repository-request";

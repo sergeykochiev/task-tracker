@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import TrackerEntity from "./tracker.entity";
 import IssueTrackEntity from "./issue-track.entity";
 
-@Entity()
+@Entity({ name: "IssueOriginalMessage" })
 export default class OriginalMessageEntity {
     @PrimaryColumn()
     id: string

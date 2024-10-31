@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import RepositoryEntity from "./repository.entity";
 
-@Entity()
+@Entity({ name: "GithubIssueTracker" })
 export default class IssueTrackEntity {
     @PrimaryColumn()
     id: string

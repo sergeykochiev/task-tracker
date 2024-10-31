@@ -1,4 +1,4 @@
-import getDiscordWebSocketUrl from "../../discord/api/get-websocket-url"
+import getDiscordWebSocketUrl from "./api/get-websocket-url"
 import DiscordWebsocketConnection from "../../discord/websocket/websocket-connection"
 import discordHandleGatewayEvent from "../../discord/websocket/event-handlers"
 
@@ -12,7 +12,7 @@ export default async function discordInitWebsocket() {
     //     console.error(JSON.stringify(a.data.data))
     //     throw null
     // }
-    const discordWebsocketConnection = new DiscordWebsocketConnection(wssUrl)
+    const discordWebsocketConnection = new DiscordWebsocketConnection(wssUrl, true)
     discordWebsocketConnection.onEvent = discordHandleGatewayEvent
     discordWebsocketConnection.openAndInit()
     return discordWebsocketConnection

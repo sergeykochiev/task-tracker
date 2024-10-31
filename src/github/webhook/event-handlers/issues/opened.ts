@@ -3,7 +3,7 @@ import TrackerEntity from "../../../../db/entity/tracker.entity";
 import discordIssueEventNotifyWithRef from "../../../../utils/discord/issue-event-notify-with-ref";
 import { log } from "console";
 import { InteractionResponseType } from "discord-api-types/v10";
-import discordSendMessageToChannel from "../../../../discord/api/messages/send-message";
+import discordSendMessageToChannel from "../../../../utils/discord/api/messages/send-message";
 import { makeDatabaseRequest } from "../../../../utils/db/repository-request";
 import IssueTrackEntity from "../../../../db/entity/issue-track.entity";
 import OriginalMessageEntity from "../../../../db/entity/original-message.entity";

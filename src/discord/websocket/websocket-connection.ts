@@ -15,7 +15,8 @@ export default class DiscordWebsocketConnection {
     public onEvent: (event: GatewayDispatchPayload) => any
 
     constructor(
-        private wssUrl: string
+        private wssUrl: string,
+        private debug?: boolean
     ) {}
 
     public async openAndInit(wssUrl: string = this.wssUrl) {
@@ -75,7 +76,7 @@ export default class DiscordWebsocketConnection {
             this.sendHeartbeat()
             this.keepTheHeartBeating()
             this.identify()
-        }, this.heartbeatIntervalDelay * jitter)
+        }, !this.debug ? this.heartbeatIntervalDelay * jitter : 0)
         return
     }
 

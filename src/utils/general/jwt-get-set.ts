@@ -1,4 +1,4 @@
-import githubGenerateJwt from "../github/generate-jwt";
+import githubSignJwt from "../github/sign-jwt";
 
 function jwtVault() {
     let jwt: string;
@@ -8,7 +8,7 @@ function jwtVault() {
     }
 
     function generateJwt() {
-        jwt = githubGenerateJwt()
+        jwt = githubSignJwt()
         return jwt
     }
 

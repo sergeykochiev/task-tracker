@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "DiscordRole" })
 export default class RoleEntity {
     @PrimaryColumn()
     id: string

@@ -13,9 +13,13 @@ export default function expressInit() {
     macroRouter.use("/", express.static("static/macro"))
     macroRouter.post("/", express.json(), handleApiMacroCreate)
 
-    app.use("/macro/:uuid", validateMacroRequestMiddleware, macroRouter)
+    app.use(
+        "/macro/:uuid",
+        validateMacroRequestMiddleware,
+        macroRouter
+    )
     app.post('/github', express.json(), handleGithubHookCall)
-    // app.post('/macro-create', express.json(), handleApiMacroCreate)
+    app.post('/macro-create', express.json(), handleApiMacroCreate)
 
     const PORT = AppConfig.PORT
     app.listen(PORT, () => {

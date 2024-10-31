@@ -1,4 +1,4 @@
-import { APIActionRowComponent, APIMessageActionRowComponent, APIModalInteractionResponseCallbackData, ComponentType, GatewayIdentify, GatewayIntentBits, GatewayOpcodes } from "discord-api-types/v10"
+import { APIActionRowComponent, APIMessageActionRowComponent, ComponentType, GatewayIdentify, GatewayIntentBits, GatewayOpcodes } from "discord-api-types/v10"
 import DiscordConfig from "../../config/env/discord.config"
 import os from "node:os"
 import INITIAL_PRESENCE_UPDATE_PAYLOAD from "./initial-presence-update-payload"
@@ -14,7 +14,7 @@ export const DISCORD_DEFAULT_IDENTIFY_PAYLOAD: GatewayIdentify = {
             device: DISCORD_AUTH_HEADERS["User-Agent"]
         },
         presence: INITIAL_PRESENCE_UPDATE_PAYLOAD,
-        intents: GatewayIntentBits.GuildMessages + GatewayIntentBits.DirectMessages
+        intents: GatewayIntentBits.GuildMessages + GatewayIntentBits.DirectMessages + GatewayIntentBits.MessageContent
     }
 } as const
 

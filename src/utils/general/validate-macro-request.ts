@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 
-function macroRequestsClosure() {
+function macroRequestsClosure(): [(uuid: string) => string, (uuid: string) => string, (uuid: string) => void] {
     const macroRequests: Record<string, string> = {}
 
     function a(channelId: string) {
@@ -11,23 +11,29 @@ function macroRequestsClosure() {
 
     function g(uuid: string) {
         const channelId = macroRequests[uuid]
-        delete macroRequests[uuid]
         return channelId
     }
 
-    return [a, g]
+    function d(uuid: string) {
+        delete macroRequests[uuid]
+        return
+    }
+
+    return [a, g, d]
 }
 
-const [addMacroRequest, getMacroRequestChannelId] = macroRequestsClosure()
+const [addMacroRequest, getMacroRequestChannelId, deleteMacroRequest] = macroRequestsClosure()
 
-export { addMacroRequest }
+export { addMacroRequest, deleteMacroRequest }
 
 export default function validateMacroRequestMiddleware(req: Request, res: Response, next: NextFunction) {
     const channelId = getMacroRequestChannelId(req.params.uuid)
     if(channelId === undefined) {
+        console.log("not valid")
         res.status(404)
         return
     }
+    console.log("valid")
     res.locals.channelId = channelId
     next()
 }

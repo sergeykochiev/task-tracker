@@ -1,6 +1,6 @@
 import { InstallationSuspendEvent, Organization } from "@octokit/webhooks-types";
 import TrackerEntity from "../../../../db/entity/tracker.entity";
-import discordSendMessageToChannel from "../../../../discord/api/messages/send-message";
+import discordSendMessageToChannel from "../../../../utils/discord/api/messages/send-message";
 import iterateOnEveryTrackerOfRepository from "../../../../utils/general/iterate-on-every-tracker-of-repository";
 
 async function trackerSuspendNotifyCallback(tracker: TrackerEntity) {
