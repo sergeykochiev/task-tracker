@@ -1,9 +1,9 @@
 import { APIApplicationCommandInteraction, InteractionContextType } from "discord-api-types/v10";
 import { log } from "console";
-import RegisterStatus from "../../../../../db/enum/register-status";
-import discordMessageToInteraction from "../../../../../utils/discord/api/messages/reply-channel-message-with-source";
-import { makeDatabaseRequest } from "../../../../../utils/db/repository-request";
-import TrackerEntity from "../../../../../db/entity/tracker.entity";
+import TrackerEntity from "../../../../db/entity/tracker.entity";
+import { makeDatabaseRequest } from "../../../../db/repository-request";
+import RegisterStatus from "../../../../enum/register-status";
+import discordMessageToInteraction from "../../../../utils/discord/api/messages/reply-channel-message-with-source";
 
 export default async function discordHandleUnregisterCommand(data: APIApplicationCommandInteraction) {
     if (!(data.context == InteractionContextType.Guild) || !data.guild_id) {

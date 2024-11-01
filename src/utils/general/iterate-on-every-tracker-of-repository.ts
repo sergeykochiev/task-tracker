@@ -1,6 +1,6 @@
 import { log } from "console"
 import TrackerEntity from "../../db/entity/tracker.entity"
-import { makeDatabaseRequest } from "../db/repository-request"
+import { makeDatabaseRequest } from "../../db/repository-request"
 
 export default async function iterateOnEveryTrackerOfRepository(owner: string, name: string, callback: (tracker: TrackerEntity) => Promise<void>) {
     const getTrackersRes = await makeDatabaseRequest(TrackerEntity, "findBy", {

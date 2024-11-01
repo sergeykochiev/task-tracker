@@ -1,13 +1,13 @@
 import TrackerEntity from "../../../db/entity/tracker.entity";
 import MacroEventEntity from "../../../db/entity/macro-event.entity";
 import MacroActionEntity, { TargetBasedOn } from "../../../db/entity/macro-action.entity";
-import { makeDatabaseRequest } from "../../db/repository-request";
 import { ErrorWrapperReturnType } from "../error-wrapper";
 import DiscordActions from "../../../enum/macro/discord-action";
 import DiscordEvents from "../../../enum/macro/discord-event";
 import GithubActions from "../../../enum/macro/github-action";
 import GithubEvents from "../../../enum/macro/github-event";
 import MacroTarget from "../../../enum/macro/macro-target";
+import { makeDatabaseRequest } from "../../../db/repository-request";
 
 export interface MacroPayload<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>> {
     origin: Origin

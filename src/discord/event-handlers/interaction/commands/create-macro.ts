@@ -1,12 +1,12 @@
 import { log } from "console";
 import { APIApplicationCommandInteraction, InteractionResponseType } from "discord-api-types/v10";
-import TrackerEntity from "../../../../../db/entity/tracker.entity";
-import RegisterStatus from "../../../../../db/enum/register-status";
-import { makeDatabaseRequest } from "../../../../../utils/db/repository-request";
-import discordMessageToInteraction from "../../../../../utils/discord/api/messages/reply-channel-message-with-source";
-import discordReplyToInteraction from "../../../../../utils/discord/api/interactions/reply-to-interaction";
-import macroGetOneTimeLink from "../../../../../utils/general/macro/get-one-time-link";
-import { addMacroRequest } from "../../../../../utils/general/validate-macro-request";
+import TrackerEntity from "../../../../db/entity/tracker.entity";
+import { makeDatabaseRequest } from "../../../../db/repository-request";
+import RegisterStatus from "../../../../enum/register-status";
+import discordReplyToInteraction from "../../../../utils/discord/api/interactions/reply-to-interaction";
+import discordMessageToInteraction from "../../../../utils/discord/api/messages/reply-channel-message-with-source";
+import macroGetOneTimeLink from "../../../../utils/general/macro/get-one-time-link";
+import { addMacroRequest } from "../../../../utils/general/validate-macro-request";
 
 export default async function discordHandleCreateMacroCommand(data: APIApplicationCommandInteraction) {
     const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", data.channel.id)
