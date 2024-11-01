@@ -3,7 +3,7 @@ import { log } from "console";
 import GITHUB_APP_INSTALL_URL from "../../../const/github/new-install-url";
 import TrackerEntity from "../../../db/entity/tracker.entity";
 import RegisterStatus from "../../../enum/register-status";
-import { makeDatabaseRequest } from "../../../utils/db/repository-request";
+import { makeDatabaseRequest } from "../../../db/repository-request";
 import discordSendMessageToChannel from "../../../utils/discord/api/messages/send-message";
 import iterateOnEveryTrackerOfRepository from "../../../utils/general/iterate-on-every-tracker-of-repository";
 

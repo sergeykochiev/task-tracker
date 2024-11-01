@@ -2,7 +2,7 @@ import { InstallationCreatedEvent, Organization } from "@octokit/webhooks-types"
 import RepositoryEntity from "../../../db/entity/repository.entity";
 import TrackerEntity from "../../../db/entity/tracker.entity";
 import RegisterStatus from "../../../enum/register-status";
-import { makeDatabaseRequest } from "../../../utils/db/repository-request";
+import { makeDatabaseRequest } from "../../../db/repository-request";
 import discordSendMessageToChannel from "../../../utils/discord/api/messages/send-message";
 
 async function updateEachRepository(owner: string, name: string, installationId: number) {
