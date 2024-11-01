@@ -12,7 +12,7 @@ export default async function discordHandleGatewayEvent(payload: GatewayDispatch
         case GatewayDispatchEvents.InteractionCreate: discordHandleInteractionCreate(payload.d); break
     }
     // @ts-ignore
-    if(payload.d.hasOwnProperty("creator_id") && payload.d.creator_id !== DiscordConfig.APP_ID) {
+    if(payload.d.hasOwnProperty("author") && payload.d.author.id === DiscordConfig.APP_ID) {
         return
     }
     if(!(Object).values<string>(DiscordEvents).includes(event)) return

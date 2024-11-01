@@ -105,5 +105,7 @@ create a match section for action. there you can pick two fields that on action 
 
 add selecting label name etc. based on repository
 
+make current functionality into default created macros
+
 frontend:
 variable present in input should be highlighted in variables list

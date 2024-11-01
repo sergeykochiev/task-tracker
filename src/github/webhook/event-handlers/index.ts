@@ -14,12 +14,12 @@ import MacroTarget from "../../../db/enum/macro-target";
 import macroExecuteEventActions from "../../../utils/general/macro/execute-actions";
 import macroGetActionsByEvent from "../../../utils/general/macro/get-actions-by-event";
 import GithubEvents from "../../../db/enum/github-event";
+import GithubAppConfig from "../../../config/env/github.config";
 
 export default async function githubHandleWebhookEvent(args: GithubWebhookEventHandlerArgs) {
     console.log("Received github webhook event:", args.eventType)
     // @ts-ignore
     const event = `${args.eventType}${args.data.hasOwnProperty("action") ? `/${args.data.action}` : ""}`
-    console.log("event")
     switch(args.eventType) {
         case GithubEventType.Installation: githubHandleInstallationEvent(args.data); break
         case GithubEventType.Issues: githubHandleIssuesEvent(args.data); break
@@ -31,6 +31,10 @@ export default async function githubHandleWebhookEvent(args: GithubWebhookEventH
         case GithubEventType.PullRequestReviewComment: githubHandlePullRequestReviewCommentEvent(args.data); break
         case GithubEventType.PullRequestReview: githubHandlePullRequestReviewEvent(args.data); break
         case GithubEventType.PullRequestReviewThread: githubHandlePullRequestReviewThreadEvent(args.data); break
+    }
+    // @ts-ignore
+    if(args.data.hasOwnProperty("sender") && args.data.sender.id === GithubAppConfig.USER_ID) {
+        return
     }
     if(!(Object).values<string>(GithubEvents).includes(event)) return
     const eventActions = await macroGetActionsByEvent(MacroTarget.GITHUB, event as unknown as GithubEvents)

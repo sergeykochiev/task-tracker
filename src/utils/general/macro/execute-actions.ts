@@ -32,7 +32,13 @@ export default async function macroExecuteEventActions<Origin extends MacroTarge
         // console.dir(eventActions.data[a].parseAdditionalInfo(), {
         //     depth: Infinity
         // })
-        const actionPayload = await macroPayloadFromParsedInfo(eventPayload, action.parseAdditionalInfo(), action.info_requires_fetching ? DISCORD_AUTH_HEADERS : undefined)
+
+        
+        const { match1, match2, ...actionPayload } = await macroPayloadFromParsedInfo(eventPayload, action.parseAdditionalInfo(), action.info_requires_fetching ? DISCORD_AUTH_HEADERS : undefined)
+        console.log(match1, match2)
+        if(match1 && match1 !== match2) {
+            return
+        }
         let actionRes
         const { id, ...payload } = actionPayload
         console.log(id, payload)
@@ -61,7 +67,6 @@ export default async function macroExecuteEventActions<Origin extends MacroTarge
                     body: payload
                 })
             }
-        console.log(actionRes)
         }
     }
 }
