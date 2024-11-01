@@ -1,4 +1,4 @@
-import { GITHUB_HEADERS } from "../../const/api/github.api";
+import { GITHUB_HEADERS } from "../../const/github/api";
 
 export default function githubGetAuthHeaders(token: string) {
     return {

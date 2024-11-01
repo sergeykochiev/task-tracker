@@ -1,11 +1,11 @@
-import { DISCORD_AUTH_HEADERS, DISCORD_V10_API_ROOT } from "../../../const/api/discord.api";
-import { GITHUB_API_ROOT } from "../../../const/api/github.api";
 import DISCORD_ACTION_TO_URL_MAP from "../../../const/discord/action-url-map";
+import { DISCORD_AUTH_HEADERS, DISCORD_V10_API_ROOT } from "../../../const/discord/api";
 import GITHUB_ACTION_TO_URL_MAP from "../../../const/github/action-url-map";
+import { GITHUB_API_ROOT } from "../../../const/github/api";
 import MacroActionEntity, { TargetBasedOn } from "../../../db/entity/macro-action.entity";
-import DiscordActions from "../../../db/enum/discord-action";
-import GithubActions from "../../../db/enum/github-action";
-import MacroTarget from "../../../db/enum/macro-target";
+import DiscordActions from "../../../enum/macro/discord-action";
+import GithubActions from "../../../enum/macro/github-action";
+import MacroTarget from "../../../enum/macro/macro-target";
 import githubGetInstallationAccessToken from "../../github/api/get-installation-access-token";
 import githubGetRepositoryInstallation from "../../github/api/get-repo-installation";
 import githubWithJwtRenewal from "../../github/api/with-jwt-renewal-wrapper";
@@ -19,6 +19,7 @@ export default async function macroExecuteEventActions<Origin extends MacroTarge
     for(let a = 0; a < eventActions.length; a++) {
         const action = eventActions[a]
         const [owner, repo] = [action.event.tracker.github_repository.owner, action.event.tracker.github_repository.name]
+        // should be a function somehow
         if(githubToken == null) {
             if(!repoInstallId) {
                 const repoInstallRes = await githubWithJwtRenewal(jwt => githubGetRepositoryInstallation(jwt, owner, repo))
@@ -27,13 +28,8 @@ export default async function macroExecuteEventActions<Origin extends MacroTarge
             }
             const tokenRes = await githubWithJwtRenewal(jwt => githubGetInstallationAccessToken(jwt, String(repoInstallId)))
             if(tokenRes.err !== null || !tokenRes.data.ok) continue
-            githubToken = tokenRes.data.data.token
-        }
-        // console.dir(eventActions.data[a].parseAdditionalInfo(), {
-        //     depth: Infinity
-        // })
-
-        
+            githubToken = tokenRes.data.data.data.token
+        }        
         const { match1, match2, ...actionPayload } = await macroPayloadFromParsedInfo(eventPayload, action.parseAdditionalInfo(), action.info_requires_fetching ? DISCORD_AUTH_HEADERS : undefined)
         console.log(match1, match2)
         if(match1 && match1 !== match2) {
@@ -59,7 +55,7 @@ export default async function macroExecuteEventActions<Origin extends MacroTarge
                     }
                     const tokenRes = await githubWithJwtRenewal(jwt => githubGetInstallationAccessToken(jwt, String(repoInstallId)))
                     if(tokenRes.err !== null || !tokenRes.data.ok) continue
-                    githubToken = tokenRes.data.data.token
+                    githubToken = tokenRes.data.data.data.token
                 }
                 actionRes = await makeRequest(GITHUB_API_ROOT + GITHUB_ACTION_TO_URL_MAP[action.action as GithubActions](owner, repo, id), {
                     headers: githubGetAuthHeaders(githubToken as string),

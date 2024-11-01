@@ -1,4 +1,4 @@
-import { DISCORD_AUTH_HEADERS, DISCORD_V10_API_ROOT } from "../../const/api/discord.api";
+import { DISCORD_V10_API_ROOT, DISCORD_AUTH_HEADERS } from "../../const/discord/api";
 import makeRequest, { ParsedBody, UnparsedBodyRequestInit } from "../general/request";
 
 type DiscordRequestErrorBody = any

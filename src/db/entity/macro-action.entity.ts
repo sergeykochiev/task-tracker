@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import MacroEventEntity from "./macro-event.entity";
-import MacroTarget from "../enum/macro-target";
-import GithubActions from "../enum/github-action";
-import DiscordActions from "../enum/discord-action";
+import DiscordActions from "../../enum/macro/discord-action";
+import GithubActions from "../../enum/macro/github-action";
+import MacroTarget from "../../enum/macro/macro-target";
 
 export type TargetBasedOn<Origin extends MacroTarget> = Origin extends MacroTarget.DISCORD ? MacroTarget.DISCORD : MacroTarget
 

@@ -1,6 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, ApplicationIntegrationType, GatewayDispatchEvents, InteractionContextType, RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10"
-import GithubMacroAction from "../../db/enum/github-action"
-import DiscordMacroAction from "../../db/enum/discord-action"
+import { ApplicationCommandOptionType, ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10"
 
 const REGISTER_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
     name: 'register',

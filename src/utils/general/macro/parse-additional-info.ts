@@ -1,5 +1,4 @@
 import ParsedAdditionalInfo from "../../../types/parsed-additional-info"
-import { ErrorWrapperReturnType } from "../error-wrapper"
 
 export default function macroParseAdditionalInfo(additionalInfo: Record<string, any>): {
     additionalInfo: ParsedAdditionalInfo,

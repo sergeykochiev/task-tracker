@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import TrackerEntity from "./tracker.entity";
-import MacroTarget from "../enum/macro-target";
-import GithubEvents from "../enum/github-event";
-import DiscordEvents from "../enum/discord-event";
+import DiscordEvents from "../../enum/macro/discord-event";
+import GithubEvents from "../../enum/macro/github-event";
+import MacroTarget from "../../enum/macro/macro-target";
 
 @Entity({ name: "MacroEvent" })
 @Unique(["tracker", "origin", "event"])

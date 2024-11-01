@@ -1,4 +1,4 @@
-import { DISCORD_ENDPOINTS } from "../../../../const/api/discord.api";
+import { DISCORD_ENDPOINTS } from "../../../../const/discord/api";
 import discordMakeRequest from "../../discord-request";
 
 export default async function discordChangeMessagePinState(channelId: string, messageId: string, pin: true) {

@@ -1,7 +1,8 @@
 import { Repository } from "@octokit/webhooks-types"
-import { GITHUB_ENDPOINTS } from "../../../const/api/github.api"
 import githubMakeRequest from "../github-request"
+import { GITHUB_ENDPOINTS } from "../../../const/github/api"
+import { Endpoints } from "@octokit/types"
 
 export default async function githubGetRepository(token: string, repoOwner: string, repoName: string) {
-    return await githubMakeRequest<Repository>(GITHUB_ENDPOINTS.REPO(repoOwner, repoName).GET, token)
+    return await githubMakeRequest<Endpoints["GET /repos/{owner}/{repo}"]["response"]>(GITHUB_ENDPOINTS.REPO(repoOwner, repoName).GET, token)
 }

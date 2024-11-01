@@ -1,4 +1,4 @@
-import { GITHUB_ENDPOINTS } from "../../../const/api/github.api"
+import { GITHUB_ENDPOINTS } from "../../../const/github/api";
 import githubMakeRequest from "../github-request"
 import { Endpoints } from "@octokit/types";
 

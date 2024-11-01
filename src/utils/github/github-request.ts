@@ -1,5 +1,4 @@
-import GithubAppConfig from "../../config/env/github.config";
-import { GITHUB_API_ROOT, GITHUB_HEADERS } from "../../const/api/github.api";
+import { GITHUB_API_ROOT, GITHUB_HEADERS } from "../../const/github/api";
 import makeRequest, { ParsedBody, UnparsedBodyRequestInit } from "../general/request";
 import githubGetAuthHeaders from "./get-auth-headers";
 

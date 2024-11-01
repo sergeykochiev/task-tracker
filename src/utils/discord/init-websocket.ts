@@ -1,6 +1,6 @@
+import discordHandleGatewayEvent from "../../discord/event-handlers"
+import DiscordWebsocketConnection from "../../discord/websocket-connection"
 import getDiscordWebSocketUrl from "./api/get-websocket-url"
-import DiscordWebsocketConnection from "../../discord/websocket/websocket-connection"
-import discordHandleGatewayEvent from "../../discord/websocket/event-handlers"
 
 export default async function discordInitWebsocket() {
     const wssUrl = await getDiscordWebSocketUrl()

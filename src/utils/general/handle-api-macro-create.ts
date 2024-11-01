@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import macroParseAdditionalInfo from "./macro/parse-additional-info";
-import MacroTarget from "../../db/enum/macro-target";
 import macroCreateNew, { MacroPayload } from "./macro/create-new";
 import { TargetBasedOn } from "../../db/entity/macro-action.entity";
 import { deleteMacroRequest } from "./validate-macro-request";
-import { disconnect } from "node:process";
-import discordSendFollowupMessage from "../discord/api/interactions/send-followup-message";
 import discordSendMessageToChannel from "../discord/api/messages/send-message";
+import MacroTarget from "../../enum/macro/macro-target";
 
 type MacroRequestPayload<Origin extends MacroTarget, Target extends TargetBasedOn<Origin>> = MacroPayload<Origin, Target> & Record<string, string>
 

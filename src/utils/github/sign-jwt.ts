@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
-import GithubAppConfig from '../../config/env/github.config';
 import fs from "node:fs"
-import os from "os"
+import GithubAppConfig from '../../envcfg/github.config';
 
 const drift = 60
 

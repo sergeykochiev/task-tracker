@@ -1,4 +1,4 @@
-import GithubActions from "../../db/enum/github-action"
+import GithubActions from "../../enum/macro/github-action"
 
 const GITHUB_ACTION_TO_URL_MAP: Record<GithubActions, (owner: string, repo: string, id?: number) => string> = {
     [GithubActions.CloseIssue]: (owner, repo) => "",
