@@ -7,3 +7,4 @@ src/db/migration/
 create-macro-page/
 static
 key.pem
+resources/

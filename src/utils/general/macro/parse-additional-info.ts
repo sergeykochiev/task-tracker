@@ -14,6 +14,7 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
         let currvar: string[] = [""]
         let varindex = -1
         let currfetchslice = -1
+        let offset = 0
         for(let i = 0; i < value.length; i++) {
             const char: string = value[i]
             if(stack && !char.match(/[a-z]|[A-Z]|-|>|./)) {
@@ -41,9 +42,10 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
                 include.push({
                     recursivename: currfetchslice >= 0 ? currvar.slice(currfetchslice) : currvar,
                     fetchfrom: currfetchslice >= 0 ? currvar.slice(0, currfetchslice) : [],
-                    index: varindex
+                    index: varindex - offset
                 })
                 if(!shouldbefetched && currfetchslice >= 0) shouldbefetched = true
+                offset += i - varindex + 1
                 varindex = -1
                 currfetchslice = 0
                 currvar = [""]

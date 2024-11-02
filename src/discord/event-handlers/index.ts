@@ -4,6 +4,8 @@ import MacroTarget from "../../enum/macro/macro-target";
 import macroExecuteEventActions from "../../utils/general/macro/execute-actions";
 import macroGetActionsByEvent from "../../utils/general/macro/get-actions-by-event";
 import DiscordEvents from "../../enum/macro/discord-event";
+import DiscordConfig from "../../envcfg/discord.config";
+
 export default async function discordHandleGatewayEvent(payload: GatewayDispatchPayload) {
     const event = payload.t
     switch(payload.t) {

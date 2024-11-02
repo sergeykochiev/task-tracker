@@ -1,4 +1,4 @@
-enum GithubActions {
+enum GithubMacroActions {
     CreateIssue = "CREATE_ISSUE",
     CloseIssue = "CLOSE_ISSUE",
     ReopenIssue = "REOPEN_ISSUE",
@@ -6,4 +6,4 @@ enum GithubActions {
     LabelPullRequest = "LABEL_PULL_REQUEST",
 }
 
-export default GithubActions
+export default GithubMacroActions

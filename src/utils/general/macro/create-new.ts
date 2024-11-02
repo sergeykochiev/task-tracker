@@ -28,9 +28,9 @@ export default async function macroCreateNew<Origin extends MacroTarget, Target 
             data: null
         }
     }
-    const newMacroEvent: Omit<MacroEventEntity<Origin>, "id"> = {
+    const newMacroEvent = {
         event: payload.event,
-        tracker: getTrackerRes.data,
+        trackers: [getTrackerRes.data],
         origin: payload.origin
     }
     const createEventRes = await makeDatabaseRequest(MacroEventEntity, "save", newMacroEvent)

@@ -1,16 +1,14 @@
 import { DataSource } from "typeorm";
 import TrackerEntity from "./entity/tracker.entity";
 import RepositoryEntity from "./entity/repository.entity";
-import RoleEntity from "./entity/role.entity";
-import { Init1729181741692 } from "./migration/1729181741692-init";
-import { Oneventchanges1729329967094 } from "./migration/1729329967094-oneventchanges";
 import MacroActionEntity from "./entity/macro-action.entity";
 import MacroEventEntity from "./entity/macro-event.entity";
-import { Macro1730121588874 } from "./migration/1730121588874-macro";
-import { Rename1730216807766 } from "./migration/1730216807766-rename";
-import { Nojson1730314815291 } from "./migration/1730314815291-nojson";
-import { Fetchingrequiredfield1730390114311 } from "./migration/1730390114311-fetchingrequiredfield";
 import DatabaseConfig from "../envcfg/db.config";
+import { Ver21730550280786 } from "./migration/1730550280786-ver2";
+import { Tidyup1730552673407 } from "./migration/1730552673407-tidyup";
+import TrackerMacroAction from "./entity/tracker-macro-action.entity";
+import { Custommanytomany1730555594654 } from "./migration/1730555594654-custommanytomany";
+import { Addroleback1730583040438 } from "./migration/1730583040438-addroleback";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -21,9 +19,9 @@ const AppDataSource = new DataSource({
     database: DatabaseConfig.NAME,
     synchronize: false,
     logging: false,
-    entities: [TrackerEntity, RepositoryEntity, RoleEntity, MacroActionEntity, MacroEventEntity],
+    entities: [TrackerEntity, RepositoryEntity, MacroActionEntity, MacroEventEntity, TrackerMacroAction],
     subscribers: [],
-    migrations: [Init1729181741692, Oneventchanges1729329967094, Macro1730121588874, Rename1730216807766, Nojson1730314815291, Fetchingrequiredfield1730390114311],
+    migrations: [Ver21730550280786, Tidyup1730552673407, Custommanytomany1730555594654],
 })
 
 AppDataSource.initialize()

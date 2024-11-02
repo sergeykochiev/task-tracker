@@ -1,5 +1,5 @@
-enum DiscordActions {
+enum DiscordMacroActions {
     MessageCreate = "MESSAGE_CREATE"
 }
 
-export default DiscordActions
+export default DiscordMacroActions

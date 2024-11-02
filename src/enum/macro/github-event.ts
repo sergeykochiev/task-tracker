@@ -1,4 +1,4 @@
-enum GithubEvents {
+enum GithubMacroEvents {
     DependabotAlert_Created = "dependabot_alert/created",
     DependabotAlert_Reintroduced = "dependabot_alert/reintroduced",
     IssueComment_Created = "issue_comment/created",
@@ -19,4 +19,4 @@ enum GithubEvents {
     PullRequestReview_Dismissed = "pull_request_review/dismissed",
 }
 
-export default GithubEvents
+export default GithubMacroEvents

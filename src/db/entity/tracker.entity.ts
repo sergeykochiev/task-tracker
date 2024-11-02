@@ -1,11 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import GithubRepoEntity from "./repository.entity";
-import RoleEntity from "./role.entity";
 import RegisterStatus from "../../enum/register-status";
+import MacroActionEntity from "./macro-action.entity";
+import TrackerMacroAction from "./tracker-macro-action.entity";
 
 @Entity({ name: "ChannelTracker" })
-export default class TrackerEntity {
-    @PrimaryColumn()
+export default class TrackerEntity extends BaseEntity {
+    @PrimaryColumn({
+        type: "varchar"
+    })
     discord_channel_id: string
 
     @ManyToOne(() => GithubRepoEntity, {
@@ -16,13 +19,15 @@ export default class TrackerEntity {
     @JoinColumn()
     github_repository: GithubRepoEntity
 
-    @Column()
-    discord_guild_id: string
-
-    @Column()
-    registrar_id: string
+    @OneToMany(() => TrackerMacroAction, (trackermacro) => trackermacro.tracker, {
+        cascade: true,
+        nullable: true
+    })
+    tracker_macro_actions: TrackerMacroAction[]
     
-    @Column()
+    @Column({
+        type: "timestamp"
+    })
     time_created: string
     
     @Column({
@@ -31,13 +36,10 @@ export default class TrackerEntity {
     })
     register_status: RegisterStatus
 
-    @ManyToOne(() => RoleEntity, {
+    @Column({
+        type: "varchar",
         nullable: true,
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-        eager: true,
-        cascade: true
+        default: null
     })
-    @JoinColumn()
-    role_to_ping?: RoleEntity
+    role_to_ping?: string
 }

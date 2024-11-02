@@ -8,6 +8,7 @@
     "start": "node src/index.ts",
     "run": "npx tsx",
     "register": "npx tsx script/commands.ts",
+    "defaultmacros": "npx tsx script/parse-defaults.ts",
     "dev": "npx nodemon src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "schema:sync": "npm run typeorm schema:sync --  -d src/db/data-source.ts",

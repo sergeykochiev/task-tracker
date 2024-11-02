@@ -3,16 +3,23 @@ import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 @Entity({ name: "GithubRepository" })
 @Unique(["owner", "name"])
 export default class RepositoryEntity {
-    @PrimaryGeneratedColumn()
-    id: string
+    @PrimaryGeneratedColumn({
+        type: "bigint"
+    })
+    id: number
 
-    @Column()
+    @Column({
+        type: "varchar"
+    })
     owner: string
 
-    @Column()
+    @Column({
+        type: "varchar"
+    })
     name: string
 
     @Column({
+        type: "varchar",
         nullable: true,
         default: null
     })

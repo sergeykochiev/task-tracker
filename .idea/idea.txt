@@ -33,9 +33,11 @@ messages on issue creation, pull request creation, leaving comments, merging bra
 
 messages on assinging labels on reviews.
 
-closing issue on closing pull request accociated with that issue
+(closing issue on closing pull request accociated with that issue)
+close issue in closing its pull request
 
-assigning labels on issues when label assigned to pull request and an issue url is present in its description
+(assigning labels on issues when label assigned to pull request and an issue url is present in its description)
+assign the same label on issue that is assigned to its pull request
 
 	***DEPRECATED FEATURES***
 	ISSUES EVENT

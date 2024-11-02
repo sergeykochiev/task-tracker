@@ -27,9 +27,15 @@ export default async function macroPayloadFromParsedInfo(eventPayload: Record<st
     const payload: Record<keyof typeof info, any> = {}
     for(let entry in info) {
         let finalValue = info[entry].value
+        let offset = 0
         for(let i = 0; i < info[entry].include.length; i++) {
-            const value = await templateToValue(eventPayload, info[entry].include[i], fetchHeaders)
-            finalValue = finalValue.slice(0, info[entry].include[i].index) + value + finalValue.slice(info[entry].include[i].index)
+            let value = await templateToValue(eventPayload, info[entry].include[i], fetchHeaders)
+            if(value == null) {
+                // TODO separate those cases
+                value = "*empty/unknown*"
+            }
+            finalValue = finalValue.slice(0, offset + info[entry].include[i].index) + value + finalValue.slice(offset + info[entry].include[i].index)
+            offset += value.length
         }
         if(entry[0] == "_") {
             payload[entry.slice(1)] = [finalValue]

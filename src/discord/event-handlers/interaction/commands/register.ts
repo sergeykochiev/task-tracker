@@ -1,4 +1,4 @@
-import { APIApplicationCommandInteraction, InteractionContextType, InteractionResponseType } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, APIChatInputApplicationCommandInteraction, InteractionContextType, InteractionResponseType } from "discord-api-types/v10"
 import GITHUB_APP_INSTALL_URL from "../../../../const/github/new-install-url"
 import GITHUB_REPOSITORY_URL_REGEXP from "../../../../const/github/repository-url-regexp"
 import RepositoryEntity from "../../../../db/entity/repository.entity"
@@ -8,9 +8,11 @@ import RegisterStatus from "../../../../enum/register-status"
 import DiscordRegisterCommandInteraction from "../../../../types/discord/register-command-interaction"
 import discordReplyToInteraction from "../../../../utils/discord/api/interactions/reply-to-interaction"
 import discordMessageToInteraction from "../../../../utils/discord/api/messages/reply-channel-message-with-source"
-import { ErrorWrapperReturnType } from "../../../../utils/general/error-wrapper"
+import { ErrorWrapperReturnType, wrapErrorAsync } from "../../../../utils/general/error-wrapper"
 import getOwnerAndNameFromRepositoryUrl from "../../../../utils/general/get-owner-and-name-from-repo-url"
 import githubCheckIfRepoHaveAnInstall from "../../../../utils/github/check-if-repo-have-an-install"
+import MacroActionEntity from "../../../../db/entity/macro-action.entity"
+import TrackerMacroAction from "../../../../db/entity/tracker-macro-action.entity"
 
 async function failRegistration(id: string, token: string, reason?: string) {
     await discordReplyToInteraction(id, token, {
@@ -38,15 +40,20 @@ async function getOrAddRepository(owner: RepositoryEntity["owner"], name: Reposi
     return repository as ErrorWrapperReturnType<RepositoryEntity>
 }
 
-export default async function discordHandleRegisterCommand(data: APIApplicationCommandInteraction) {
+export default async function discordHandleRegisterCommand(data: APIChatInputApplicationCommandInteraction) {
     console.log("Starting registration process...")
+    console.dir(data, {
+        depth: Infinity
+    })
     if (!(data.context == InteractionContextType.Guild) || !data.guild_id) {
         await discordMessageToInteraction(data.id, data.token, {
             content: "This command can only be used inside a server"
         })
         return
     }
-    const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", data.channel.id)
+    const getTrackerRes = await wrapErrorAsync(() => TrackerEntity.findOneBy({
+        discord_channel_id: data.channel.id
+    })) 
     if (getTrackerRes.err !== null) {
         failRegistration(data.id, data.token, "error checking if channel is registered already")
         return
@@ -74,16 +81,15 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
         return
     }
     const targetRepository = getOrAddRepositoryRes.data
-    const interactionUserId = data.member!.user.id
-    let trackerStatus: RegisterStatus = RegisterStatus.PendingInstallation
+    let trackerStatus: RegisterStatus = RegisterStatus.Registered
     if (!targetRepository.installationId) {
         const res = await githubCheckIfRepoHaveAnInstall(owner, repo)
+        console.log(res)
         if(res.err !== null) {
             failRegistration(data.id, data.token, "couldn't check wheither your repository has the app installed")
             return
         }
         if(res.data.hasInstall) {
-            trackerStatus = RegisterStatus.Registered
             const updateRepoRes = await makeDatabaseRequest(RepositoryEntity, "update", targetRepository.id, {
                 installationId: String(res.data.res.id)
             })
@@ -91,26 +97,43 @@ export default async function discordHandleRegisterCommand(data: APIApplicationC
                 failRegistration(data.id, data.token, "couldn't save installation data")
                 return
             }
+        } else {
+            trackerStatus = RegisterStatus.PendingInstallation
         }
     }
     let saveOrUpdateTrackerRes;
     if (targetTracker) {
         saveOrUpdateTrackerRes = await makeDatabaseRequest(TrackerEntity, "update", targetTracker.discord_channel_id, {
-            registrar_id: interactionUserId,
             github_repository: targetRepository,
-            register_status: trackerStatus
+            register_status: trackerStatus,
+            role_to_ping: role
         })
     } else {
+        const defaultActions = await makeDatabaseRequest(MacroActionEntity, "findBy", {
+            is_default: true
+        })
+        if(defaultActions.err !== null) {
+            failRegistration(data.id, data.token, "Couldn't assign default actions to the channel")
+            return
+        }
+        console.log(defaultActions)
         saveOrUpdateTrackerRes = await makeDatabaseRequest(TrackerEntity, "save", {
             discord_channel_id: data.channel.id,
             github_repository: targetRepository,
-            discord_guild_id: data.guild_id,
-            registrar_id: interactionUserId,
             time_created: `${new Date().getTime()}`,
-            register_status: trackerStatus
+            register_status: trackerStatus,
+            role_to_ping: role,
+            tracker_macro_actions: defaultActions.data.map(action => {
+                return {
+                    tracker: {
+                        discord_channel_id: data.channel.id
+                    },
+                    action: action
+                }
+            })
         })
     }
-    if (saveOrUpdateTrackerRes.err) {
+    if (saveOrUpdateTrackerRes.err !== null) {
         failRegistration(data.id, data.token, "error saving registration data")
         return
     }

@@ -17,7 +17,7 @@ const REGISTER_COMMAND: RESTPostAPIApplicationCommandsJSONBody = {
             name: "ping-on-events",
             description: "A role Bot will ping in every message in this channel",
             type: ApplicationCommandOptionType.Role,
-            required: true
+            required: false
         }
     ]
 } as const

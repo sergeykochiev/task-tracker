@@ -1,23 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
-import TrackerEntity from "./tracker.entity";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 import DiscordEvents from "../../enum/macro/discord-event";
 import GithubEvents from "../../enum/macro/github-event";
 import MacroTarget from "../../enum/macro/macro-target";
 
 @Entity({ name: "MacroEvent" })
-@Unique(["tracker", "origin", "event"])
-export default class MacroEventEntity<Origin extends MacroTarget> {
-    @PrimaryGeneratedColumn()
-    id: number
-
-    @ManyToOne(() => TrackerEntity, {
-        eager: true,
-        cascade: true,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE"
+@Unique(["origin", "event"])
+export default class MacroEventEntity<Origin extends MacroTarget = MacroTarget> extends BaseEntity {
+    @PrimaryGeneratedColumn({
+        type: "bigint"
     })
-    @JoinColumn()
-    tracker: TrackerEntity
+    id: number
 
     @Column({
         type: "enum",
