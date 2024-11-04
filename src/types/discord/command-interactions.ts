@@ -1,0 +1,13 @@
+import { APIApplicationCommandInteractionDataAttachmentOption, APIApplicationCommandInteractionDataBooleanOption, APIApplicationCommandInteractionDataRoleOption, APIApplicationCommandInteractionDataStringOption, APIChatInputApplicationCommandInteraction, APIChatInputApplicationCommandInteractionData, APIInteractionDataOptionBase } from "discord-api-types/v10";
+
+interface DiscordRegisterCommandInteractionDataWithOptions<Options extends APIInteractionDataOptionBase<any, any>[]> extends APIChatInputApplicationCommandInteractionData {
+    options: Options
+}
+
+interface DiscordCommandInteractionWithOptions<Options extends APIInteractionDataOptionBase<any, any>[]> extends APIChatInputApplicationCommandInteraction {
+    data: DiscordRegisterCommandInteractionDataWithOptions<Options>
+}
+
+export type DiscordRegisterCommandInteraction = DiscordCommandInteractionWithOptions<[APIApplicationCommandInteractionDataStringOption, APIApplicationCommandInteractionDataBooleanOption, APIApplicationCommandInteractionDataRoleOption]>
+
+export type DiscordImportMacrosCommandInteraction = DiscordCommandInteractionWithOptions<[APIApplicationCommandInteractionDataAttachmentOption]>

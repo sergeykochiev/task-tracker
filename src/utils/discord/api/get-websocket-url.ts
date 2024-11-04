@@ -1,9 +1,8 @@
-import { RESTGetAPIGatewayResult } from "discord-api-types/v10"
-import discordMakeRequest from "../discord-request"
-import { DISCORD_ENDPOINTS } from "../../../const/discord/api"
+import { DISCORD_ENDPOINTS, DISCORD_V10_API_ROOT } from "../../../const/discord/api"
 
 export default async function discordGetWebSocketUrl() {
-    const res = await discordMakeRequest<RESTGetAPIGatewayResult>(DISCORD_ENDPOINTS.GATEWAY)
-    if (res.err !== null || !res.data.ok) return null
-    return res.data.data.url
+    const res = await fetch(DISCORD_V10_API_ROOT + DISCORD_ENDPOINTS.GATEWAY)
+    if (!res.ok) return null
+    // console.log(await res.json())
+    return (await res.json()).url
 }

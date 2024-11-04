@@ -19,7 +19,7 @@ export default async function handleChannelRegistrationFailure(channelId: string
     }) : await discordSendMessageToChannel(channelId, {
         content: failureMessage
     })
-    if (messageRes.err) {
+    if (!messageRes.ok) {
         //we simply do not care
     }
     return

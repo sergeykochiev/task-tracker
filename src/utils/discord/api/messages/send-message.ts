@@ -1,7 +1,10 @@
 import { RESTPostAPIChannelMessageJSONBody, RESTPostAPIChannelMessageResult } from 'discord-api-types/v10';
-import discordMakeRequest from '../../discord-request';
 import { DISCORD_ENDPOINTS } from '../../../../const/discord/api';
+import TypedResponse from '../../../../types/typed-response';
 
-export default async function discordSendMessageToChannel(channelId: string | number, message: RESTPostAPIChannelMessageJSONBody) {
-    return await discordMakeRequest<RESTPostAPIChannelMessageResult>(DISCORD_ENDPOINTS.MESSAGES(channelId), { method: 'POST', body: message })
+export default async function discordSendMessageToChannel(channelId: string | number, message: RESTPostAPIChannelMessageJSONBody): Promise<TypedResponse<RESTPostAPIChannelMessageResult>> {
+    return await fetch(DISCORD_ENDPOINTS.MESSAGES(channelId), {
+        method: 'POST',
+        body: JSON.stringify(message)
+    })
 }

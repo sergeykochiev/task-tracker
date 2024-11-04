@@ -1,9 +1,8 @@
-import { ErrorWrapperReturnType } from "../../general/error-wrapper"
+import TypedResponse from "../../../types/typed-response"
 import { generateNewGithubJwt, getCurrentGithubJwt } from "../../general/jwt-get-set"
-import { RequestReturn } from "../../general/request"
 
-export default async function githubWithJwtRenewal<R extends ErrorWrapperReturnType<RequestReturn>>(callback: (jwt: string) => Promise<R>): Promise<R> {
+export default async function githubWithJwtRenewal<R extends any>(callback: (jwt: string) => Promise<TypedResponse<R>>): Promise<TypedResponse<R>> {
     const res = await callback(getCurrentGithubJwt())
-    if(res.data && res.data.ok) return res
+    if(res.ok) return res
     return await callback(generateNewGithubJwt())
 }

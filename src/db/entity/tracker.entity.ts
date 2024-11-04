@@ -1,8 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import GithubRepoEntity from "./repository.entity";
 import RegisterStatus from "../../enum/register-status";
-import MacroActionEntity from "./macro-action.entity";
-import TrackerMacroAction from "./tracker-macro-action.entity";
+import MacroEntity from "./macro.entity";
 
 @Entity({ name: "ChannelTracker" })
 export default class TrackerEntity extends BaseEntity {
@@ -19,12 +18,6 @@ export default class TrackerEntity extends BaseEntity {
     @JoinColumn()
     github_repository: GithubRepoEntity
 
-    @OneToMany(() => TrackerMacroAction, (trackermacro) => trackermacro.tracker, {
-        cascade: true,
-        nullable: true
-    })
-    tracker_macro_actions: TrackerMacroAction[]
-    
     @Column({
         type: "timestamp"
     })

@@ -29,15 +29,21 @@ commands
 
 Github events:
 
-messages on issue creation, pull request creation, leaving comments, merging branches, requesting reviews.
+messages on issue creation, pull request creation, leaving comments (done)
+pullrequestreview comment, merging branches, requesting reviews (not done)
 
 messages on assinging labels on reviews.
+
+create pull request -> assign label "in progress"
+request changes in review -> assign label "in progress"
+delete "in progress" -> assign label "on review"
+delete "on review" -> assign label "in progress"
 
 (closing issue on closing pull request accociated with that issue)
 close issue in closing its pull request
 
 (assigning labels on issues when label assigned to pull request and an issue url is present in its description)
-assign the same label on issue that is assigned to its pull request
+assign the same labels on issue that is assigned to its pull request. if no "in progress" or "on review", assign "in progress"
 
 	***DEPRECATED FEATURES***
 	ISSUES EVENT

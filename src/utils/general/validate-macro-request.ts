@@ -30,7 +30,7 @@ export default function validateMacroRequestMiddleware(req: Request, res: Respon
     const channelId = getMacroRequestChannelId(req.params.uuid)
     if(channelId === undefined) {
         console.log("not valid")
-        res.status(404)
+        res.status(404).send()
         return
     }
     console.log("valid")

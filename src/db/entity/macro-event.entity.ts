@@ -6,11 +6,9 @@ import MacroTarget from "../../enum/macro/macro-target";
 @Entity({ name: "MacroEvent" })
 @Unique(["origin", "event"])
 export default class MacroEventEntity<Origin extends MacroTarget = MacroTarget> extends BaseEntity {
-    @PrimaryGeneratedColumn({
-        type: "bigint"
-    })
+    @PrimaryGeneratedColumn()
     id: number
-
+    
     @Column({
         type: "enum",
         enum: MacroTarget

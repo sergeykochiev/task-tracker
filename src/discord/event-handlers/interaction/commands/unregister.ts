@@ -2,7 +2,6 @@ import { APIApplicationCommandInteraction, InteractionContextType } from "discor
 import { log } from "console";
 import TrackerEntity from "../../../../db/entity/tracker.entity";
 import { makeDatabaseRequest } from "../../../../db/repository-request";
-import RegisterStatus from "../../../../enum/register-status";
 import discordMessageToInteraction from "../../../../utils/discord/api/messages/reply-channel-message-with-source";
 
 export default async function discordHandleUnregisterCommand(data: APIApplicationCommandInteraction) {
@@ -12,26 +11,7 @@ export default async function discordHandleUnregisterCommand(data: APIApplicatio
         })
         return
     }
-    const getTrackerRes = await makeDatabaseRequest(TrackerEntity, "findOneById", data.channel.id)
-    if (getTrackerRes.err !== null) {
-        log(getTrackerRes.err)
-        return
-    }
-    const targetTracker = getTrackerRes.data
-    if(!targetTracker) {
-        await discordMessageToInteraction(data.id, data.token, {
-            content: "Channel is not registered. To register, use /register command with the repository you want to link this chat to."
-        })
-        return
-    }
-    const deleteChannelRes = await makeDatabaseRequest(TrackerEntity, "delete", targetTracker.discord_channel_id)
-    if (deleteChannelRes.err !== null) {
-        log(deleteChannelRes.err)
-        await discordMessageToInteraction(data.id, data.token, {
-            content: "Coundn't unregister the channel."
-        })
-        return
-    }
+    await TrackerEntity.delete(data.channel.id)
     await discordMessageToInteraction(data.id, data.token, {
         content: "Channel unregistered."
     })

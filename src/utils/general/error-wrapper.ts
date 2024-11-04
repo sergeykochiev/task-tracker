@@ -6,9 +6,9 @@ export type ErrorWrapperReturnType<Data> = {
     data: Data
 }
 
-export async function wrapErrorAsync<T, A extends any[]>(callback: (...args: A) => Promise<T>, ...args: A): Promise<ErrorWrapperReturnType<Awaited<T>>> {
+export async function wrapErrorAsync<T>(callback: () => Promise<T>): Promise<ErrorWrapperReturnType<Awaited<T>>> {
     try {
-        const result = await callback(...args)
+        const result = await callback()
         return {
             err: null,
             data: result
