@@ -12,12 +12,14 @@ export function macroGetValueFromResursiveName(record: any, resursivename: strin
 async function macroValueFromIncludeObject(eventpayload: Record<string, any>, include: ParsedAdditionalInfo[string]["include"][0], fetchHeaders?: Record<string, any>): Promise<any> {
     if(include.fetchfrom.length) {
         const url = macroGetValueFromResursiveName(eventpayload, include.fetchfrom)
-        if(url == null) return null
+        if(url === null) return undefined
         const res = await fetch(url, {
             headers: fetchHeaders
         })
-        if(!res.ok) return null
-        eventpayload = await res.json()
+        const json = await res.json()
+        console.log("RESULT FROM FETCHING WITH HEADERS", fetchHeaders, "URL", url, ":", json)
+        if(!res.ok) return undefined
+        eventpayload = json
     }
     if(include.arrayfrom.length) {
         const array = macroGetValueFromResursiveName(eventpayload, include.arrayfrom) as Array<any>
@@ -29,9 +31,11 @@ async function macroValueFromIncludeObject(eventpayload: Record<string, any>, in
 
 async function macroParseInclude(sourcePayload: Record<string, any>, initValue: string, accumulatedOffset: number, include: ParsedAdditionalInfo[string]["include"][0], fetchHeaders?: Record<string, any>,) {
     let value = await macroValueFromIncludeObject(sourcePayload, include, fetchHeaders)
-    if(value == null) {
-        // TODO separate those cases
-        value = "*empty/unknown*"
+    if(value === null) {
+        value = "*empty*"
+    }
+    if(value === undefined) {
+        value = "*unknown*"
     }
     return [accumulatedOffset + value.toString().length, initValue.slice(0, accumulatedOffset + include.index) + (Array.isArray(value) ? value.join(", ") : value) + initValue.slice(accumulatedOffset + include.index)]
 }

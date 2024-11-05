@@ -34,10 +34,9 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
                 if(!tokenRes.ok) continue
                 githubToken = (await tokenRes.json()).token
             }
-            const fetchHeaders = macro.info_requires_fetching ? DISCORD_AUTH_HEADERS : undefined
+            const fetchHeaders = macro.info_requires_fetching ? macro.event.origin == MacroTarget.DISCORD ? DISCORD_AUTH_HEADERS : githubGetAuthHeaders(githubToken) : undefined
             const { match1, match2, matchType, ...infoToParse } = macro.parseAdditionalInfo()!
             const actionPayload = await macroGetPayloadFromFields(eventPayload, infoToParse, fetchHeaders)
-            console.log("FROM EXECUTE:", match1, match2, matchType)
             if(match1 !== undefined && match2 !== undefined && matchType !== undefined && !macroMatch(matchType, ...(await macroGetMatches(eventPayload, match1, match2, fetchHeaders)))) {
                 return
             } 
@@ -56,9 +55,6 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
                         method: "POST",
                         body: JSON.stringify(payload)
                     })
-                    console.dir(actionRes, {
-                        depth: Infinity
-                    })
                     continue
                 }
                 case MacroTarget.GITHUB: {
@@ -76,9 +72,6 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
                         headers: githubGetAuthHeaders(githubToken as string),
                         method: "POST",
                         body: JSON.stringify(payload)
-                    })
-                    console.dir(actionRes, {
-                        depth: Infinity
                     })
                     continue
                 }

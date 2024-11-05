@@ -5,7 +5,7 @@ import fs from "node:fs"
 
 async function initDefaultMacros() {
     await AppDataSource.initialize()
-    await macroSaveFromFile(await JSON.parse(fs.readFileSync("resources/default-actions.json").toString()))
+    await macroSaveFromFile(JSON.parse(fs.readFileSync("resources/default-actions.json").toString()))
 }
 
 initDefaultMacros()

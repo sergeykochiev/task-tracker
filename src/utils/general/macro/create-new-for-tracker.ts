@@ -36,6 +36,5 @@ export default async function macroCreateNewForTracker(channelId: string, payloa
         macroId: createRes,
         channelTrackerDiscordChannelId: channelId
     })
-    console.log(res)
     return createRes
 }

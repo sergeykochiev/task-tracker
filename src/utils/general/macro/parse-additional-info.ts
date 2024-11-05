@@ -13,8 +13,8 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
         let include = []
         let currvar: string[] = [""]
         let varindex = -1
-        let currfetchslice = -1
-        let currarrayofslice = -1
+        let currfetchslice = 0
+        let currarrayofslice = 0
         let offset = 0
         for(let i = 0; i < value.length; i++) {
             const char: string = value[i]
@@ -41,9 +41,9 @@ export default function macroParseAdditionalInfo(additionalInfo: Record<string, 
             if(stack && char == "}") {
                 stack = false
                 include.push({
-                    recursivename: currfetchslice >= 0 ? currvar.slice(currfetchslice) : currarrayofslice >=0 ? currvar.slice(currarrayofslice) : currvar,
-                    fetchfrom: currfetchslice >= 0 ? currvar.slice(0, currfetchslice) : [],
-                    arrayfrom: currarrayofslice >= 0 ? currvar.slice(0, currarrayofslice) : [],
+                    recursivename: currvar.slice(Math.max(currfetchslice, currarrayofslice)),
+                    fetchfrom: currvar.slice(0, currfetchslice),
+                    arrayfrom: currvar.slice(currfetchslice, currarrayofslice),
                     index: varindex - offset
                 })
                 if(!shouldbefetched && currfetchslice >= 0) shouldbefetched = true
