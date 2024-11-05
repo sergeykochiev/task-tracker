@@ -12,19 +12,19 @@ import macroGetTargetTrackers from "../../utils/general/macro/get-target-tracker
 import { wrapErrorAsync } from "../../utils/general/error-wrapper";
 
 export default async function githubHandleWebhookEvent(req: Request, res: Response) {
-    console.log("Received github webhook call")
+    console.log("API received github webhook call")
     const signature = (req.headers["x-hub-signature-256"] as string).split("=")[1]
     const valid = await githubValidateWebhookSignature(JSON.stringify(req.body), signature)
     if (!valid) {
         res.status(401).send("Unauthorized")
-        console.log("Github webhook call unauthorized, returning...")
+        console.log("API github webhook call unauthorized, returning")
         return
     }
-    console.log("Github webhook call authorized, proceeding...")
+    console.log("API github webhook call authorized, proceeding")
     res.status(202).send("Accepted")
     const eventType = req.headers["x-github-event"]
     const data = req.body
-    console.log("Received github webhook event:", eventType)
+    console.log("API handling github webhook event", eventType?.toString().toUpperCase())
     const event = `${eventType}${data.hasOwnProperty("action") ? `/${data.action}` : ""}`
     try {
         switch(eventType) {

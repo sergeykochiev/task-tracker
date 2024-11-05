@@ -21,6 +21,7 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
         const macro = macros[m]
         if(!macro.trackers) continue
         for(let t = 0; t < macro.trackers.length; t++) {
+            console.log("MACRO executing", macro.action.action)
             const tracker = macro.trackers[t]
             const [owner, repo] = [tracker.github_repository.owner, tracker.github_repository.name]
             // TODO should be a function somehow
@@ -50,12 +51,15 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
                             roles: [tracker.role_to_ping]
                         }
                     }
-                    actionRes = await fetch(DISCORD_V10_API_ROOT + DISCORD_ACTION_TO_URL_MAP[macro.action.action as DiscordActions](tracker.discord_channel_id), {
+                    const api = DISCORD_ACTION_TO_URL_MAP[macro.action.action as DiscordActions]
+                    const url = DISCORD_V10_API_ROOT + api.url(tracker.discord_channel_id)
+                    console.log("\nMACRO making", api.method, "request to", url, "with payload", payload, "\n")
+                    actionRes = await fetch(url, {
                         headers: DISCORD_AUTH_HEADERS,
-                        method: "POST",
+                        method: api.method,
                         body: JSON.stringify(payload)
                     })
-                    continue
+                    break
                 }
                 case MacroTarget.GITHUB: {
                     if(githubToken === null) {
@@ -68,14 +72,19 @@ export default async function macroExecute(macros: MacroEntity[], eventPayload: 
                         if(!tokenRes.ok) continue
                         githubToken = (await tokenRes.json()).token
                     }
-                    actionRes = await fetch(GITHUB_API_ROOT + GITHUB_ACTION_TO_URL_MAP[macro.action.action as GithubActions](owner, repo, id), {
+                    const api = GITHUB_ACTION_TO_URL_MAP[macro.action.action as GithubActions]
+                    const url = GITHUB_API_ROOT + api.url(owner, repo, id)
+                    console.log("\nMACRO making", api.method, "request to", url, "with payload", payload, "\n")
+                    console.log(githubToken)
+                    actionRes = await fetch(url, {
                         headers: githubGetAuthHeaders(githubToken as string),
-                        method: "POST",
+                        method: api.method,
                         body: JSON.stringify(payload)
                     })
-                    continue
+                    break
                 }
             }
+            console.log("RESPONSE execute macro status", actionRes.status, "payload", await actionRes.json())
         }
     }
 }

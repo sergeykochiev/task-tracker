@@ -29,11 +29,11 @@ export { addMacroRequest, deleteMacroRequest }
 export default function validateMacroRequestMiddleware(req: Request, res: Response, next: NextFunction) {
     const channelId = getMacroRequestChannelId(req.params.uuid)
     if(channelId === undefined) {
-        console.log("not valid")
+        console.log("API create macro request not valid")
         res.status(404).send()
         return
     }
-    console.log("valid")
+    console.log("API create macro request valid")
     res.locals.channelId = channelId
     next()
 }

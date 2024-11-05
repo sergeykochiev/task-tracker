@@ -7,6 +7,7 @@ import DatabaseConfig from "../envcfg/db.config";
 import MacroEntity from "./entity/macro.entity";
 import { Init1730716863865 } from "./migration/1730716863865-init";
 import { Uniquejsonb1730747883143 } from "./migration/1730747883143-uniquejsonb";
+import { Mtmcascades1730820829851 } from "./migration/1730820829851-mtmcascades";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -19,7 +20,7 @@ const AppDataSource = new DataSource({
     logging: false,
     entities: [TrackerEntity, RepositoryEntity, MacroActionEntity, MacroEventEntity, MacroEntity],
     subscribers: [],
-    migrations: [Init1730716863865, Uniquejsonb1730747883143],
+    migrations: [Init1730716863865, Uniquejsonb1730747883143, Mtmcascades1730820829851],
 })
 
 AppDataSource.initialize()

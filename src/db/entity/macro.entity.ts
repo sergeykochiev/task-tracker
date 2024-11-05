@@ -50,7 +50,9 @@ export default class MacroEntity extends BaseEntity {
     @ManyToMany(() => TrackerEntity, {
         eager: true,
         cascade: true,
-        nullable: true
+        nullable: true,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
     })
     @JoinTable()
     trackers?: TrackerEntity[]

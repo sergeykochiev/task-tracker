@@ -3,10 +3,11 @@ import discordReplyToInteraction from "../../../../utils/discord/api/interaction
 import macroGetOneTimeLink from "../../../../utils/general/macro/get-one-time-link";
 import { addMacroRequest } from "../../../../utils/general/validate-macro-request";
 import macroGetCurrentCountForTracker from "../../../../utils/general/macro/get-current-count-for-tracker";
+import MAX_MACRO_COUNT from "../../../../const/macro-count";
 
 export default async function discordHandleCreateMacroCommand(data: APIApplicationCommandInteraction) {
     const count = await macroGetCurrentCountForTracker(data.channel.id)
-    if(count >= 10) throw "Macro limit exceeded"
+    if(count >= MAX_MACRO_COUNT) throw "Macro limit exceeded"
     const uuid = addMacroRequest(data.channel.id)
     await discordReplyToInteraction(data.id, data.token, {
         type: InteractionResponseType.ChannelMessageWithSource,

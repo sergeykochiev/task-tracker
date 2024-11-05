@@ -7,14 +7,14 @@
   "scripts": {
     "start": "npx tsx src/index.ts",
     "run": "npx tsx",
-    "commands": "npx tsx script/commands.ts",
+    "cmds": "npx tsx script/commands.ts",
     "macros": "npx tsx ./script/add-default-macros.ts",
     "dev": "npx nodemon src/index.ts",
     "typeorm": "npx typeorm-ts-node-commonjs",
-    "schema:sync": "npm run typeorm schema:sync --  -d src/db/data-source.ts",
-    "migration:gen": "npm run typeorm migration:generate -- src/db/migration/%npm_config_name% -d src/db/data-source.ts",
-    "migration:run": "npm run typeorm migration:run -- -d src/db/data-source.ts",
-    "migration:revert": "npm run typeorm migration:revert -- -d src/db/data-source.ts"
+    "shmsync": "npm run typeorm schema:sync --  -d src/db/data-source.ts",
+    "mgen": "npm run typeorm migration:generate -- src/db/migration/%npm_config_name% -d src/db/data-source.ts",
+    "mrun": "npm run typeorm migration:run -- -d src/db/data-source.ts",
+    "mrevert": "npm run typeorm migration:revert -- -d src/db/data-source.ts"
   },
   "author": "Sergey Kochiev",
   "dependencies": {

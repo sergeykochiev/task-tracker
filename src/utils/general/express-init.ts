@@ -23,7 +23,7 @@ export default function expressInit() {
 
     const PORT = AppConfig.PORT
     app.listen(PORT, () => {
-        console.log('Listening on port', PORT)
+        console.log('API listening on port', PORT)
     })
 
     return app

@@ -1,3 +1,4 @@
+import MAX_MACRO_COUNT from "../../../const/macro-count";
 import macroGetCurrentCountForTracker from "./get-current-count-for-tracker";
 import macroParseAdditionalInfo from "./parse-additional-info";
 import macroSaveTrackerRelations from "./save-tracker-macros-relations";
@@ -6,10 +7,10 @@ import macroCascadeSave from "./upsert-full";
 export default async function macroSaveFromFile(filedata: any[], additionalInfoIsUnparsed: boolean = true, channelId?: string) {
     if(!Array.isArray(filedata)) throw "Inner data is not an array"
     const length = filedata.length
-    let maxcount = 10
+    let maxcount = MAX_MACRO_COUNT
     if(channelId) {
         const currCount = await macroGetCurrentCountForTracker(channelId)
-        if(currCount >= 10) return 0
+        if(currCount >= maxcount) throw `Can't save any more macros: macro limit exceeded`
         maxcount -= currCount
     }
     filedata.map(async (data, index) => {

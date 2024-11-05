@@ -10,6 +10,8 @@ export function macroGetValueFromResursiveName(record: any, resursivename: strin
     return macroGetValueFromResursiveName(record, resursivename, idx+1)
 }
 async function macroValueFromIncludeObject(eventpayload: Record<string, any>, include: ParsedAdditionalInfo[string]["include"][0], fetchHeaders?: Record<string, any>): Promise<any> {
+
+    // TODO rework using GraphQL
     if(include.fetchfrom.length) {
         const url = macroGetValueFromResursiveName(eventpayload, include.fetchfrom)
         if(url === null) return undefined
@@ -17,10 +19,11 @@ async function macroValueFromIncludeObject(eventpayload: Record<string, any>, in
             headers: fetchHeaders
         })
         const json = await res.json()
-        console.log("RESULT FROM FETCHING WITH HEADERS", fetchHeaders, "URL", url, ":", json)
+        console.log("MACRO RESPONSE fetching additional_info headers", fetchHeaders, "url", url, ":", json)
         if(!res.ok) return undefined
         eventpayload = json
     }
+
     if(include.arrayfrom.length) {
         const array = macroGetValueFromResursiveName(eventpayload, include.arrayfrom) as Array<any>
         if(!array.length) return null
@@ -46,7 +49,7 @@ async function macroParseField(sourcePayload: Record<string, any>, field: Parsed
     for(let i = 0; i < field.include.length; i++) {
         [offset, value] = await macroParseInclude(sourcePayload, value, offset, field.include[i], fetchHeaders)
     }
-    if(shouldBeArrayified) {
+    if(shouldBeArrayified && !Array.isArray(value)) {
         return [value]
     }
     return value
@@ -55,7 +58,8 @@ async function macroParseField(sourcePayload: Record<string, any>, field: Parsed
 export async function macroGetPayloadFromFields(eventPayload: Record<string, any>, info: ParsedAdditionalInfo, fetchHeaders?: Record<string, any>) {
     const payload: Record<keyof typeof info, any> = {}
     for(let entry in info) {
-        payload[entry] = await macroParseField(eventPayload, info[entry], entry[0] === "_", fetchHeaders)
+        const shouldBeArrayified = entry[0] === "_"
+        payload[shouldBeArrayified ? entry.slice(1) : entry] = await macroParseField(eventPayload, info[entry], shouldBeArrayified, fetchHeaders)
     }
     return payload
 }
