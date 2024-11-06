@@ -13,6 +13,8 @@ export const GITHUB_ENDPOINTS = {
 
 export const GITHUB_API_ROOT = "https://api.github.com"
 
+export const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql"
+
 export const GITHUB_HEADERS = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28"

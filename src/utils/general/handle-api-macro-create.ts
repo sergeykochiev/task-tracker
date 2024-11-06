@@ -7,6 +7,7 @@ import discordSendMessageToChannel from "../discord/api/messages/send-message";
 import MacroTarget from "../../enum/macro/macro-target";
 import { wrapErrorAsync } from "./error-wrapper";
 import MatchType from "../../types/match";
+import ParsedAdditionalInfo from "../../types/parsed-additional-info";
 
 type MacroRequestPayload = MacroPayload & Record<string, string>
 
@@ -20,18 +21,27 @@ function isEmpty(obj: Record<any, any>) {
 
 export default async function handleApiMacroCreate(req: Request, res: Response) {
     const payload = req.body as MacroRequestPayload
-    const { origin, event, target, action, matchType, ...additionalInfo } = payload
+    const { origin, event, target, action, matchType, ...rest } = payload
     deleteMacroRequest(req.params.uuid)
     const channelId = res.locals.channelId
     if(!channelId) return
-    const parsedInfo = macroParseAdditionalInfo(additionalInfo)
-    parsedInfo.additionalInfo.matchType = matchType as MatchType
+    let parsedInfo = {
+        additionalInfo: {} as ParsedAdditionalInfo,
+        shouldBeFetched: false
+    }
+    if(!isEmpty(rest)) {
+        parsedInfo = await macroParseAdditionalInfo(rest)
+        parsedInfo.additionalInfo.matchType = matchType as MatchType
+        console.dir(parsedInfo.additionalInfo, {
+            depth: Infinity
+        })
+    }
     const createMacroRes = await wrapErrorAsync(() => macroCreateNew(channelId, {
         origin: origin, 
         target: target,
         event: event,
         action: action
-    }, isEmpty(additionalInfo) ? undefined : JSON.stringify(parsedInfo.additionalInfo), parsedInfo.shouldBeFetched)) 
+    }, JSON.stringify(parsedInfo.additionalInfo), parsedInfo.shouldBeFetched)) 
     if(createMacroRes.err !== null) {
         await discordSendMessageToChannel(channelId, {
             content: "Error while creating macro."

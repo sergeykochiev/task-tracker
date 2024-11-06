@@ -5,9 +5,7 @@ type ParsedAdditionalInfo = {
 } & Record<string, {
     value: string,
     include: {
-        recursivename: string[]
-        fetchfrom: string[]
-        arrayfrom: string[]
+        recursivename: string[],
         index: number
     }[]
 }>
