@@ -1,26 +1,25 @@
-import { GatewayDispatchEvents, GatewayDispatchPayload } from "discord-api-types/v10";
-import DiscordEvents from "../../enum/macro/discord-event";
-import MacroTarget from "../../enum/macro/macro-target";
-import DiscordConfig from "../../envcfg/discord.config";
-import { wrapErrorAsync } from "../../utils/general/error-wrapper";
-import macroExecute from "../../utils/general/macro/execute";
-import discordHandleInteractionCreate from "./interaction";
-import macroGetTargeted from "../../utils/general/macro/get-target-tracker-by-event";
+import { APIApplicationCommandInteraction, InteractionType } from "discord-api-types/v10";
+import { Request, Response } from "express";
+import discordValidateWebhookSignature from "../../utils/discord/validate-webhook-call";
+import discordHandleApplicationCommandInteraction from "./commands";
 
-export default async function discordHandleGatewayEvent(payload: GatewayDispatchPayload) {
-    const event = payload.t
-    switch(payload.t) {
-        case GatewayDispatchEvents.InteractionCreate: discordHandleInteractionCreate(payload.d); break
-    }
-    // @ts-ignore
-    if(payload.d.hasOwnProperty("author") && payload.d.author.id === DiscordConfig.APP_ID || !payload.d.hasOwnProperty("channel_id")) {
+export default async function discordHandleWebhookEvent(req: Request, res: Response) {
+    const data = (req.body as APIApplicationCommandInteraction)
+    const signature = req.get("X-Signature-Ed25519")!
+    const timestamp = req.get("X-Signature-Timestamp")!
+    const body = JSON.stringify(data)
+
+    if (!discordValidateWebhookSignature(timestamp + body, signature)) {
+        res.status(401).end("invalid request signature")
         return
     }
-    if(!(Object).values<string>(DiscordEvents).includes(event)) return
-    const targetMacros = await wrapErrorAsync(() => macroGetTargeted(MacroTarget.DISCORD, event as unknown as DiscordEvents, {
-        // @ts-ignore
-        discord_channel_id: payload.d.channel.id
-    }))
-    if(targetMacros.err !== null || !targetMacros.data.length) return
-    await macroExecute(targetMacros.data, payload.d)
+    res.status(202).send()
+    switch(req.body.type) {
+        case InteractionType.Ping: res.json({
+            type: InteractionType.Ping,
+        }).send(); break
+    }
+    switch(data.type) {
+        case InteractionType.ApplicationCommand: discordHandleApplicationCommandInteraction(data); break
+    }
 }

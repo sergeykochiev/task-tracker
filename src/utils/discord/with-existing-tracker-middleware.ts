@@ -1,13 +1,12 @@
 import { APIApplicationCommandInteraction, InteractionResponseType } from "discord-api-types/v10";
-import { wrapErrorAsync } from "../general/error-wrapper";
 import TrackerEntity from "../../db/entity/tracker.entity";
 import discordReplyToInteraction from "./api/interactions/reply-to-interaction";
 
 export default async function withExistingTracker<T extends APIApplicationCommandInteraction>(data: T, callback: (data: T) => Promise<any>) {
-    const tracker = await wrapErrorAsync(() => TrackerEntity.findOneBy({
+    const tracker = await TrackerEntity.findOneBy({
         discord_channel_id: data.channel.id
-    }))
-    if(tracker.err !== null || !tracker.data) {
+    })
+    if(!tracker) {
         await discordReplyToInteraction(data.id, data.token, {
             type: InteractionResponseType.ChannelMessageWithSource,
             data: {

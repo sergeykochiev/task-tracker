@@ -1,17 +1,24 @@
 import { InstallationEvent } from "@octokit/webhooks-types";
-import githubHandleInstallationCreateEvent from "./create";
-import githubHandleInstallationDeletedEvent from "./deleted";
-import githubHandleInstallationSuspendEvent from "./suspend";
-import githubHandleInstallationUnsuspendEvent from "./unsuspend";
-import discordSendMessageToChannel from "../../../utils/discord/api/messages/send-message";
+import githubHandleMultiRepoTrackerSpecificEvent from "../../../utils/github/handle-multirepo-tracker-specific-event";
+import { githubInstallationCreatedCallback, githubInstallationDeletedCallback, githubInstallationSuspendCallback, githubInstallationUnsuspendCallback } from "./callbacks";
+import RepositoryEntity from "../../../db/entity/repository.entity";
 
-export default function githubHandleInstallationEvent(data: InstallationEvent) {
-    try {
-        switch(data.action) {
-            case "created": githubHandleInstallationCreateEvent(data); break
-            case "deleted": githubHandleInstallationDeletedEvent(data); break
-            case "suspend": githubHandleInstallationSuspendEvent(data); break
-            case "unsuspend": githubHandleInstallationUnsuspendEvent(data); break
+export default async function githubHandleInstallationEvent(data: InstallationEvent) {
+    switch(data.action) {
+        case "created": {
+            if(!data.repositories) throw "No repos changed"
+            data.repositories?.map(async repository => {
+                await RepositoryEntity.update({
+                    fullname: repository.full_name
+                }, {
+                    installationId: String(data.installation.id)
+                })
+            })
+            await githubHandleMultiRepoTrackerSpecificEvent(data, githubInstallationCreatedCallback)
+            break
         }
-    } catch(e) {}
+        case "deleted": await githubHandleMultiRepoTrackerSpecificEvent(data, githubInstallationDeletedCallback); break
+        case "suspend": await githubHandleMultiRepoTrackerSpecificEvent(data, githubInstallationSuspendCallback); break
+        case "unsuspend": await githubHandleMultiRepoTrackerSpecificEvent(data, githubInstallationUnsuspendCallback); break
+    }
 }

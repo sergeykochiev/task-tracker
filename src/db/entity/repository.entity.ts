@@ -1,22 +1,15 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity({ name: "GithubRepository" })
-@Unique(["owner", "name"])
+@Unique(["fullname"])
 export default class RepositoryEntity extends BaseEntity {
-    @PrimaryGeneratedColumn({
-        type: "bigint"
-    })
+    @PrimaryGeneratedColumn()
     id: number
 
     @Column({
         type: "varchar"
     })
-    owner: string
-
-    @Column({
-        type: "varchar"
-    })
-    name: string
+    fullname: string
 
     @Column({
         type: "varchar",
@@ -24,4 +17,8 @@ export default class RepositoryEntity extends BaseEntity {
         default: null
     })
     installationId?: string
+
+    getOwnerAndName() {
+        return this.fullname.split("/")
+    }
 }

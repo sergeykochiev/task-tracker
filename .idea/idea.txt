@@ -30,14 +30,14 @@ commands
 Github events:
 
 messages on issue creation, pull request creation, leaving comments (done)
-pullrequestreview comment, merging branches, requesting reviews (not done)
+pullrequestreview comment, merging branches, requesting reviews (done)
 
 messages on assinging labels on reviews.
 
 create pull request -> assign label "in progress" (done)
-request changes in review -> assign label "in progress"
-delete "in progress" -> assign label "on review"
-delete "on review" -> assign label "in progress"
+request changes in review -> assign label "in progress" (done)
+delete "in progress" -> assign label "on review" (done)
+delete "on review" -> assign label "in progress" (done)
 
 (closing issue on closing pull request accociated with that issue)
 close issue in closing its pull request

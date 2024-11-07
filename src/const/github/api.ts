@@ -1,12 +1,17 @@
 export const GITHUB_ENDPOINTS = {
-    GET_REPO_BY_ID: (repoId: string) => `/repositories/${repoId}`,
-    GET_ACCESS_TOKEN: (installId: string) => `/app/installations/${installId}}/access_tokens`,
-    REPO: (owner: string, repo: string) => {
-        const root = `/repos/${owner}/${repo}`
+    GET_ACCESS_TOKEN: (installId: number) => `/app/installations/${installId}}/access_tokens`,
+    REPO: (fullname: string) => {
+        const root = `/repos/${fullname}`
         return {
             HOOKS: root + "/hooks",
             INSTALLATION: root + "/installation",
-            GET: root
+            GET: root,
+            ISSUE: (number: number) => {
+                const root = `/repos/${fullname}/issues/${number}`
+                return {
+                    LABEL: root + "/labels"
+                }
+            },
         }
     }
 } as const

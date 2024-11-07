@@ -1,17 +1,12 @@
-import { log } from "console"
 import TrackerEntity from "../../db/entity/tracker.entity"
-import { makeDatabaseRequest } from "../../db/repository-request"
 
-export default async function iterateOnEveryTrackerOfRepository(owner: string, name: string, callback: (tracker: TrackerEntity) => Promise<void>) {
-    const getTrackersRes = await makeDatabaseRequest(TrackerEntity, "findBy", {
-        github_repository: {
-            owner: owner,
-            name: name
+export default async function iterateOnEveryTrackerOfRepository(trackers: TrackerEntity[], fullname: string, callback: (tracker: TrackerEntity) => Promise<void>) {
+    console.log("GITHUB iterating over", trackers.length, "trackers")
+    trackers.map(async tracker => {
+        try {
+            await callback(tracker)
+        } catch(e) {
+            console.error("GITHUB error on tracker", tracker.discord_channel_id, ":", e)
         }
     })
-    if (getTrackersRes.err !== null) {
-        log(getTrackersRes.err)
-        return
-    }
-    getTrackersRes.data.map(callback)
 }

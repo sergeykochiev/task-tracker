@@ -4,7 +4,7 @@ import discordInstallGlobalCommands from "../src/utils/discord/api/install-globa
 
 async function InstallGlobalCommands() {
     const res = await discordInstallGlobalCommands(DiscordConfig.APP_ID, ALL_COMMANDS)
-    console.dir(res, {
+    console.dir(await res.json(), {
         depth: Infinity
     })
 }

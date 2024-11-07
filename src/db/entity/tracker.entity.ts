@@ -1,7 +1,6 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import GithubRepoEntity from "./repository.entity";
 import RegisterStatus from "../../enum/register-status";
-import MacroEntity from "./macro.entity";
 
 @Entity({ name: "ChannelTracker" })
 export default class TrackerEntity extends BaseEntity {

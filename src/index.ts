@@ -1,11 +1,10 @@
 import "reflect-metadata"
-import discordInitWebsocket from "./utils/discord/init-websocket"
 import expressInit from "./utils/general/express-init"
+import AppDataSource from "./db/data-source"
 
 // TODO save jwts (probably not) and macrocreate uuid in redis
-// TODO implement macro list command and deleting macros
 async function bootstrap() {
-    await discordInitWebsocket()
+    AppDataSource.initialize()
     expressInit()
 }
 

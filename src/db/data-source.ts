@@ -1,13 +1,8 @@
 import { DataSource } from "typeorm";
 import TrackerEntity from "./entity/tracker.entity";
 import RepositoryEntity from "./entity/repository.entity";
-import MacroActionEntity from "./entity/macro-action.entity";
-import MacroEventEntity from "./entity/macro-event.entity";
 import DatabaseConfig from "../envcfg/db.config";
-import MacroEntity from "./entity/macro.entity";
-import { Init1730716863865 } from "./migration/1730716863865-init";
-import { Uniquejsonb1730747883143 } from "./migration/1730747883143-uniquejsonb";
-import { Mtmcascades1730820829851 } from "./migration/1730820829851-mtmcascades";
+import { Init1730914997016 } from "./migration/1730914997016-init";
 
 const AppDataSource = new DataSource({
     type: "postgres",
@@ -18,11 +13,9 @@ const AppDataSource = new DataSource({
     database: DatabaseConfig.NAME,
     synchronize: false,
     logging: false,
-    entities: [TrackerEntity, RepositoryEntity, MacroActionEntity, MacroEventEntity, MacroEntity],
+    entities: [TrackerEntity, RepositoryEntity],
     subscribers: [],
-    migrations: [Init1730716863865, Uniquejsonb1730747883143, Mtmcascades1730820829851],
+    migrations: [Init1730914997016],
 })
-
-AppDataSource.initialize()
 
 export default AppDataSource
