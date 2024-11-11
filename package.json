@@ -5,8 +5,9 @@
   "description": "Discord task tracker bot",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npx tsx src/index.ts",
+    "start": "npm run build && node build/src/index.js",
     "run": "npx tsx",
+    "build": "npx tsc --outDir build",
     "cmds": "npx tsx script/commands.ts",
     "macros": "npx tsx ./script/add-default-macros.ts",
     "dev": "npx nodemon src/index.ts",
@@ -26,7 +27,8 @@
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
     "tweetnacl": "^1.0.3",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "discord-api-types": "^0.37.101"
   },
   "devDependencies": {
     "@octokit/types": "^13.6.1",
@@ -36,7 +38,6 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.5",
     "@types/ws": "^8.5.12",
-    "discord-api-types": "^0.37.101",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.1",

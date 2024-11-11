@@ -1,20 +1,25 @@
 import githubSignJwt from "../github/sign-jwt";
 
-function jwtVault() {
+function jwt() {
     let jwt: string;
 
-    function getJwt() {
+    function get() {
         return jwt
     }
 
-    function generateJwt() {
-        jwt = githubSignJwt()
+    function gen() {
+        try {
+            jwt = githubSignJwt()
+        }
+        catch(e) {
+            console.error(e)
+        }
         return jwt
     }
 
-    return [getJwt, generateJwt]
+    return [get, gen]
 }
 
-const [getCurrentGithubJwt, generateNewGithubJwt] = jwtVault()
+const [getCurrentGithubJwt, generateNewGithubJwt] = jwt()
 
 export { getCurrentGithubJwt, generateNewGithubJwt }

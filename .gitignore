@@ -8,3 +8,4 @@ create-macro-page/
 static
 key.pem
 resources/
+.db.env

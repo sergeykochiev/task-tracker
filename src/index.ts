@@ -12,6 +12,9 @@ async function bootstrap() {
 
     app.post('/github', express.json(), githubHandleWebhookEvent)
     app.post('/discord', express.json(), discordHandleWebhookEvent)
+    app.get('/', (_, res) => {
+        res.status(200).send("Hi")
+    })
 
     const PORT = AppConfig.PORT
     app.listen(PORT, () => {

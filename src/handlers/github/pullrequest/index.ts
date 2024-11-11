@@ -19,8 +19,8 @@ export default async function githubHandlePullRequestEvent(data: PullRequestEven
     switch(data.action) {
         case "opened": {
             if(!token) throw "No token"
-            await githubAssignLabel(data.repository.full_name, data.number, token, GithubLabels.IN_PROGRESS)
-            await iterateOnEveryTrackerOfRepository(trackers, async (tracker) => await githubPullRequestOpenedCallback(tracker, data))
+            githubAssignLabel(data.repository.full_name, data.number, token, GithubLabels.IN_PROGRESS)
+            iterateOnEveryTrackerOfRepository(trackers, async (tracker) => await githubPullRequestOpenedCallback(tracker, data))
             break
         }
         case "labeled": {

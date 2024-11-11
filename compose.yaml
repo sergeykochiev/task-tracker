@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports: 
+      - 3000:3000
+    env_file:
+      - .env
+      - .db.env
+    environment:
+      - DB_HOST=db
+    # command: "sh -c 'npm run typeorm migration:run -- -d /app/src/db/data-source.js && node /app/src/index.js'"
+  db:
+    image: postgres
+    env_file:
+      - .db.env
+    
