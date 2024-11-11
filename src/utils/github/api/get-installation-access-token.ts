@@ -11,7 +11,7 @@ export default async function githubGetInstallationAccessToken(installId: number
         }),
         headers: githubGetAuthHeaders(jwt)
     }))
-    if(res.ok) return null
+    if(!res.ok) return null
     const json = await res.json()
     return json.token
 }

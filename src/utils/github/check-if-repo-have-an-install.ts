@@ -5,16 +5,16 @@ import githubWithJwtRenewal from "./api/with-jwt-renewal-wrapper";
 //implement installation permissions validation
 export default async function githubCheckIfRepoHaveAnInstall(fullname: string): Promise<{
     hasInstall: boolean,
-    res: Endpoints["GET /repos/{owner}/{repo}/installation"]["response"]["data"]
+    installation: Endpoints["GET /repos/{owner}/{repo}/installation"]["response"]["data"]
 }> {
     const repoInstallRes = await githubWithJwtRenewal(jwt => githubGetRepositoryInstallation(jwt, fullname))
     const data = await repoInstallRes.json()
     if(!repoInstallRes.ok || !data) return {
         hasInstall: false,
-        res: data
+        installation: data
     }
     return {
         hasInstall: true,
-        res: data
+        installation: data
     }
 }

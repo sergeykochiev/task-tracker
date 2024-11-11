@@ -16,11 +16,6 @@ export default class TrackerEntity extends BaseEntity {
     })
     @JoinColumn()
     github_repository: GithubRepoEntity
-
-    @Column({
-        type: "timestamp"
-    })
-    time_created: string
     
     @Column({
         type: "enum",

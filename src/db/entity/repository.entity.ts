@@ -11,13 +11,6 @@ export default class RepositoryEntity extends BaseEntity {
     })
     fullname: string
 
-    @Column({
-        type: "varchar",
-        nullable: true,
-        default: null
-    })
-    installationId?: string
-
     getOwnerAndName() {
         return this.fullname.split("/")
     }

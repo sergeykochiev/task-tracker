@@ -5,11 +5,16 @@ export const GITHUB_ENDPOINTS = {
         return {
             HOOKS: root + "/hooks",
             INSTALLATION: root + "/installation",
-            GET: root,
-            ISSUE: (number: number) => {
+            SELF: root,
+            LABELS: root + "/labels",
+            ISSUES: (number: number) => {
                 const root = `/repos/${fullname}/issues/${number}`
                 return {
-                    LABEL: root + "/labels"
+                    LABELS: {
+                        SELF: root + "/labels",
+                        BY_NAME: (name: string) => root + "/labels/" + name
+                    },
+                    SELF: root
                 }
             },
         }

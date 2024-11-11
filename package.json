@@ -12,7 +12,7 @@
     "dev": "npx nodemon src/index.ts",
     "typeorm": "npx typeorm-ts-node-commonjs",
     "shmsync": "npm run typeorm schema:sync --  -d src/db/data-source.ts",
-    "mgen": "npm run typeorm migration:generate -- src/db/migration/%npm_config_name% -d src/db/data-source.ts",
+    "mgen": "npm run typeorm migration:generate -- src/db/migration/$npm_config_name -d src/db/data-source.ts",
     "mrun": "npm run typeorm migration:run -- -d src/db/data-source.ts",
     "mrevert": "npm run typeorm migration:revert -- -d src/db/data-source.ts"
   },

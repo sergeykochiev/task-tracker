@@ -1,11 +1,12 @@
+import { DISCORD_AUTH_HEADERS, DISCORD_ENDPOINTS, DISCORD_V10_API_ROOT } from "../src/const/discord/api";
 import ALL_COMMANDS from "../src/const/discord/global-commands";
 import DiscordConfig from "../src/envcfg/discord.config";
-import discordInstallGlobalCommands from "../src/utils/discord/api/install-global-commands";
 
 async function InstallGlobalCommands() {
-    const res = await discordInstallGlobalCommands(DiscordConfig.APP_ID, ALL_COMMANDS)
-    console.dir(await res.json(), {
-        depth: Infinity
+    await fetch(DISCORD_V10_API_ROOT + DISCORD_ENDPOINTS.COMMANDS(DiscordConfig.APP_ID), {
+        headers: DISCORD_AUTH_HEADERS,
+        method: 'PUT',
+        body: JSON.stringify(ALL_COMMANDS)
     })
 }
 

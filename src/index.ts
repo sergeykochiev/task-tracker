@@ -1,11 +1,22 @@
 import "reflect-metadata"
-import expressInit from "./utils/general/express-init"
 import AppDataSource from "./db/data-source"
+import express from 'express';
+import AppConfig from "./envcfg/app.config";
+import githubHandleWebhookEvent from "./handlers/github";
+import discordHandleWebhookEvent from "./handlers/discord";
 
 // TODO save jwts (probably not) and macrocreate uuid in redis
 async function bootstrap() {
     AppDataSource.initialize()
-    expressInit()
+    const app = express()
+
+    app.post('/github', express.json(), githubHandleWebhookEvent)
+    app.post('/discord', express.json(), discordHandleWebhookEvent)
+
+    const PORT = AppConfig.PORT
+    app.listen(PORT, () => {
+        console.log('API listening on port', PORT)
+    })
 }
 
 bootstrap()

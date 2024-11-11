@@ -1,6 +1,6 @@
 import TrackerEntity from "../../db/entity/tracker.entity"
 
-export default async function iterateOnEveryTrackerOfRepository(trackers: TrackerEntity[], fullname: string, callback: (tracker: TrackerEntity) => Promise<void>) {
+export default async function iterateOnEveryTrackerOfRepository(trackers: TrackerEntity[], callback: (tracker: TrackerEntity) => Promise<void>) {
     console.log("GITHUB iterating over", trackers.length, "trackers")
     trackers.map(async tracker => {
         try {
