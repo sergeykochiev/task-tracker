@@ -1,27 +1,18 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import GithubRepoEntity from "./repository.entity";
-import RegisterStatus from "../../enum/register-status";
+import { BaseEntity, Column, Entity, PrimaryColumn, Unique } from "typeorm";
 
-@Entity({ name: "ChannelTracker" })
+@Entity({ name: "channel_tracker" })
+@Unique(["repository_fullname"])
 export default class TrackerEntity extends BaseEntity {
     @PrimaryColumn({
         type: "varchar"
     })
     discord_channel_id: string
 
-    @ManyToOne(() => GithubRepoEntity, {
-        eager: true,
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
-    })
-    @JoinColumn()
-    github_repository: GithubRepoEntity
+    @Column()
+    repository_fullname: string
     
-    @Column({
-        type: "enum",
-        enum: RegisterStatus
-    })
-    register_status: RegisterStatus
+    @Column()
+    is_app_installed: boolean
 
     @Column({
         type: "varchar",

@@ -5,6 +5,7 @@ import discordSendNotificationToChannel from "../../../utils/discord/send-notifi
 export async function githubPullRequestReviewCommentOpenedCallback(tracker: TrackerEntity, data: PullRequestReviewCommentCreatedEvent) {
     await discordSendNotificationToChannel(tracker.discord_channel_id, {
         title: "New PR review comment",
-        content: `A comment on the review of the pull request #${data.pull_request.number} titled \"${data.pull_request.title}\" was created by ${data.comment.user.login}!\n\nBody: ${data.comment.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`
+        content: `A comment on the review of the pull request #${data.pull_request.number} titled \"${data.pull_request.title}\" was created by ${data.comment.user.login}!\n\nBody: ${data.comment.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`,
+        role_to_ping: tracker.role_to_ping
     })
 }

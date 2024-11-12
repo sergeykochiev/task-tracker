@@ -4,23 +4,16 @@ import githubGetInstallationAccessToken from "../../../utils/github/api/get-inst
 import githubAssignLabel from "../../../utils/github/api/assign-label";
 import GithubLabels from "../../../enum/github-labels";
 import githubRemoveLabel from "../../../utils/github/api/remove-label";
-import githubGetIssuesOfPR from "../../../utils/github/api/graphql/get-issues-of-pr";
-import githubOverwriteLabel from "../../../utils/github/api/overwrite-label";
 import TrackerEntity from "../../../db/entity/tracker.entity";
-import iterateOnEveryTrackerOfRepository from "../../../utils/general/iterate-on-every-tracker-of-repository";
 import overwriteIssuesLabels from "../../../utils/github/api/overwrite-issue-labels";
 
-export default async function githubHandlePullRequestEvent(data: PullRequestEvent) {
+export default async function githubHandlePullRequestEvent(data: PullRequestEvent, tracker: TrackerEntity) {
     const token = await githubGetInstallationAccessToken(data.installation!.id)
-    const trackers = await TrackerEntity.findBy({
-        github_repository: { fullname: data.repository.full_name }
-    })
-    if(!trackers || !trackers.length) return
     switch(data.action) {
         case "opened": {
             if(!token) throw "No token"
             githubAssignLabel(data.repository.full_name, data.number, token, GithubLabels.IN_PROGRESS)
-            iterateOnEveryTrackerOfRepository(trackers, async (tracker) => await githubPullRequestOpenedCallback(tracker, data))
+            githubPullRequestOpenedCallback(tracker, data)
             break
         }
         case "labeled": {
@@ -37,7 +30,7 @@ export default async function githubHandlePullRequestEvent(data: PullRequestEven
             }
             break
         }
-        case "review_requested": iterateOnEveryTrackerOfRepository(trackers, async tracker => await githubPullRequestReviewRequestedCallback(tracker, data)); break
+        case "review_requested": await githubPullRequestReviewRequestedCallback(tracker, data); break
         case "unlabeled": {
             if(!token) throw "No token"
             overwriteIssuesLabels(data.repository.full_name, data.pull_request.number, data.pull_request.labels.map(label => label.name), token)

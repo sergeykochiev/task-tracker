@@ -5,6 +5,7 @@ import discordSendNotificationToChannel from "../../../utils/discord/send-notifi
 export async function githubPushCallback(tracker: TrackerEntity, data: PushEvent) {
     await discordSendNotificationToChannel(tracker.discord_channel_id, {
         title: "Somebody pushed something",
-        content: `Push happenned`
+        content: `Push happenned`,
+        role_to_ping: tracker.role_to_ping
     })
 }

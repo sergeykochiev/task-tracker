@@ -1,16 +1,13 @@
-import { APIApplicationCommandInteraction, ApplicationCommandType, InteractionResponseType } from "discord-api-types/v10"
+import { APIApplicationCommandInteraction, ApplicationCommandType } from "discord-api-types/v10"
 import discordHandleRegisterCommand from "./register"
 import discordHandleUnregisterCommand from "./unregister";
 import TrackerEntity from "../../../db/entity/tracker.entity";
-import RegisterStatus from "../../../enum/register-status";
 import withExistingTracker from "../../../utils/discord/with-existing-tracker-middleware";
-import discordTextToInteraction from "../../../utils/discord/text-to-interaction";
+import discordTextToInteraction from "../../../utils/discord/text-to-interaction"
 
-async function failRegistration(channelId: string) {
-    await TrackerEntity.update(channelId, {
-        register_status: RegisterStatus.Failed
-    })
-}
+const onNoTracker = (id: string, token: string) => discordTextToInteraction(id, token, {
+    content: "Channel is not registered. To register, use /register command with the repository you want to link this chat to."
+})    
 
 export default async function discordHandleApplicationCommandInteraction(data: APIApplicationCommandInteraction): Promise<void> {
     console.log("DISCORD Handling command")
@@ -19,18 +16,11 @@ export default async function discordHandleApplicationCommandInteraction(data: A
     const command = interactionData.name
     try {
         switch(command) {
-            case "register": {
-                try {
-                    await discordHandleRegisterCommand(data)
-                } catch(e) {
-                    await failRegistration(data.channel.id)
-                    throw e
-                }
-                break
-            }
-            case "unregister": await withExistingTracker(data, discordHandleUnregisterCommand); break
+            case "register": await discordHandleRegisterCommand(data); break
+            case "unregister": await withExistingTracker({ discord_channel_id: data.channel.id }, (t) => discordHandleUnregisterCommand(data), () => onNoTracker(data.id, data.token)); break
         }
     } catch(e) {
+        if(command === "register") await TrackerEntity.delete(data.channel.id)
         console.log("DISCORD error handling", command, "command :", e)
         await discordTextToInteraction(data.id, data.token, {
             content: `Error handling ${command} command: ${e}`

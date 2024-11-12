@@ -4,12 +4,8 @@ import githubAssignLabel from "../../../utils/github/api/assign-label";
 import GithubLabels from "../../../enum/github-labels";
 import TrackerEntity from "../../../db/entity/tracker.entity";
 
-export default async function githubHandlePullRequestReviewEvent(data: PullRequestReviewEvent) {
+export default async function githubHandlePullRequestReviewEvent(data: PullRequestReviewEvent, tracker: TrackerEntity) {
     const token = await githubGetInstallationAccessToken(data.installation!.id)
-    const trackers = await TrackerEntity.findBy({
-        github_repository: { fullname: data.repository.full_name }
-    })
-    if(!trackers || !trackers.length) return
     switch(data.action) {
         case "dismissed": {
             if(!token) throw "No token"

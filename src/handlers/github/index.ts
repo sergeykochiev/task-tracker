@@ -7,6 +7,7 @@ import githubHandleIssueCommentEvent from "./issuecomment";
 import githubHandleIssuesEvent from "./issues";
 import githubHandlePullRequestEvent from "./pullrequest";
 import githubHandlePullRequestReviewCommentEvent from "./pullrequestreviewcomment";
+import withExistingTracker from "../../utils/discord/with-existing-tracker-middleware";
 
 export default async function githubHandleWebhookEvent(req: Request, res: Response) {
     console.log("API GITHUB received github webhook call")
@@ -25,11 +26,11 @@ export default async function githubHandleWebhookEvent(req: Request, res: Respon
     try {
         switch(eventType) {
             case GithubEventType.Installation: await githubHandleInstallationEvent(data); break
-            case GithubEventType.PullRequest: await githubHandlePullRequestEvent(data); break
-            case GithubEventType.Issues: await githubHandleIssuesEvent(data); break
-            case GithubEventType.IssueComment: await githubHandleIssueCommentEvent(data); break
-            case GithubEventType.PullRequestReviewComment: await githubHandlePullRequestReviewCommentEvent(data); break
-            case GithubEventType.Push: await githubHandlePushEvent(data); break
+            case GithubEventType.PullRequest: await withExistingTracker({ repository_fullname: data.repository.full_name }, (t) => githubHandlePullRequestEvent(data, t)); break
+            case GithubEventType.Issues: await withExistingTracker({ repository_fullname: data.repository.full_name }, (t) => githubHandleIssuesEvent(data, t)); break
+            case GithubEventType.IssueComment: await withExistingTracker({ repository_fullname: data.repository.full_name }, (t) => githubHandleIssueCommentEvent(data, t)); break
+            case GithubEventType.PullRequestReviewComment: await withExistingTracker({ repository_fullname: data.repository.full_name }, (t) => githubHandlePullRequestReviewCommentEvent(data, t)); break
+            case GithubEventType.Push: await withExistingTracker({ repository_fullname: data.repository.full_name }, (t) => githubHandlePushEvent(data, t)); break
         }
     } catch(e) {
         console.error("ERROR - API GITHUB failed to handle event", eventType?.toString().toUpperCase(), "error", e)

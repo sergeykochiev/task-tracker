@@ -4,6 +4,14 @@ import express from 'express';
 import AppConfig from "./envcfg/app.config";
 import githubHandleWebhookEvent from "./handlers/github";
 import discordHandleWebhookEvent from "./handlers/discord";
+import d from "dotenv"
+
+d.configDotenv({
+    path: "/.env"
+})
+d.configDotenv({
+    path: "/.db.env"
+})
 
 // TODO save jwts (probably not) and macrocreate uuid in redis
 async function bootstrap() {

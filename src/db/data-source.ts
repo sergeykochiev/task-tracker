@@ -1,6 +1,5 @@
 import { DataSource } from "typeorm";
 import TrackerEntity from "./entity/tracker.entity";
-import RepositoryEntity from "./entity/repository.entity";
 import DatabaseConfig from "../envcfg/db.config";
 
 const AppDataSource = new DataSource({
@@ -12,7 +11,7 @@ const AppDataSource = new DataSource({
     database: DatabaseConfig.NAME,
     synchronize: false,
     logging: false,
-    entities: [TrackerEntity, RepositoryEntity],
+    entities: [TrackerEntity],
     subscribers: [],
     migrationsRun: true,
     migrations: ["**/db/migration/*.js"],

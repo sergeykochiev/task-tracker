@@ -3,17 +3,12 @@ import { githubIssuesOpenedCallback } from "./callbacks";
 import GithubLabels from "../../../enum/github-labels";
 import githubGetInstallationAccessToken from "../../../utils/github/api/get-installation-access-token";
 import githubRemoveLabel from "../../../utils/github/api/remove-label";
-import iterateOnEveryTrackerOfRepository from "../../../utils/general/iterate-on-every-tracker-of-repository";
 import TrackerEntity from "../../../db/entity/tracker.entity";
 
-export default async function githubHandleIssuesEvent(data: IssuesEvent) {
+export default async function githubHandleIssuesEvent(data: IssuesEvent, tracker: TrackerEntity) {
     const token = await githubGetInstallationAccessToken(data.installation!.id)
-    const trackers = await TrackerEntity.findBy({
-        github_repository: { fullname: data.repository.full_name }
-    })
-    if(!trackers || !trackers.length) return
     switch(data.action) {
-        case "opened": iterateOnEveryTrackerOfRepository(trackers, async tracker => await githubIssuesOpenedCallback(tracker, data)); break
+        case "opened": await githubIssuesOpenedCallback(tracker, data); break
         case "labeled": {
             if(!token) throw "No token"
             switch(data.label!.name) {

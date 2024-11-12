@@ -5,13 +5,15 @@ import discordSendNotificationToChannel from "../../../utils/discord/send-notifi
 export async function githubPullRequestOpenedCallback(tracker: TrackerEntity, data: PullRequestOpenedEvent) {
     await discordSendNotificationToChannel(tracker.discord_channel_id, {
         title: "New PR opened",
-        content: `A pull request #${data.number} titled \"${data.pull_request.title}\" was ${data.action} by ${data.pull_request.user.login}!\n\nDescription: ${data.pull_request.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`
+        content: `A pull request #${data.number} titled \"${data.pull_request.title}\" was ${data.action} by ${data.pull_request.user.login}!\n\nDescription: ${data.pull_request.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`,
+        role_to_ping: tracker.role_to_ping
     })
 }
 
 export async function githubPullRequestReviewRequestedCallback(tracker: TrackerEntity, data: PullRequestReviewRequestedEvent) {
     await discordSendNotificationToChannel(tracker.discord_channel_id, {
         title: "Review requested",
-        content: `A review on the pull request #${data.number} titled \"${data.pull_request.title}\" was requested by ${data.pull_request.user.login}!\n\nDescription: ${data.pull_request.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`
+        content: `A review on the pull request #${data.number} titled \"${data.pull_request.title}\" was requested by ${data.pull_request.user.login}!\n\nDescription: ${data.pull_request.body}\n\n[Check the pull request](<${data.pull_request.html_url}>)`,
+        role_to_ping: tracker.role_to_ping
     })
 }
